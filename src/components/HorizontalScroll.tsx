@@ -8,13 +8,14 @@ export const categories = ['Popular', 'Most Viewed', 'Recommended', 'New'];
 interface Props {
   categories: Array<string>;
   selected: string;
+  onSelectCategory: (category: string) => void;
 }
 
-export const HorizontalScroll = ({ categories, selected }: Props) => {
-  const onSelectCategory = (category: string) => {
-    // set category state from parent
-  };
-
+export const HorizontalScroll = ({
+  categories,
+  selected,
+  onSelectCategory
+}: Props) => {
   const getButtonType = (category: string): ButtonType =>
     category === selected ? ButtonType.PRIMARY : ButtonType.UNSELECTED;
 
@@ -39,6 +40,8 @@ const Wrapper = styled.div`
   display: flex;
   flex-wrap: none;
   overflow-x: scroll;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
 `;
 
 const ButtonContainer = styled.div`
