@@ -1,5 +1,6 @@
 import React from 'react';
 import { icons } from '../../assets/icons';
+import classes from './Input.module.scss';
 import styled from 'styled-components';
 
 interface InputContainerProps {
@@ -20,6 +21,7 @@ export const Input = ({
     </InputContainer>
   );
 };
+
 const InputContainer = styled.div`
   display: flex;
   padding: 0.75rem;
@@ -34,6 +36,7 @@ const InputContainer = styled.div`
     background-color: transparent;
   }
 `;
+
 const SearchContainer = styled.div`
   margin-top: auto;
   margin-bottom: auto;
