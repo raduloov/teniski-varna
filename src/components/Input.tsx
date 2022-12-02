@@ -1,6 +1,7 @@
 import React from 'react';
 import { icons } from '../assets/icons';
 import styled from 'styled-components';
+import { Color } from '../assets/constants';
 
 interface Props {
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
@@ -24,11 +25,10 @@ export const Input = ({
 const InputContainer = styled.div`
   display: flex;
   padding: 0.75rem;
-  background-color: #f7f7f7;
+  background-color: ${Color.GRAY_LIGHT};
   border-radius: 2rem;
-  margin: auto;
   position: relative;
-  color: #9b9b9b;
+  color: ${Color.GRAY};
   input {
     width: 100%;
     outline: none;
@@ -46,10 +46,11 @@ const SearchContainer = styled.div`
   justify-content: center;
   padding: 0.5rem;
   border-radius: 50%;
-  background-color: #ffffff;
+  background-color: ${Color.WHITE};
   margin-right: 0.75rem;
   filter: drop-shadow(1px 2px 2px rgba(0, 0, 0, 0.1));
   svg {
-    color: #9b9b9b;
+    cursor: pointer;
+    color: ${Color.GRAY};
   }
 `;
