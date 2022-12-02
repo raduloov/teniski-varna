@@ -1,36 +1,41 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Button } from './Button';
+import { Button, ButtonType } from './Button';
 
 // Example categories to be passed
-// export const categories = ['Popular', 'Most Viewed', 'Recommended', 'New'];
+export const categories = ['Popular', 'Most Viewed', 'Recommended', 'New'];
 
 interface Props {
   categories: Array<string>;
+  selected: string;
 }
 
-export const HorizontalScroll = ({ categories }: Props) => {
+export const HorizontalScroll = ({ categories, selected }: Props) => {
   const onSelectCategory = (category: string) => {
     // set category state from parent
   };
 
+  const getButtonType = (category: string): ButtonType =>
+    category === selected ? ButtonType.PRIMARY : ButtonType.UNSELECTED;
+
   return (
-    <Container>
+    <Wrapper>
       {categories.map((category, index) => {
         return (
           <ButtonContainer key={`category-${index}`}>
             <Button
               label={category}
+              type={getButtonType(category)}
               onClick={() => onSelectCategory(category)}
             />
           </ButtonContainer>
         );
       })}
-    </Container>
+    </Wrapper>
   );
 };
 
-const Container = styled.div`
+const Wrapper = styled.div`
   display: flex;
   flex-wrap: none;
   overflow-x: scroll;
