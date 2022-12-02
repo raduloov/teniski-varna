@@ -1,5 +1,5 @@
-import { GiHamburgerMenu } from 'react-icons/gi';
+import { FaSearch } from 'react-icons/fa';
 
 export const icons = {
-  GiHamburgerMenu
+  FaSearch
 };
