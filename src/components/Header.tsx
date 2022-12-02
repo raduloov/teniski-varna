@@ -4,6 +4,7 @@ import { Input } from './Input';
 import { ReactComponent as Logo } from '../assets/images/logo.svg';
 import { icons } from '../assets/icons';
 import { Color } from '../assets/constants';
+
 export const Header = () => {
   return (
     <HeaderContainer>
@@ -26,8 +27,10 @@ const HeaderContainer = styled.div`
   flex-direction: column;
   border-bottom-left-radius: 2rem;
   border-bottom-right-radius: 2rem;
+  margin-bottom: 10px;
   box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.15);
 `;
+
 const LogoContainer = styled.div`
   display: flex;
   justify-content: space-between;
@@ -38,6 +41,7 @@ const LogoContainer = styled.div`
     height: 4.5rem;
   }
 `;
+
 const CartContainer = styled.div`
   display: flex;
   align-items: center;
@@ -45,7 +49,7 @@ const CartContainer = styled.div`
   padding: 0.75rem;
   border-radius: 50%;
   background-color: ${Color.WHITE};
-  filter: drop-shadow(0px 0px 4px rgba(57, 57, 57, 0.05));
+  filter: drop-shadow(0px 2px 10px rgba(0, 0, 0, 0.15));
   svg {
     cursor: pointer;
     color: ${Color.GRAY};
@@ -53,6 +57,7 @@ const CartContainer = styled.div`
     height: 2rem;
   }
 `;
+
 const CartItemTick = styled.div`
   background-color: ${Color.ACCENT};
   position: absolute;
