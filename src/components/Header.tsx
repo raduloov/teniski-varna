@@ -27,7 +27,6 @@ const HeaderContainer = styled.div`
   flex-direction: column;
   border-bottom-left-radius: 2rem;
   border-bottom-right-radius: 2rem;
-  margin-bottom: 10px;
   box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.15);
 `;
 
