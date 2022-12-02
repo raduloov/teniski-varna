@@ -1,9 +1,8 @@
 import React from 'react';
-import { icons } from '../../assets/icons';
-import classes from './Input.module.scss';
+import { icons } from '../assets/icons';
 import styled from 'styled-components';
 
-interface InputContainerProps {
+interface Props {
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   placeholder?: string;
 }
@@ -11,7 +10,7 @@ interface InputContainerProps {
 export const Input = ({
   onChange,
   placeholder = 'Looking for fashion'
-}: InputContainerProps) => {
+}: Props) => {
   return (
     <InputContainer>
       <SearchContainer>

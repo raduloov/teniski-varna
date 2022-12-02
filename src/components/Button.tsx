@@ -25,6 +25,8 @@ export const Button = ({
 };
 
 const ButtonContainer = styled.button<ButtonContainerProps>`
+  white-space: nowrap;
+  min-width: max-content;
   background: ${(props) => props.backgroundColor};
   border-radius: 10px;
   padding-top: 10px;
