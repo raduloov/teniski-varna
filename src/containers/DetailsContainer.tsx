@@ -36,6 +36,7 @@ export const DetailsContainer = () => {
           </TitleWrapper>
           {/* TODO Yavor: Create rating stars component */}
         </HeaderWrapper>
+        <SelectSizeTitle>Select Size</SelectSizeTitle>
         <SizeAndQuantityWrapper>
           <SizeSelector
             selectedSize={selectedSize}
@@ -63,6 +64,12 @@ export const DetailsContainer = () => {
   );
 };
 
+const SelectSizeTitle = styled.p`
+  font-size: 18px;
+  font-weight: 500;
+  margin-top: 15px;
+`;
+
 const Price = styled.p`
   font-size: 50px;
   font-weight: 800;
@@ -89,6 +96,7 @@ const DescriptionTitle = styled.p`
 
 const DescriptionWrapper = styled.div`
   flex-direction: column;
+  margin-top: 15px;
 `;
 
 const SizeAndQuantityWrapper = styled.div`
@@ -120,7 +128,6 @@ const Title = styled.p`
 const BottomSheetContainer = styled.div`
   position: absolute;
   bottom: 0;
-  height: 45%;
   width: 100vw;
   border-top-left-radius: 45px;
   border-top-right-radius: 45px;
