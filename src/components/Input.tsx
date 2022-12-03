@@ -1,22 +1,22 @@
 import React from 'react';
-import { icons } from '../assets/icons';
+import { IconType } from 'react-icons';
 import styled from 'styled-components';
 import { Color } from '../assets/constants';
 
 interface Props {
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   placeholder?: string;
+  iconButton?: IconType;
 }
 
 export const Input = ({
   onChange,
-  placeholder = 'Looking for fashion'
+  placeholder = 'Looking for fashion',
+  iconButton
 }: Props) => {
   return (
     <InputContainer>
-      <SearchContainer>
-        <icons.FaSearch />
-      </SearchContainer>
+      {iconButton && <IconButton>{React.createElement(iconButton)}</IconButton>}
       <input placeholder={placeholder} onChange={onChange} />
     </InputContainer>
   );
@@ -33,10 +33,13 @@ const InputContainer = styled.div`
     width: 100%;
     outline: none;
     background-color: transparent;
+    ::placeholder {
+      color: ${Color.MEDIUM_GRAY};
+    }
   }
 `;
 
-const SearchContainer = styled.div`
+const IconButton = styled.div`
   margin-top: auto;
   margin-bottom: auto;
   width: auto;

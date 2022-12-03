@@ -4,7 +4,7 @@ import styled from 'styled-components';
 export const Banner = () => {
   return (
     <BannerContainer>
-      <img src="https://picsum.photos/400/200" />
+      <img src="https://static.wikia.nocookie.net/36404868-b546-4edd-87ca-e387f1a2acc7" />
     </BannerContainer>
   );
 };

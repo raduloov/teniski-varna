@@ -2,17 +2,17 @@ import React from 'react';
 import styled from 'styled-components';
 import { ProductCard } from './ProductCard';
 
-export const Products = () => {
+export const ProductList = () => {
   return (
     <ProductsContainer>
-      <ProductCard></ProductCard>
-      <ProductCard></ProductCard>
-      <ProductCard></ProductCard>
-      <ProductCard></ProductCard>
-      <ProductCard></ProductCard>
-      <ProductCard></ProductCard>
-      <ProductCard></ProductCard>
-      <ProductCard></ProductCard>
+      <ProductCard />
+      <ProductCard />
+      <ProductCard />
+      <ProductCard />
+      <ProductCard />
+      <ProductCard />
+      <ProductCard />
+      <ProductCard />
     </ProductsContainer>
   );
 };

@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Banner } from '../components/Banner';
 import { Header } from '../components/Header';
 import { categories, HorizontalScroll } from '../components/HorizontalScroll';
-import { Products } from '../components/Products';
+import { ProductList } from '../components/ProductList';
 
 export const HomeContainer = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>(
@@ -20,7 +20,7 @@ export const HomeContainer = () => {
         onSelectCategory={(category) => setSelectedCategory(category)}
       />
       <Container>
-        <Products />
+        <ProductList />
       </Container>
     </>
   );
@@ -32,4 +32,5 @@ const Container = styled.div`
   margin-top: 10px;
   padding-left: 1.5rem;
   padding-right: 1.5rem;
+  padding-bottom: 1.5rem;
 `;
