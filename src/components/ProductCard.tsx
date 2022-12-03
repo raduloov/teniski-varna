@@ -23,7 +23,9 @@ export const ProductCard = ({
   const navigate = useNavigate();
 
   const navigateToDetails = (productId: string) => {
-    navigate(`/products/${productId}`, { state: { productId } });
+    navigate(`/products/${productId}`, {
+      state: { productId }
+    });
   };
 
   const addToFavorites = () => {
