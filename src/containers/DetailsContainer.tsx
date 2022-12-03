@@ -6,6 +6,7 @@ import { icons } from '../assets/icons';
 import { Button, ButtonSize } from '../components/Button';
 import { IconButton } from '../components/IconButton';
 import { QuantitySelector } from '../components/QuantitySelector';
+import { RatingStars } from '../components/RatingStars';
 import { SizeLabel, SizeSelector } from '../components/SizeSelector';
 
 export const DetailsContainer = () => {
@@ -34,7 +35,7 @@ export const DetailsContainer = () => {
             <Title>Nike Jumpman</Title>
             <Description>Men&apos;s Gillet</Description>
           </TitleWrapper>
-          {/* TODO Yavor: Create rating stars component */}
+          <RatingStars />
         </HeaderWrapper>
         <SelectSizeTitle>Select Size</SelectSizeTitle>
         <SizeAndQuantityWrapper>
@@ -50,6 +51,7 @@ export const DetailsContainer = () => {
         </SizeAndQuantityWrapper>
         <DescriptionWrapper>
           <DescriptionTitle>Description</DescriptionTitle>
+          {/* TODO Yavor: Implement read more functionality */}
           <DescriptionContent>
             Clothing products are currently one of the best and high-quality
             clothig lines among local Brands. Collared shirt with...
@@ -113,6 +115,7 @@ const TitleWrapper = styled.div`
 
 const HeaderWrapper = styled.div`
   display: flex;
+  justify-content: space-between;
   line-height: 30px;
 `;
 
