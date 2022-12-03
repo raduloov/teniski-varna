@@ -8,7 +8,7 @@ export const AppRoutes = () => {
     <>
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/details" element={<DetailsPage />} />
+        <Route path="/products/:productId" element={<DetailsPage />} />
         {/* <Route path="/admin-panel" element={<AdminPanelPage />} /> */}
         {/* <Route path="/about" element={<AboutPage />} /> */}
         {/* <Route path="/contact" element={<ContactPage />} /> */}
