@@ -1,20 +1,23 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Input } from './Input';
 import { ReactComponent as Logo } from '../assets/images/logo.svg';
 import { icons } from '../assets/icons';
 import { Color } from '../assets/constants';
+import { Cart } from './Cart';
 
 interface Props {
   cartItemsCount?: number;
 }
 
 export const Header = ({ cartItemsCount = 3 }: Props) => {
+  const [showModal, setShowModal] = useState<boolean>(false);
   return (
     <HeaderContainer>
+      <Cart setShowModal={setShowModal} showModal={showModal} />
       <LogoContainer>
         <Logo />
-        <CartContainer>
+        <CartContainer onClick={() => setShowModal(true)}>
           <icons.MdOutlineShoppingBag />
           <CartItemTick>{cartItemsCount}</CartItemTick>
         </CartContainer>
