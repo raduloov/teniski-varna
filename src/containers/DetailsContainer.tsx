@@ -1,14 +1,22 @@
 import React from 'react';
-import { useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import styled from 'styled-components';
 import { Color } from '../assets/constants';
+import { icons } from '../assets/icons';
 import { Button, ButtonSize } from '../components/Button';
+import { IconButton } from '../components/IconButton';
 
 export const DetailsContainer = () => {
   const { productId } = useParams();
+  const navigate = useNavigate();
+
+  const goBack = () => navigate(-1);
 
   return (
     <Container>
+      <ActionButtonsWrapper>
+        <IconButton icon={icons.FaChevronLeft} onClick={goBack} />
+      </ActionButtonsWrapper>
       <BottomSheetContainer>
         <HeaderWrapper>
           <TitleWrapper>
@@ -89,6 +97,12 @@ const BottomSheetContainer = styled.div`
   border-top-right-radius: 45px;
   background: ${Color.WHITE};
   padding: 2rem;
+`;
+
+const ActionButtonsWrapper = styled.div`
+  position: absolute;
+  top: 1.5rem;
+  left: 1.5rem;
 `;
 
 const Container = styled.div`

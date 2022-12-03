@@ -32,6 +32,7 @@ const InputContainer = styled.div`
   color: ${Color.GRAY};
   input {
     width: 100%;
+    margin-left: 0.75rem;
     outline: none;
     background-color: transparent;
     ::placeholder {
