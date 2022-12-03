@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router';
 import styled from 'styled-components';
 import { Color } from '../assets/constants';
 import { icons } from '../assets/icons';
-import { pressAnimation } from '../utils/animations';
+import { IconButton } from './IconButton';
 
 interface Props {
   id?: string;
@@ -38,9 +38,9 @@ export const ProductCard = ({
       <h1>{title}</h1>
       <p>{description}</p>
       <h1>{price}</h1>
-      <HeartButton onClick={addToFavorites}>
-        <icons.FaRegHeart color={Color.MEDIUM_GRAY} size={25} />
-      </HeartButton>
+      <FavoriteButton>
+        <IconButton icon={icons.FaRegHeart} onClick={addToFavorites} />
+      </FavoriteButton>
     </Card>
   );
 };
@@ -78,17 +78,8 @@ const Card = styled.div`
   }
 `;
 
-const HeartButton = styled.div`
-  height: 35px;
-  width: 35px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+const FavoriteButton = styled.div`
   position: absolute;
-  bottom: 1rem;
-  right: 1rem;
-  padding: 0.5rem;
-  border-radius: 50%;
-  background-color: ${Color.LIGHT_GRAY};
-  ${pressAnimation}
+  bottom: 0.5rem;
+  right: 0.5rem;
 `;

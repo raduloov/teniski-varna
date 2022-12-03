@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { IconType } from 'react-icons';
 import { Color } from '../assets/constants';
+import { pressAnimation } from '../utils/animations';
 
 interface Props {
   icon: IconType;
@@ -29,4 +30,5 @@ const Container = styled.div`
     cursor: pointer;
     color: ${Color.GRAY};
   }
+  ${pressAnimation}
 `;
