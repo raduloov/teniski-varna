@@ -5,15 +5,23 @@ import { Color } from '../assets/constants';
 import { icons } from '../assets/icons';
 import { Button, ButtonSize } from '../components/Button';
 import { IconButton } from '../components/IconButton';
+import { QuantitySelector } from '../components/QuantitySelector';
 import { SizeLabel, SizeSelector } from '../components/SizeSelector';
 
 export const DetailsContainer = () => {
   const [selectedSize, setSelectedSize] = useState<SizeLabel | null>(null);
-
+  const [selectedQuality, setSelectedQuality] = useState<number>(1);
   const { productId } = useParams();
   const navigate = useNavigate();
 
   const goBack = () => navigate(-1);
+  const increaseQuantity = () => setSelectedQuality((q) => (q += 1));
+  const decreaseQuantity = () => {
+    if (selectedQuality <= 1) {
+      return;
+    }
+    setSelectedQuality((q) => (q -= 1));
+  };
 
   return (
     <Container>
@@ -32,6 +40,11 @@ export const DetailsContainer = () => {
           <SizeSelector
             selectedSize={selectedSize}
             onSelectSize={(size) => setSelectedSize(size)}
+          />
+          <QuantitySelector
+            quantity={selectedQuality}
+            onIncreaseQuantity={increaseQuantity}
+            onDecreaseQuantity={decreaseQuantity}
           />
         </SizeAndQuantityWrapper>
         <DescriptionWrapper>
@@ -83,6 +96,7 @@ const SizeAndQuantityWrapper = styled.div`
   justify-content: space-between;
   margin-top: 10px;
   margin-bottom: 10px;
+  gap: 20px;
 `;
 
 const TitleWrapper = styled.div`
@@ -107,11 +121,11 @@ const BottomSheetContainer = styled.div`
   position: absolute;
   bottom: 0;
   height: 45%;
-  width: 100%;
+  width: 100vw;
   border-top-left-radius: 45px;
   border-top-right-radius: 45px;
   background: ${Color.WHITE};
-  padding: 2rem;
+  padding: 1.5rem;
 `;
 
 const ActionButtonsWrapper = styled.div`
