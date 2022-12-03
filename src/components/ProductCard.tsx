@@ -1,32 +1,41 @@
 import React from 'react';
+import { useNavigate } from 'react-router';
 import styled from 'styled-components';
 import { Color } from '../assets/constants';
 import { icons } from '../assets/icons';
 import { pressAnimation } from '../utils/animations';
 
 interface Props {
-  productTitle?: string;
-  productDescription?: string;
-  productPrice?: string;
-  productImage?: string;
+  id?: string;
+  title?: string;
+  description?: string;
+  price?: string;
+  image?: string;
 }
 
 export const ProductCard = ({
-  productTitle = 'Product Title',
-  productDescription = 'Product Description',
-  productPrice = '88.00',
-  productImage = 'https://picsum.photos/150/200'
+  id = 'p1',
+  title = 'Product Title',
+  description = 'Product Description',
+  price = '88.00',
+  image = 'https://picsum.photos/150/200'
 }: Props) => {
+  const navigate = useNavigate();
+
+  const navigateToDetails = (productId: string) => {
+    navigate(`/products/${productId}`, { state: { productId } });
+  };
+
   const addToFavorites = () => {
     // TODO: Add to favorites functionality
   };
 
   return (
-    <Card>
-      <img src={productImage} />
-      <h1>{productTitle}</h1>
-      <p>{productDescription}</p>
-      <h1>{productPrice}</h1>
+    <Card onClick={() => navigateToDetails(id)}>
+      <img src={image} />
+      <h1>{title}</h1>
+      <p>{description}</p>
+      <h1>{price}</h1>
       <HeartButton onClick={addToFavorites}>
         <icons.FaRegHeart color={Color.MEDIUM_GRAY} size={25} />
       </HeartButton>
