@@ -5,14 +5,18 @@ import { ReactComponent as Logo } from '../assets/images/logo.svg';
 import { icons } from '../assets/icons';
 import { Color } from '../assets/constants';
 
-export const Header = () => {
+interface Props {
+  cartItemsCount?: number;
+}
+
+export const Header = ({ cartItemsCount = 3 }: Props) => {
   return (
     <HeaderContainer>
       <LogoContainer>
         <Logo />
         <CartContainer>
           <icons.MdOutlineShoppingBag />
-          <CartItemTick>3</CartItemTick>
+          <CartItemTick>{cartItemsCount}</CartItemTick>
         </CartContainer>
       </LogoContainer>
       <Input />

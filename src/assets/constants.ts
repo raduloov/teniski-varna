@@ -1,5 +1,6 @@
 export enum Color {
   ACCENT = '#FAC000',
+  BLACK = '#000000',
   WHITE = '#FFFFFF',
   GRAY = '#9B9B9B',
   LIGHT_GRAY = '#F7F7F7',
