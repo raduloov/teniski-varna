@@ -19,7 +19,7 @@ export const Header = ({ cartItemsCount = 3 }: Props) => {
           <CartItemTick>{cartItemsCount}</CartItemTick>
         </CartContainer>
       </LogoContainer>
-      <Input iconButton={icons.FaSearch} />
+      <Input icon={icons.FaSearch} />
     </HeaderContainer>
   );
 };
