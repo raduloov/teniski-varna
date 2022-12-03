@@ -1,12 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import styled from 'styled-components';
 import { Color } from '../assets/constants';
 import { icons } from '../assets/icons';
 import { Button, ButtonSize } from '../components/Button';
 import { IconButton } from '../components/IconButton';
+import { SizeLabel, SizeSelector } from '../components/SizeSelector';
 
 export const DetailsContainer = () => {
+  const [selectedSize, setSelectedSize] = useState<SizeLabel | null>(null);
+
   const { productId } = useParams();
   const navigate = useNavigate();
 
@@ -25,7 +28,12 @@ export const DetailsContainer = () => {
           </TitleWrapper>
           {/* TODO Yavor: Create rating stars component */}
         </HeaderWrapper>
-        {/* TODO Yavor: Create size select component */}
+        <SizeAndQuantityWrapper>
+          <SizeSelector
+            selectedSize={selectedSize}
+            onSelectSize={(size) => setSelectedSize(size)}
+          />
+        </SizeAndQuantityWrapper>
         <DescriptionWrapper>
           <DescriptionTitle>Description</DescriptionTitle>
           <DescriptionContent>
@@ -68,6 +76,13 @@ const DescriptionTitle = styled.p`
 
 const DescriptionWrapper = styled.div`
   flex-direction: column;
+`;
+
+const SizeAndQuantityWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  margin-bottom: 10px;
 `;
 
 const TitleWrapper = styled.div`
