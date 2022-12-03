@@ -13,10 +13,13 @@ export const Backdrop = ({ onClose }: Props) => {
   return <BackDropCont onClick={onClose} />;
 };
 
-export const ModalOverlay = ({ onClose }: Props) => {
+export const ModalOverlay = ({ children, onClose }: Props) => {
   return (
     <ModalOverlayCont>
-      <IconButton onClick={onClose} icon={icons.FaChevronLeft}></IconButton>
+      <BackButtonCont>
+        <IconButton onClick={onClose} icon={icons.FaChevronLeft}></IconButton>
+      </BackButtonCont>
+      <div>{children}</div>
     </ModalOverlayCont>
   );
 };
@@ -40,7 +43,10 @@ export const Modal = ({ children, onClose }: Props) => {
     </React.Fragment>
   );
 };
-
+const BackButtonCont = styled.div`
+  margin-left: 2rem;
+  margin-top: 2rem;
+`;
 const BackDropCont = styled.div`
   position: fixed;
   top: 0;
@@ -51,7 +57,7 @@ const BackDropCont = styled.div`
   z-index: 9;
 `;
 const ModalOverlayCont = styled.div`
-  padding: 2rem;
+  overflow-y: scroll;
   position: fixed;
   top: 40%;
   left: 50%;
@@ -62,6 +68,7 @@ const ModalOverlayCont = styled.div`
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
   transition: all 0.5s ease-out;
   animation: slide-in 0.5s ease-out forwards;
+
   //add media query for mobile
   @keyframes slide-in {
     0% {
