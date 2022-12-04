@@ -28,7 +28,9 @@ export const ProductCard = ({
     });
   };
 
-  const addToFavorites = () => {
+  const addToFavorites = (e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    console.log('Add to favorites');
     // TODO: Add to favorites functionality
   };
 
