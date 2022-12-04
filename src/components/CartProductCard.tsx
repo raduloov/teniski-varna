@@ -18,7 +18,7 @@ export const CartProductCard = ({
   id = 'p1',
   title = 'Product Title',
   description = 'Product Description',
-  price = '88.00',
+  price = '29.99',
   image = 'https://picsum.photos/150/100'
 }: Props) => {
   const navigate = useNavigate();
@@ -35,16 +35,20 @@ export const CartProductCard = ({
       <ProductDetails>
         <h1>{title}</h1>
         <p>{description}</p>
-        <h1>${price}</h1>
-        <QuantitySelector
-          quantity={0}
-          onIncreaseQuantity={function (): void {
-            throw new Error('Function not implemented.');
-          }}
-          onDecreaseQuantity={function (): void {
-            throw new Error('Function not implemented.');
-          }}
-        />
+        <h1>
+          ${price}
+          <QuantitySelector
+            quantity={0}
+            onIncreaseQuantity={(e?: React.MouseEvent) => {
+              e?.stopPropagation();
+              console.log('Increase quantity');
+            }}
+            onDecreaseQuantity={(e?: React.MouseEvent) => {
+              e?.stopPropagation();
+              console.log('Decrease quantity');
+            }}
+          />
+        </h1>
       </ProductDetails>
     </Card>
   );
@@ -59,7 +63,7 @@ const Card = styled.div`
   background-color: ${Color.WHITE};
   gap: 0.3rem;
   border-radius: 10px;
-  padding: 1rem;
+  padding: 0.5rem;
   filter: drop-shadow(0px 2px 10px rgba(0, 0, 0, 0.15));
   :hover {
     transform: scale(1.05);
@@ -86,8 +90,15 @@ const ProductDetails = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  width: 100%;
   margin-left: 1rem;
+
   h1:last-child {
+    display: flex;
     margin-top: auto;
+    justify-items: space-between;
+  }
+  button {
+    padding: 0 8px 0 8px;
   }
 `;
