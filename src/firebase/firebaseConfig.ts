@@ -13,7 +13,7 @@ const firebaseConfig = {
   measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID
 };
 
-console.log('firebaseConfig:', firebaseConfig);
+console.log('firebaseConfig:', process.env.REACT_APP_FIREBASE_KEY);
 console.log('REACT_APP_VERCEL_URL:', process.env.REACT_APP_VERCEL_URL);
 
 // const firebaseConfig = {
