@@ -9,6 +9,7 @@
     "@types/react-dom": "^18.0.0",
     "@types/styled-components": "^5.1.26",
     "firebase": "9.13.0",
+    "firebase-tools": "^11.16.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.7.1",
