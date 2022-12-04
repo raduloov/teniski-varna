@@ -13,6 +13,8 @@ const firebaseConfig = {
   measurementId: `${process.env.FIREBASE_MEASUREMENT_ID}`
 };
 
+console.log('firebaseConfig:', firebaseConfig);
+
 // const firebaseConfig = {
 //   apiKey: 'AIzaSyC-CehY2KTdOVerlTLSJ2PU8Xcx9T-gR5A',
 //   authDomain: 'teniski-varna.firebaseapp.com',
