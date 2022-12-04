@@ -77,13 +77,13 @@ const Card = styled.div`
   }
   h1 {
     font-weight: 600;
-    font-size: 1.1rem;
+    font-size: 1rem;
     display: flex;
     justify-content: space-between;
   }
   p {
     color: ${Color.GRAY};
-    font-size: 0.9rem;
+    font-size: 0.8rem;
   }
 `;
 const ProductDetails = styled.div`
@@ -92,9 +92,12 @@ const ProductDetails = styled.div`
   gap: 0.5rem;
   width: 100%;
   margin-left: 1rem;
+  word-break: break-all;
 
   h1:last-child {
     display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
     margin-top: auto;
     justify-items: space-between;
   }
