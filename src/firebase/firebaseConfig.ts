@@ -4,16 +4,17 @@ import { getFirestore } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
 
 const firebaseConfig = {
-  apiKey: `${process.env.VERCEL_URL_FIREBASE_KEY}`,
-  authDomain: `${process.env.VERCEL_URL_FIREBASE_AUTH_DOMAIN}`,
-  projectId: `${process.env.VERCEL_URL_FIREBASE_PROJECT_ID}`,
-  storageBucket: `${process.env.VERCEL_URL_FIREBASE_STORAGE_BUCKET}`,
-  messagingSenderId: `${process.env.VERCEL_URL_FIREBASE_MESSAGING_SENDER_ID}`,
-  appId: `${process.env.VERCEL_URL_FIREBASE_APP_ID}`,
-  measurementId: `${process.env.VERCEL_URL_FIREBASE_MEASUREMENT_ID}`
+  apiKey: `${process.env.FIREBASE_KEY}`,
+  authDomain: `${process.env.FIREBASE_AUTH_DOMAIN}`,
+  projectId: `${process.env.FIREBASE_PROJECT_ID}`,
+  storageBucket: `${process.env.FIREBASE_STORAGE_BUCKET}`,
+  messagingSenderId: `${process.env.FIREBASE_MESSAGING_SENDER_ID}`,
+  appId: `${process.env.FIREBASE_APP_ID}`,
+  measurementId: `${process.env.FIREBASE_MEASUREMENT_ID}`
 };
 
 console.log('firebaseConfig:', firebaseConfig);
+console.log('REACT_APP_VERCEL_URL:', process.env.REACT_APP_VERCEL_URL);
 
 // const firebaseConfig = {
 //   apiKey: 'AIzaSyC-CehY2KTdOVerlTLSJ2PU8Xcx9T-gR5A',
