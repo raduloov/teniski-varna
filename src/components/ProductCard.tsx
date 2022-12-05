@@ -3,23 +3,14 @@ import { useNavigate } from 'react-router';
 import styled from 'styled-components';
 import { Color } from '../assets/constants';
 import { icons } from '../assets/icons';
+import { Product } from '../hooks/useProducts';
 import { IconButton } from './IconButton';
 
 interface Props {
-  id?: string;
-  title?: string;
-  description?: string;
-  price?: string;
-  image?: string;
+  product: Product;
 }
 
-export const ProductCard = ({
-  id = 'p1',
-  title = 'Product Title',
-  description = 'Product Description',
-  price = '88.00',
-  image
-}: Props) => {
+export const ProductCard = ({ product }: Props) => {
   const navigate = useNavigate();
 
   const navigateToDetails = (productId: string) => {

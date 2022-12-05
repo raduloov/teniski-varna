@@ -4,17 +4,16 @@ import { Banner } from '../components/Banner';
 import { Header } from '../components/Header';
 import { categories, HorizontalScroll } from '../components/HorizontalScroll';
 import { ProductList } from '../components/ProductList';
+import { Product } from '../hooks/useProducts';
 
 interface Props {
-  products: Array<any>;
+  products: Array<Product>;
 }
 
 export const HomeContainer = ({ products }: Props) => {
   const [selectedCategory, setSelectedCategory] = useState<string>(
     categories[0]
   );
-
-  console.log('products:', products);
 
   return (
     <>
