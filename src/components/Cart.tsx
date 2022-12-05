@@ -25,16 +25,16 @@ export const Cart = ({ setShowModal, showModal }: Props) => {
             <CartProductCard />
           </CartContainer>
           <CartFooter>
-            <p>
-              Sub Total:<h1>$220.85</h1>
-            </p>
-            <p>
-              Shipping:<h1>$220.85</h1>
-            </p>
+            <CartPriceContainer>
+              Sub Total:<p>$220.85</p>
+            </CartPriceContainer>
+            <CartPriceContainer>
+              Shipping:<p>$220.85</p>
+            </CartPriceContainer>
             <CartDivider></CartDivider>
-            <p>
-              Bag Total: <h1>$220.85</h1>
-            </p>
+            <CartPriceContainer>
+              Bag Total: <p>$220.85</p>
+            </CartPriceContainer>
             <Button label={'Checkout'}></Button>
           </CartFooter>
         </Modal>
@@ -76,13 +76,13 @@ const CartFooter = styled.div`
   border-top-right-radius: 2.5rem;
   border-top-left-radius: 2.5rem;
   box-shadow: 0px -2px 10px rgba(0, 0, 0, 0.15);
+`;
+const CartPriceContainer = styled.div`
+  display: flex;
   p {
-    display: flex;
-    h1 {
-      margin-left: auto;
-      font-weight: 600;
-      color: #000000;
-    }
+    margin-left: auto;
+    font-weight: 600;
+    color: #000000;
   }
 `;
 const CartDivider = styled.div`

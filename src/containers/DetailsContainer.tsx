@@ -58,7 +58,7 @@ export const DetailsContainer = () => {
           </DescriptionContent>
         </DescriptionWrapper>
         <CtaWrapper>
-          <Price>88.8</Price>
+          <Price>$88.8</Price>
           <Button label="Shop Now" size={ButtonSize.LARGE} />
         </CtaWrapper>
       </BottomSheetContainer>
@@ -79,6 +79,7 @@ const Price = styled.p`
 
 const CtaWrapper = styled.div`
   display: flex;
+  flex-wrap: wrap;
   width: 100%;
   margin-top: 15px;
   gap: 15px;
@@ -103,6 +104,7 @@ const DescriptionWrapper = styled.div`
 
 const SizeAndQuantityWrapper = styled.div`
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   margin-top: 10px;
   margin-bottom: 10px;

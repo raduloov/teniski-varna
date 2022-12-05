@@ -19,7 +19,7 @@ export const CartProductCard = ({
   title = 'Product Title',
   description = 'Product Description',
   price = '29.99',
-  image = 'https://picsum.photos/150/100'
+  image = 'https://picsum.photos/100/100'
 }: Props) => {
   const navigate = useNavigate();
 
@@ -95,6 +95,7 @@ const ProductDetails = styled.div`
 
   h1:last-child {
     display: flex;
+    flex-wrap: wrap;
     margin-top: auto;
     justify-items: space-between;
   }

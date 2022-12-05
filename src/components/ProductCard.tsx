@@ -18,7 +18,7 @@ export const ProductCard = ({
   title = 'Product Title',
   description = 'Product Description',
   price = '88.00',
-  image = 'https://picsum.photos/150/200'
+  image
 }: Props) => {
   const navigate = useNavigate();
 
@@ -39,10 +39,10 @@ export const ProductCard = ({
       <img src={image} />
       <h1>{title}</h1>
       <p>{description}</p>
-      <h1>{price}</h1>
-      <FavoriteButton>
+      <BottomCardContainer>
+        <h1>${price}</h1>
         <IconButton icon={icons.FaRegHeart} onClick={addToFavorites} />
-      </FavoriteButton>
+      </BottomCardContainer>
     </Card>
   );
 };
@@ -56,7 +56,7 @@ const Card = styled.div`
   background-color: ${Color.WHITE};
   gap: 0.3rem;
   border-radius: 10px;
-  padding: 1rem;
+  padding: 0.5rem;
   filter: drop-shadow(0px 2px 10px rgba(0, 0, 0, 0.15));
   :hover {
     transform: scale(1.05);
@@ -80,8 +80,10 @@ const Card = styled.div`
   }
 `;
 
-const FavoriteButton = styled.div`
-  position: absolute;
-  bottom: 0.5rem;
-  right: 0.5rem;
+const BottomCardContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  h1 {
+    margin-top: auto;
+  }
 `;

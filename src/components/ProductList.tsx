@@ -25,7 +25,15 @@ export const ProductList = ({ products }: Props) => {
   return (
     <ProductsContainer>
       {products.map((product) => {
-        return <ProductCard image={images[0]} key={product.id} />;
+        return (
+          <ProductCard
+            image={images[0]}
+            key={product.id}
+            title={product.title}
+            price={product.price}
+            description={product.description}
+          />
+        );
       })}
     </ProductsContainer>
   );

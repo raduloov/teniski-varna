@@ -37,5 +37,5 @@ export const HomePage = () => {
     // getImages();
   }, []);
 
-  return <HomeContainer products={products} />;
+  return <>{products.length > 0 && <HomeContainer products={products} />}</>;
 };
