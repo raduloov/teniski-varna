@@ -1,31 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { ProductCard } from './ProductCard';
-import { ref, getDownloadURL, listAll } from 'firebase/storage';
-import { storage } from '../firebase/firebaseConfig';
+import { Product } from '../hooks/useProducts';
 
 interface Props {
-  products: Array<any>;
+  products: Array<Product>;
 }
 
 export const ProductList = ({ products }: Props) => {
-  const [images, setImages] = useState<Array<string>>([]);
-
-  const imagesListRef = ref(storage, 'images/');
-  useEffect(() => {
-    listAll(imagesListRef).then((response) => {
-      response.items.forEach((item) => {
-        getDownloadURL(item).then((url) => {
-          setImages((prev) => [...prev, url]);
-        });
-      });
-    });
-  }, []);
-
   return (
     <ProductsContainer>
       {products.map((product) => {
-        return <ProductCard image={images[0]} key={product.id} />;
+        return <ProductCard product={product} key={product.id} />;
       })}
     </ProductsContainer>
   );

@@ -3,23 +3,14 @@ import { useNavigate } from 'react-router';
 import styled from 'styled-components';
 import { Color } from '../assets/constants';
 import { icons } from '../assets/icons';
+import { Product } from '../hooks/useProducts';
 import { IconButton } from './IconButton';
 
 interface Props {
-  id?: string;
-  title?: string;
-  description?: string;
-  price?: string;
-  image?: string;
+  product: Product;
 }
 
-export const ProductCard = ({
-  id = 'p1',
-  title = 'Product Title',
-  description = 'Product Description',
-  price = '88.00',
-  image = 'https://picsum.photos/150/200'
-}: Props) => {
+export const ProductCard = ({ product }: Props) => {
   const navigate = useNavigate();
 
   const navigateToDetails = (productId: string) => {
@@ -35,11 +26,11 @@ export const ProductCard = ({
   };
 
   return (
-    <Card onClick={() => navigateToDetails(id)}>
-      <img src={image} />
-      <h1>{title}</h1>
-      <p>{description}</p>
-      <h1>{price}</h1>
+    <Card onClick={() => navigateToDetails(product.id)}>
+      <img src={product.image} />
+      <h1>{product.title}</h1>
+      <p>{product.description}</p>
+      <h1>{product.price}</h1>
       <FavoriteButton>
         <IconButton icon={icons.FaRegHeart} onClick={addToFavorites} />
       </FavoriteButton>
