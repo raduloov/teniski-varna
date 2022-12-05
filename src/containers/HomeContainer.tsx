@@ -4,8 +4,13 @@ import { Banner } from '../components/Banner';
 import { Header } from '../components/Header';
 import { categories, HorizontalScroll } from '../components/HorizontalScroll';
 import { ProductList } from '../components/ProductList';
+import { Product } from '../hooks/useProducts';
 
-export const HomeContainer = () => {
+interface Props {
+  products: Array<Product>;
+}
+
+export const HomeContainer = ({ products }: Props) => {
   const [selectedCategory, setSelectedCategory] = useState<string>(
     categories[0]
   );
@@ -19,14 +24,14 @@ export const HomeContainer = () => {
         selected={selectedCategory}
         onSelectCategory={(category) => setSelectedCategory(category)}
       />
-      <Container>
-        <ProductList />
-      </Container>
+      <ProductListContainer>
+        <ProductList products={products} />
+      </ProductListContainer>
     </>
   );
 };
 
-const Container = styled.div`
+const ProductListContainer = styled.div`
   z-index: 10;
   background-color: transparent;
   margin-top: 10px;

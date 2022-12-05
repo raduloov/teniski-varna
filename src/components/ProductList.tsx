@@ -1,18 +1,18 @@
 import React from 'react';
 import styled from 'styled-components';
 import { ProductCard } from './ProductCard';
+import { Product } from '../hooks/useProducts';
 
-export const ProductList = () => {
+interface Props {
+  products: Array<Product>;
+}
+
+export const ProductList = ({ products }: Props) => {
   return (
     <ProductsContainer>
-      <ProductCard />
-      <ProductCard />
-      <ProductCard />
-      <ProductCard />
-      <ProductCard />
-      <ProductCard />
-      <ProductCard />
-      <ProductCard />
+      {products.map((product) => {
+        return <ProductCard product={product} key={product.id} />;
+      })}
     </ProductsContainer>
   );
 };
