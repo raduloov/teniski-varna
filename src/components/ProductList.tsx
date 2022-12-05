@@ -21,7 +21,7 @@ export const ProductList = ({ products }: Props) => {
       });
     });
   }, []);
-
+  console.log(images);
   return (
     <ProductsContainer>
       {products.map((product) => {

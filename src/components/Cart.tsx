@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import { Modal } from './Modal';
 import { CartProductCard } from './CartProductCard';
 import { Button } from './Button';
+import { useSelector } from 'react-redux';
+import { InitialStateType } from '../store/store';
 
 interface Props {
   showModal: boolean;
@@ -10,6 +12,8 @@ interface Props {
 }
 
 export const Cart = ({ setShowModal, showModal }: Props) => {
+  const cart = useSelector((state: InitialStateType) => state);
+  console.log(cart);
   return (
     <>
       {showModal && (

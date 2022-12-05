@@ -8,8 +8,11 @@ import { IconButton } from '../components/IconButton';
 import { QuantitySelector } from '../components/QuantitySelector';
 import { RatingStars } from '../components/RatingStars';
 import { SizeLabel, SizeSelector } from '../components/SizeSelector';
+import { userActions } from '../store/store';
+import { useDispatch } from 'react-redux';
 
 export const DetailsContainer = () => {
+  const dispatch = useDispatch();
   const [selectedSize, setSelectedSize] = useState<SizeLabel | null>(null);
   const [selectedQuality, setSelectedQuality] = useState<number>(1);
   const { productId } = useParams();
@@ -22,6 +25,9 @@ export const DetailsContainer = () => {
       return;
     }
     setSelectedQuality((q) => (q -= 1));
+  };
+  const addToCartHandler = () => {
+    dispatch(userActions.addToCart({ productId, quantity: selectedQuality }));
   };
 
   return (
@@ -59,7 +65,11 @@ export const DetailsContainer = () => {
         </DescriptionWrapper>
         <CtaWrapper>
           <Price>$88.8</Price>
-          <Button label="Shop Now" size={ButtonSize.LARGE} />
+          <Button
+            label="Shop Now"
+            size={ButtonSize.LARGE}
+            onClick={addToCartHandler}
+          />
         </CtaWrapper>
       </BottomSheetContainer>
     </Container>
