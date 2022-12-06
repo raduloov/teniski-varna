@@ -19,10 +19,7 @@ export const QuantitySelector = ({
 }: Props) => {
   return (
     <Wrapper>
-      <Button
-        color={quantity <= 1 ? Color.MEDIUM_GRAY : Color.BLACK}
-        onClick={onDecreaseQuantity}
-      >
+      <Button color={Color.MEDIUM_GRAY} onClick={onDecreaseQuantity}>
         -
       </Button>
       <Quantity>{quantity}</Quantity>

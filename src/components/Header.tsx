@@ -5,21 +5,21 @@ import { ReactComponent as Logo } from '../assets/images/logo.svg';
 import { icons } from '../assets/icons';
 import { Color } from '../assets/constants';
 import { Cart } from './Cart';
+import { useSelector } from 'react-redux';
+import { InitialStateType } from '../store/store';
 
-interface Props {
-  cartItemsCount?: number;
-}
-
-export const Header = ({ cartItemsCount = 3 }: Props) => {
+export const Header = () => {
   const [showModal, setShowModal] = useState<boolean>(false);
+  const cart = useSelector((state: InitialStateType) => state);
+  console.log(cart);
   return (
     <HeaderContainer>
-      <Cart setShowModal={setShowModal} showModal={showModal} />
+      <Cart cart={cart} setShowModal={setShowModal} showModal={showModal} />
       <LogoContainer>
         <Logo />
         <CartContainer onClick={() => setShowModal(true)}>
           <icons.MdOutlineShoppingBag />
-          <CartItemTick>{cartItemsCount}</CartItemTick>
+          <CartItemTick>{cart.length}</CartItemTick>
         </CartContainer>
       </LogoContainer>
       <Input icon={icons.FaSearch} />
