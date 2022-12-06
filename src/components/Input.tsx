@@ -25,7 +25,7 @@ export const Input = ({
 
 const InputContainer = styled.div`
   display: flex;
-  padding: 0.75rem;
+  padding: 0.3rem;
   background-color: ${Color.LIGHT_GRAY};
   border-radius: 2rem;
   position: relative;

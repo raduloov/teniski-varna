@@ -57,7 +57,6 @@ const BackDropCont = styled.div`
   z-index: 9;
 `;
 const ModalOverlayCont = styled.div`
-  overflow-y: scroll;
   position: fixed;
   top: 40%;
   left: 50%;

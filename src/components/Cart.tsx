@@ -11,41 +11,55 @@ interface Props {
 }
 
 export const Cart = ({ setShowModal, showModal, cart }: Props) => {
+  const cartPrice = cart.reduce((acc, product) => {
+    return acc + product.price * product.quantity;
+  }, 0);
+  const shippingPrice = cart.length > 0 ? 4.99 : 0;
+  const totalPrice = cartPrice + shippingPrice;
   return (
     <>
       {showModal && (
         <Modal onClose={() => setShowModal(false)}>
-          <CartHeader>My Cart</CartHeader>
-          <CartContainer>
-            <>
-              {cart.length > 0 &&
-                cart.map((product) => (
-                  <CartProductCard key={product.id} product={product} />
-                ))}
-            </>
-          </CartContainer>
-          <CartFooter>
-            <CartPriceContainer>
-              Sub Total:<p>$220.85</p>
-            </CartPriceContainer>
-            <CartPriceContainer>
-              Shipping:<p>$220.85</p>
-            </CartPriceContainer>
-            <CartDivider></CartDivider>
-            <CartPriceContainer>
-              Bag Total: <p>$220.85</p>
-            </CartPriceContainer>
-            <Button label={'Checkout'}></Button>
-          </CartFooter>
+          <Teeest>
+            <CartHeader>My Cart</CartHeader>
+
+            <CartContainer>
+              <>
+                {cart.length > 0 &&
+                  cart.map((product) => (
+                    <CartProductCard key={product.id} product={product} />
+                  ))}
+              </>
+            </CartContainer>
+            <CartFooter>
+              <CartPriceContainer>
+                Sub Total:<p>${cartPrice.toFixed(2)}</p>
+              </CartPriceContainer>
+              <CartPriceContainer>
+                Shipping:<p>${shippingPrice}</p>
+              </CartPriceContainer>
+              <CartDivider></CartDivider>
+              <CartPriceContainer>
+                Bag Total: <p>${totalPrice.toFixed(2)}</p>
+              </CartPriceContainer>
+              <Button label={'Checkout'}></Button>
+            </CartFooter>
+          </Teeest>
         </Modal>
       )}
     </>
   );
 };
-
+const Teeest = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 92vh;
+  width: 100%;
+`;
 const CartHeader = styled.h1`
   position: absolute;
   color: #000000;
+  background-color: transparent;
   font-size: 1.25rem;
   font-weight: 500;
   top: 6.5%;
@@ -53,18 +67,19 @@ const CartHeader = styled.h1`
 `;
 const CartContainer = styled.div`
   padding: 2rem;
-  position: relative;
   display: flex;
+  height: 100%;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   margin-top: 1rem;
   gap: 1rem;
+  overflow-y: auto;
 `;
 const CartFooter = styled.div`
+  margin-top: auto;
   background-color: #ffffff;
   z-index: 12;
-  position: sticky;
   bottom: 0;
   left: 0;
   width: 100%;
