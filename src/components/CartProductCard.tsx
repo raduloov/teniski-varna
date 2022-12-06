@@ -11,7 +11,6 @@ import { useDispatch } from 'react-redux';
 export const CartProductCard = ({ product }: any) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  console.log(product);
   const navigateToDetails = (productId: string) => {
     navigate(`/products/${productId}`, {
       state: { productId }
