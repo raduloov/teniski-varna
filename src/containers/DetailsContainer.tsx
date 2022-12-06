@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import { useNavigate, useParams } from 'react-router';
+import React from 'react';
 import styled from 'styled-components';
 import { Color } from '../assets/constants';
 import { icons } from '../assets/icons';
@@ -9,25 +8,27 @@ import { QuantitySelector } from '../components/QuantitySelector';
 import { RatingStars } from '../components/RatingStars';
 import { SizeLabel, SizeSelector } from '../components/SizeSelector';
 
-export const DetailsContainer = () => {
-  const [selectedSize, setSelectedSize] = useState<SizeLabel | null>(null);
-  const [selectedQuality, setSelectedQuality] = useState<number>(1);
-  const { productId } = useParams();
-  const navigate = useNavigate();
+interface Props {
+  selectedSize: SizeLabel | null;
+  onSelectSize: (size: SizeLabel) => void;
+  selectedQuality: number;
+  onGoBack: () => void;
+  onIncreaseQuantity: () => void;
+  onDecreaseQuantity: () => void;
+}
 
-  const goBack = () => navigate(-1);
-  const increaseQuantity = () => setSelectedQuality((q) => (q += 1));
-  const decreaseQuantity = () => {
-    if (selectedQuality <= 1) {
-      return;
-    }
-    setSelectedQuality((q) => (q -= 1));
-  };
-
+export const DetailsContainer = ({
+  selectedSize,
+  onSelectSize,
+  selectedQuality,
+  onGoBack,
+  onIncreaseQuantity,
+  onDecreaseQuantity
+}: Props) => {
   return (
     <Container>
       <ActionButtonsWrapper>
-        <IconButton icon={icons.FaChevronLeft} onClick={goBack} />
+        <IconButton icon={icons.FaChevronLeft} onClick={onGoBack} />
       </ActionButtonsWrapper>
       <BottomSheetContainer>
         <HeaderWrapper>
@@ -41,12 +42,12 @@ export const DetailsContainer = () => {
         <SizeAndQuantityWrapper>
           <SizeSelector
             selectedSize={selectedSize}
-            onSelectSize={(size) => setSelectedSize(size)}
+            onSelectSize={(size) => onSelectSize(size)}
           />
           <QuantitySelector
             quantity={selectedQuality}
-            onIncreaseQuantity={increaseQuantity}
-            onDecreaseQuantity={decreaseQuantity}
+            onIncreaseQuantity={onIncreaseQuantity}
+            onDecreaseQuantity={onDecreaseQuantity}
           />
         </SizeAndQuantityWrapper>
         <DescriptionWrapper>

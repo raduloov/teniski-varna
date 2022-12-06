@@ -1,5 +1,5 @@
 import React from 'react';
-import styled, { css } from 'styled-components';
+import styled, { css, FlattenSimpleInterpolation } from 'styled-components';
 import { Color } from '../assets/constants';
 
 interface Props {
@@ -13,7 +13,7 @@ interface Props {
 interface ButtonContainerProps {
   backgroundColor?: Color;
   type?: ButtonType;
-  size: any; // TODO Yavor: Set type
+  size: FlattenSimpleInterpolation; // TODO Yavor: Set type
 }
 
 export enum ButtonType {
@@ -43,7 +43,7 @@ const ButtonContainer = ({
   size = ButtonSize.MEDIUM,
   onClick
 }: Props) => {
-  const buttonSize = getButtonSize(size);
+  const buttonSize: FlattenSimpleInterpolation = getButtonSize(size);
 
   switch (type) {
     case ButtonType.PRIMARY:
@@ -79,10 +79,10 @@ const ButtonContainer = ({
   }
 };
 
-const getButtonSize = (size: ButtonSize) => {
+const getButtonSize = (size: ButtonSize): FlattenSimpleInterpolation => {
   switch (size) {
     case ButtonSize.SMALL:
-      return;
+      return css``;
     case ButtonSize.MEDIUM:
       return css`
         padding-top: 16px;
