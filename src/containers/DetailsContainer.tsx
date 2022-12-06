@@ -15,6 +15,7 @@ interface Props {
   onGoBack: () => void;
   onIncreaseQuantity: () => void;
   onDecreaseQuantity: () => void;
+  product: any;
 }
 
 export const DetailsContainer = ({
@@ -23,8 +24,10 @@ export const DetailsContainer = ({
   selectedQuality,
   onGoBack,
   onIncreaseQuantity,
-  onDecreaseQuantity
+  onDecreaseQuantity,
+  product
 }: Props) => {
+  console.log(product);
   return (
     <Container>
       <ActionButtonsWrapper>
@@ -33,8 +36,8 @@ export const DetailsContainer = ({
       <BottomSheetContainer>
         <HeaderWrapper>
           <TitleWrapper>
-            <Title>Nike Jumpman</Title>
-            <Description>Men&apos;s Gillet</Description>
+            <Title>{product.title}</Title>
+            <Description>{product.description}</Description>
           </TitleWrapper>
           <RatingStars />
         </HeaderWrapper>
@@ -59,7 +62,7 @@ export const DetailsContainer = ({
           </DescriptionContent>
         </DescriptionWrapper>
         <CtaWrapper>
-          <Price>88.8</Price>
+          <Price>${product.price}</Price>
           <Button label="Shop Now" size={ButtonSize.LARGE} />
         </CtaWrapper>
       </BottomSheetContainer>

@@ -23,7 +23,7 @@ export const DetailsPage = () => {
     setSelectedQuality((q) => (q -= 1));
   };
 
-  const product = useProducts(productId);
+  const product = useProducts(productId).products[0];
   console.log(product);
   return (
     <DetailsContainer
@@ -33,6 +33,7 @@ export const DetailsPage = () => {
       onGoBack={goBack}
       onIncreaseQuantity={increaseQuantity}
       onDecreaseQuantity={decreaseQuantity}
+      product={product}
     />
   );
 };
