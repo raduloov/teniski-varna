@@ -7,6 +7,7 @@ import { IconButton } from '../components/IconButton';
 import { QuantitySelector } from '../components/QuantitySelector';
 import { RatingStars } from '../components/RatingStars';
 import { SizeLabel, SizeSelector } from '../components/SizeSelector';
+import { Product } from '../hooks/useProducts';
 
 interface Props {
   selectedSize: SizeLabel | null;
@@ -15,7 +16,7 @@ interface Props {
   onGoBack: () => void;
   onIncreaseQuantity: () => void;
   onDecreaseQuantity: () => void;
-  product: any;
+  product: Product;
 }
 
 export const DetailsContainer = ({
