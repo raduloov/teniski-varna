@@ -4,6 +4,7 @@ import { SizeLabel } from '../components/SizeSelector';
 import { DetailsContainer } from '../containers/DetailsContainer';
 import { collection } from 'firebase/firestore';
 import { db } from '../firebase/firebaseConfig';
+import { useProducts } from '../hooks/useProducts';
 
 export const DetailsPage = () => {
   const [selectedSize, setSelectedSize] = useState<SizeLabel | null>(null);
@@ -22,8 +23,8 @@ export const DetailsPage = () => {
     setSelectedQuality((q) => (q -= 1));
   };
 
-  const getProduct = async () => {};
-
+  const product = useProducts(productId);
+  console.log(product);
   return (
     <DetailsContainer
       selectedSize={selectedSize}
