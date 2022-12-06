@@ -26,14 +26,14 @@ export const ProductCard = ({ product }: Props) => {
   };
 
   return (
-    <Card onClick={() => navigateToDetails(id)}>
-      <img src={image} />
-      <h1>{title}</h1>
-      <p>{description}</p>
-      <BottomCardContainer>
-        <h1>${price}</h1>
+    <Card onClick={() => navigateToDetails(product.id)}>
+      <img src={product.image} />
+      <h1>{product.title}</h1>
+      <p>{product.description}</p>
+      <h1>{product.price}</h1>
+      <FavoriteButton>
         <IconButton icon={icons.FaRegHeart} onClick={addToFavorites} />
-      </BottomCardContainer>
+      </FavoriteButton>
     </Card>
   );
 };
@@ -47,7 +47,7 @@ const Card = styled.div`
   background-color: ${Color.WHITE};
   gap: 0.3rem;
   border-radius: 10px;
-  padding: 0.5rem;
+  padding: 1rem;
   filter: drop-shadow(0px 2px 10px rgba(0, 0, 0, 0.15));
   :hover {
     transform: scale(1.05);
@@ -71,10 +71,8 @@ const Card = styled.div`
   }
 `;
 
-const BottomCardContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-  h1 {
-    margin-top: auto;
-  }
+const FavoriteButton = styled.div`
+  position: absolute;
+  bottom: 0.5rem;
+  right: 0.5rem;
 `;

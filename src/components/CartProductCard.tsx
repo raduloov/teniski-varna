@@ -3,49 +3,43 @@ import { useNavigate } from 'react-router';
 import styled from 'styled-components';
 import { Color } from '../assets/constants';
 import { icons } from '../assets/icons';
+import { userActions } from '../store/store';
 import { IconButton } from './IconButton';
 import { QuantitySelector } from './QuantitySelector';
+import { useDispatch } from 'react-redux';
 
-interface Props {
-  id?: string;
-  title?: string;
-  description?: string;
-  price?: string;
-  image?: string;
-}
-
-export const CartProductCard = ({
-  id = 'p1',
-  title = 'Product Title',
-  description = 'Product Description',
-  price = '29.99',
-  image = 'https://picsum.photos/100/100'
-}: Props) => {
+export const CartProductCard = ({ product }: any) => {
   const navigate = useNavigate();
-
+  const dispatch = useDispatch();
+  console.log(product);
   const navigateToDetails = (productId: string) => {
     navigate(`/products/${productId}`, {
       state: { productId }
     });
   };
-
+  const increaseQuantity = () => {
+    dispatch(userActions.addToCart({ product }));
+  };
+  const decreaseQuantity = () => {
+    dispatch(userActions.removeFromCart({ product }));
+  };
   return (
-    <Card onClick={() => navigateToDetails(id)}>
-      <img src={image} />
+    <Card onClick={() => navigateToDetails(product.id)}>
+      <img src={product.image} />
       <ProductDetails>
-        <h1>{title}</h1>
-        <p>{description}</p>
+        <h1>{product.title}</h1>
+        <p>{product.description}</p>
         <h1>
-          ${price}
+          ${product.price}
           <QuantitySelector
-            quantity={0}
+            quantity={product.quantity}
             onIncreaseQuantity={(e?: React.MouseEvent) => {
               e?.stopPropagation();
-              console.log('Increase quantity');
+              increaseQuantity();
             }}
             onDecreaseQuantity={(e?: React.MouseEvent) => {
               e?.stopPropagation();
-              console.log('Decrease quantity');
+              decreaseQuantity();
             }}
           />
         </h1>
@@ -71,6 +65,8 @@ const Card = styled.div`
   }
   transition: ease-out 0.2s;
   img {
+    width: 100px;
+    height: 100px;
     background-size: cover;
     object-fit: cover;
     border-radius: 10px;

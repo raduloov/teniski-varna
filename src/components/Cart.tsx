@@ -3,30 +3,26 @@ import styled from 'styled-components';
 import { Modal } from './Modal';
 import { CartProductCard } from './CartProductCard';
 import { Button } from './Button';
-import { useSelector } from 'react-redux';
-import { InitialStateType } from '../store/store';
 
 interface Props {
   showModal: boolean;
   setShowModal: (showModal: boolean) => void;
+  cart: Array<any>;
 }
 
-export const Cart = ({ setShowModal, showModal }: Props) => {
-  const cart = useSelector((state: InitialStateType) => state);
-  console.log(cart);
+export const Cart = ({ setShowModal, showModal, cart }: Props) => {
   return (
     <>
       {showModal && (
         <Modal onClose={() => setShowModal(false)}>
           <CartHeader>My Cart</CartHeader>
           <CartContainer>
-            <CartProductCard />
-            <CartProductCard />
-            <CartProductCard />
-            <CartProductCard />
-            <CartProductCard />
-            <CartProductCard />
-            <CartProductCard />
+            <>
+              {cart.length > 0 &&
+                cart.map((product) => (
+                  <CartProductCard key={product.id} product={product} />
+                ))}
+            </>
           </CartContainer>
           <CartFooter>
             <CartPriceContainer>
