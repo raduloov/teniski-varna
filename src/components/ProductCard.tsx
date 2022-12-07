@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
 import styled from 'styled-components';
 import { Color } from '../assets/constants';
@@ -12,7 +12,9 @@ interface Props {
 
 export const ProductCard = ({ product }: Props) => {
   const navigate = useNavigate();
-
+  const [favorites, setFavorites] = useState(
+    JSON.parse(localStorage.getItem('Favorites') || '[]')
+  );
   const navigateToDetails = (productId: string) => {
     navigate(`/products/${productId}`, {
       state: { productId }
@@ -21,8 +23,21 @@ export const ProductCard = ({ product }: Props) => {
 
   const addToFavorites = (e?: React.MouseEvent) => {
     e?.stopPropagation();
-    console.log('Add to favorites');
-    // TODO: Add to favorites functionality
+    const favorites = localStorage.getItem('Favorites');
+    const favoritesArray = JSON.parse(favorites || '[]');
+    if (favoritesArray.find((item: Product) => item.id === product.id)) {
+      const newFavorites = favoritesArray.filter(
+        (item: Product) => item.id !== product.id
+      );
+      localStorage.setItem('Favorites', JSON.stringify(newFavorites));
+      setFavorites(newFavorites);
+    } else {
+      localStorage.setItem(
+        'Favorites',
+        JSON.stringify([...favoritesArray, product])
+      );
+      setFavorites([...favoritesArray, product]);
+    }
   };
 
   return (
@@ -32,7 +47,11 @@ export const ProductCard = ({ product }: Props) => {
       <p>{product.description}</p>
       <h1>{product.price}</h1>
       <FavoriteButton>
-        <IconButton icon={icons.FaRegHeart} onClick={addToFavorites} />
+        {favorites.find((item: Product) => item.id === product.id) ? (
+          <IconButton icon={icons.FcLike} onClick={addToFavorites} />
+        ) : (
+          <IconButton icon={icons.FaRegHeart} onClick={addToFavorites} />
+        )}
       </FavoriteButton>
     </Card>
   );

@@ -3,6 +3,7 @@ import { MdOutlineShoppingBag } from 'react-icons/md';
 import { FaChevronLeft } from 'react-icons/fa';
 import { RiCloseFill } from 'react-icons/ri';
 import { BsStar, BsStarFill, BsStarHalf } from 'react-icons/bs';
+import { FcLike } from 'react-icons/fc';
 
 export const icons = {
   FaSearch,
@@ -12,5 +13,6 @@ export const icons = {
   RiCloseFill,
   BsStar,
   BsStarFill,
-  BsStarHalf
+  BsStarHalf,
+  FcLike
 };
