@@ -3,19 +3,21 @@ import styled from 'styled-components';
 import { Modal } from './Modal';
 import { CartProductCard } from './CartProductCard';
 import { Button } from './Button';
+import { CartProduct } from '../domain/mappers/cartProductMapper';
 
 interface Props {
   showModal: boolean;
   setShowModal: (showModal: boolean) => void;
-  cart: Array<any>;
+  cartItems: Array<CartProduct>;
 }
 
-export const Cart = ({ setShowModal, showModal, cart }: Props) => {
-  const cartPrice = cart.reduce((acc, product) => {
+export const Cart = ({ setShowModal, showModal, cartItems }: Props) => {
+  const cartPrice = cartItems.reduce((acc, product) => {
     return acc + product.price * product.quantity;
   }, 0);
-  const shippingPrice = cart.length > 0 ? 4.99 : 0;
+  const shippingPrice = cartItems.length > 0 ? 4.99 : 0;
   const totalPrice = cartPrice + shippingPrice;
+
   return (
     <>
       {showModal && (
@@ -25,8 +27,8 @@ export const Cart = ({ setShowModal, showModal, cart }: Props) => {
 
             <CartContainer>
               <>
-                {cart.length > 0 &&
-                  cart.map((product) => (
+                {cartItems.length > 0 &&
+                  cartItems.map((product) => (
                     <CartProductCard key={product.id} product={product} />
                   ))}
               </>
@@ -50,12 +52,14 @@ export const Cart = ({ setShowModal, showModal, cart }: Props) => {
     </>
   );
 };
+
 const Teeest = styled.div`
   display: flex;
   flex-direction: column;
   height: 92vh;
   width: 100%;
 `;
+
 const CartHeader = styled.h1`
   position: absolute;
   color: #000000;
@@ -65,6 +69,7 @@ const CartHeader = styled.h1`
   top: 6.5%;
   right: calc(50% + -32px);
 `;
+
 const CartContainer = styled.div`
   padding: 2rem;
   display: flex;
@@ -76,6 +81,7 @@ const CartContainer = styled.div`
   gap: 1rem;
   overflow-y: auto;
 `;
+
 const CartFooter = styled.div`
   margin-top: auto;
   background-color: #ffffff;
@@ -92,6 +98,7 @@ const CartFooter = styled.div`
   border-top-left-radius: 2.5rem;
   box-shadow: 0px -2px 10px rgba(0, 0, 0, 0.15);
 `;
+
 const CartPriceContainer = styled.div`
   display: flex;
   p {
@@ -100,6 +107,7 @@ const CartPriceContainer = styled.div`
     color: #000000;
   }
 `;
+
 const CartDivider = styled.div`
   width: 100%;
   height: 2px;

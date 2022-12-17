@@ -2,26 +2,33 @@ import React from 'react';
 import { useNavigate } from 'react-router';
 import styled from 'styled-components';
 import { Color } from '../assets/constants';
-import { icons } from '../assets/icons';
-import { userActions } from '../store/store';
-import { IconButton } from './IconButton';
+import { cartActions } from '../store/cartSlice';
 import { QuantitySelector } from './QuantitySelector';
 import { useDispatch } from 'react-redux';
+import { CartProduct } from '../domain/mappers/cartProductMapper';
 
-export const CartProductCard = ({ product }: any) => {
+interface Props {
+  product: CartProduct;
+}
+
+export const CartProductCard = ({ product }: Props) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
   const navigateToDetails = (productId: string) => {
     navigate(`/products/${productId}`, {
       state: { productId }
     });
   };
+
   const increaseQuantity = () => {
-    dispatch(userActions.addToCart({ product }));
+    dispatch(cartActions.addToCart({ product }));
   };
+
   const decreaseQuantity = () => {
-    dispatch(userActions.removeFromCart({ product }));
+    dispatch(cartActions.removeFromCart({ product }));
   };
+
   return (
     <Card onClick={() => navigateToDetails(product.id)}>
       <img src={product.image} />
@@ -81,6 +88,7 @@ const Card = styled.div`
     font-size: 0.8rem;
   }
 `;
+
 const ProductDetails = styled.div`
   display: flex;
   flex-direction: column;

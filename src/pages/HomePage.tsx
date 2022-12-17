@@ -5,5 +5,5 @@ import { useProducts } from '../hooks/useProducts';
 export const HomePage = () => {
   const { products } = useProducts();
 
-  return <>{products.length > 0 && <HomeContainer products={products} />}</>;
+  return <HomeContainer products={products} />;
 };

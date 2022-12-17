@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
+import { Product } from '../domain/models/ProductDTO';
 import { ProductCard } from './ProductCard';
-import { Product } from '../hooks/useProducts';
 
 interface Props {
   products: Array<Product>;

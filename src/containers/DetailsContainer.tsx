@@ -6,17 +6,18 @@ import { Button, ButtonSize } from '../components/Button';
 import { IconButton } from '../components/IconButton';
 import { QuantitySelector } from '../components/QuantitySelector';
 import { RatingStars } from '../components/RatingStars';
-import { SizeLabel, SizeSelector } from '../components/SizeSelector';
-import { userActions } from '../store/store';
+import { SizeSelector } from '../components/SizeSelector';
+import { cartActions } from '../store/cartSlice';
 import { useDispatch } from 'react-redux';
+import { Product, TShirtSize } from '../domain/models/ProductDTO';
 interface Props {
-  selectedSize: SizeLabel | null;
-  onSelectSize: (size: SizeLabel) => void;
+  product: Product;
+  selectedSize: TShirtSize | null;
+  onSelectSize: (size: TShirtSize) => void;
   selectedQuantity: number;
   onGoBack: () => void;
   onIncreaseQuantity: () => void;
   onDecreaseQuantity: () => void;
-  product: any;
 }
 
 export const DetailsContainer = ({
@@ -29,9 +30,11 @@ export const DetailsContainer = ({
   product
 }: Props) => {
   const dispatch = useDispatch();
+
   const addToCartHandler = () => {
-    dispatch(userActions.addToCart({ product, selectedQuantity }));
+    dispatch(cartActions.addToCart({ product, selectedQuantity }));
   };
+
   return (
     <Container>
       <ActionButtonsWrapper>
