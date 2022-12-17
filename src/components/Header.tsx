@@ -6,20 +6,24 @@ import { icons } from '../assets/icons';
 import { Color } from '../assets/constants';
 import { Cart } from './Cart';
 import { useSelector } from 'react-redux';
-import { InitialStateType } from '../store/store';
+import { CartProduct } from '../domain/mappers/cartProductMapper';
 
 export const Header = () => {
   const [showModal, setShowModal] = useState<boolean>(false);
-  const cart = useSelector((state: InitialStateType) => state);
-  console.log(cart);
+  const cartItems = useSelector((state: CartProduct[]) => state);
+
   return (
     <HeaderContainer>
-      <Cart cart={cart} setShowModal={setShowModal} showModal={showModal} />
+      <Cart
+        cartItems={cartItems}
+        setShowModal={setShowModal}
+        showModal={showModal}
+      />
       <LogoContainer>
         <Logo />
         <CartContainer onClick={() => setShowModal(true)}>
           <icons.MdOutlineShoppingBag />
-          <CartItemTick>{cart.length}</CartItemTick>
+          <CartItemTick>{cartItems.length}</CartItemTick>
         </CartContainer>
       </LogoContainer>
       <Input icon={icons.FaSearch} />

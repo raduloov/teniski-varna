@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router';
 import styled from 'styled-components';
 import { Color } from '../assets/constants';
 import { icons } from '../assets/icons';
-import { Product } from '../hooks/useProducts';
+import { Product } from '../domain/models/ProductDTO';
 import { IconButton } from './IconButton';
 
 interface Props {
@@ -40,6 +40,8 @@ export const ProductCard = ({ product }: Props) => {
     }
   };
 
+  const isFavorite = favorites.find((item: Product) => item.id === product.id);
+
   return (
     <Card onClick={() => navigateToDetails(product.id)}>
       <img src={product.image} />
@@ -47,7 +49,7 @@ export const ProductCard = ({ product }: Props) => {
       <p>{product.description}</p>
       <h1>{product.price}</h1>
       <FavoriteButton>
-        {favorites.find((item: Product) => item.id === product.id) ? (
+        {isFavorite ? (
           <IconButton icon={icons.FcLike} onClick={addToFavorites} />
         ) : (
           <IconButton icon={icons.FaRegHeart} onClick={addToFavorites} />

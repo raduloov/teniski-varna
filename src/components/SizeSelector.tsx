@@ -1,27 +1,21 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Color } from '../assets/constants';
-
-export enum SizeLabel {
-  S = 'S',
-  M = 'M',
-  L = 'L',
-  XL = 'XL'
-}
+import { TShirtSize } from '../domain/models/ProductDTO';
 
 interface ButtonWrapperProps {
   selected: boolean;
 }
 
 interface SizeButtonProps {
-  label: SizeLabel;
+  label: TShirtSize;
   selected: boolean;
-  onSelectSize: (size: SizeLabel) => void;
+  onSelectSize: (size: TShirtSize) => void;
 }
 
 interface SizeSelectorProps {
-  selectedSize: SizeLabel | null;
-  onSelectSize: (size: SizeLabel) => void;
+  selectedSize: TShirtSize | null;
+  onSelectSize: (size: TShirtSize) => void;
 }
 
 const SizeButton = ({ label, selected, onSelectSize }: SizeButtonProps) => {
@@ -39,23 +33,23 @@ export const SizeSelector = ({
   return (
     <SelectorWrapper>
       <SizeButton
-        label={SizeLabel.S}
-        selected={selectedSize === SizeLabel.S}
+        label={TShirtSize.S}
+        selected={selectedSize === TShirtSize.S}
         onSelectSize={(size) => onSelectSize(size)}
       />
       <SizeButton
-        label={SizeLabel.M}
-        selected={selectedSize === SizeLabel.M}
+        label={TShirtSize.M}
+        selected={selectedSize === TShirtSize.M}
         onSelectSize={(size) => onSelectSize(size)}
       />
       <SizeButton
-        label={SizeLabel.L}
-        selected={selectedSize === SizeLabel.L}
+        label={TShirtSize.L}
+        selected={selectedSize === TShirtSize.L}
         onSelectSize={(size) => onSelectSize(size)}
       />
       <SizeButton
-        label={SizeLabel.XL}
-        selected={selectedSize === SizeLabel.XL}
+        label={TShirtSize.XL}
+        selected={selectedSize === TShirtSize.XL}
         onSelectSize={(size) => onSelectSize(size)}
       />
     </SelectorWrapper>

@@ -4,7 +4,7 @@ import { Banner } from '../components/Banner';
 import { Header } from '../components/Header';
 import { categories, HorizontalScroll } from '../components/HorizontalScroll';
 import { ProductList } from '../components/ProductList';
-import { Product } from '../hooks/useProducts';
+import { Product } from '../domain/models/ProductDTO';
 
 interface Props {
   products: Array<Product>;
@@ -25,7 +25,7 @@ export const HomeContainer = ({ products }: Props) => {
         onSelectCategory={(category) => setSelectedCategory(category)}
       />
       <ProductListContainer>
-        <ProductList products={products} />
+        {products.length > 0 && <ProductList products={products} />}
       </ProductListContainer>
     </>
   );
