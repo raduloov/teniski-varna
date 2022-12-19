@@ -8,8 +8,9 @@ import { QuantitySelector } from '../components/QuantitySelector';
 import { RatingStars } from '../components/RatingStars';
 import { SizeSelector } from '../components/SizeSelector';
 import { cartActions } from '../store/cartSlice';
-import { useDispatch } from 'react-redux';
 import { Product, TShirtSize } from '../domain/models/ProductDTO';
+import { useAppDispatch } from '../hooks/useRedux';
+
 interface Props {
   product: Product;
   selectedSize: TShirtSize | null;
@@ -29,7 +30,7 @@ export const DetailsContainer = ({
   onDecreaseQuantity,
   product
 }: Props) => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const addToCartHandler = () => {
     dispatch(cartActions.addToCart({ product, selectedQuantity }));

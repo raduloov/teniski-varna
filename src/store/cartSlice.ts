@@ -12,9 +12,7 @@ export const cartSlice = createSlice({
   name: 'cart',
   initialState,
   reducers: {
-    addToCart: (state, item) => {
-      const { payload } = item;
-
+    addToCart: (state, { payload }) => {
       const product: CartProduct = mapProductToCartProduct(
         payload.product,
         payload.selectedQuantity
@@ -27,15 +25,14 @@ export const cartSlice = createSlice({
         state[index].quantity++;
       }
     },
-    removeFromCart: (state, item) => {
-      const { payload } = item;
-
+    removeFromCart: (state, { payload }) => {
       const index = state.findIndex(
         (product) => product.id === payload.product.id
       );
       const currentQuantity = state.find(
         (product) => product.id === payload.product.id
       )?.quantity;
+
       if (currentQuantity === 1) {
         state.splice(index, 1);
       } else {

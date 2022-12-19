@@ -5,12 +5,11 @@ import { ReactComponent as Logo } from '../assets/images/logo.svg';
 import { icons } from '../assets/icons';
 import { Color } from '../assets/constants';
 import { Cart } from './Cart';
-import { useSelector } from 'react-redux';
-import { CartProduct } from '../domain/mappers/cartProductMapper';
+import { useAppSelector } from '../hooks/useRedux';
 
 export const Header = () => {
   const [showModal, setShowModal] = useState<boolean>(false);
-  const cartItems = useSelector((state: CartProduct[]) => state);
+  const cartItems = useAppSelector((state) => state.cart);
 
   return (
     <HeaderContainer>
