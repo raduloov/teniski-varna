@@ -4,8 +4,8 @@ import styled from 'styled-components';
 import { Color } from '../assets/constants';
 import { cartActions } from '../store/cartSlice';
 import { QuantitySelector } from './QuantitySelector';
-import { useDispatch } from 'react-redux';
 import { CartProduct } from '../domain/mappers/cartProductMapper';
+import { useAppDispatch } from '../hooks/useRedux';
 
 interface Props {
   product: CartProduct;
@@ -13,7 +13,7 @@ interface Props {
 
 export const CartProductCard = ({ product }: Props) => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const navigateToDetails = (productId: string) => {
     navigate(`/products/${productId}`, {

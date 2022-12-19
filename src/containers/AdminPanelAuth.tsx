@@ -1,24 +1,37 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Color } from '../assets/constants';
 import { Button } from '../components/Button';
 import { Input } from '../components/Input';
+import { useAuth } from '../hooks/useAuth';
 
 export const AdminPanelAuth = () => {
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+
+  const { signIn, isLoading } = useAuth();
+
   return (
     <Container>
       <Title>Admin Panel</Title>
       <PanelContainer>
         <InputContainer>
           <Text>Admin Email</Text>
-          <Input placeholder={'Email...'} />
+          <Input
+            placeholder={'Email...'}
+            onChange={(e) => setEmail(e.target.value)}
+          />
         </InputContainer>
         <InputContainer>
           <Text>Admin Password</Text>
-          <Input placeholder={'Password...'} />
+          <Input
+            placeholder={'Password...'}
+            onChange={(e) => setPassword(e.target.value)}
+            password
+          />
         </InputContainer>
         <ButtonContainer>
-          <Button label={'Sign in'} />
+          <Button label={'Sign in'} onClick={() => signIn(email, password)} />
         </ButtonContainer>
       </PanelContainer>
     </Container>
