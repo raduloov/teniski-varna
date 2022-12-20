@@ -11,23 +11,23 @@ export const HeaderLinks = () => {
         <icons.FaHome />
         Home
       </Link>
-      <Link to="/">
+      <Link to="/favorites">
         <icons.MdFavorite />
         Favorites
       </Link>
-      <Link to="/">
+      <Link to="/contact">
         <icons.MdPermContactCalendar />
         Contact
       </Link>
-      <Link to="/">
+      <Link to="/about">
         <icons.RiInformationFill />
         About
       </Link>
-      <Link to="/">
+      <Link to="/policies">
         <icons.MdPolicy />
         Policies
       </Link>
-      <Link to="/">
+      <Link to="/faq">
         <icons.FaQuestionCircle />
         FAQ
       </Link>
@@ -39,18 +39,6 @@ const HeaderLinksContainer = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 0.5rem;
-  transition: all 0.5s ease-out;
-  animation: slide-in 0.5s ease-out forwards;
-  @keyframes slide-in {
-    0% {
-      opacity: 0;
-      transform: translateY(-15%);
-    }
-    100% {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
 
   svg {
     cursor: pointer;
