@@ -8,17 +8,23 @@ interface Props {
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   placeholder?: string;
   icon?: IconType;
+  password?: boolean;
 }
 
 export const Input = ({
   onChange,
   placeholder = 'Looking for fashion',
-  icon
+  icon,
+  password
 }: Props) => {
   return (
     <InputContainer>
       {icon && <IconButton icon={icon} />}
-      <input placeholder={placeholder} onChange={onChange} />
+      <input
+        placeholder={placeholder}
+        onChange={onChange}
+        type={password ? 'password' : ''}
+      />
     </InputContainer>
   );
 };

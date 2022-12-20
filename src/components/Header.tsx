@@ -5,9 +5,8 @@ import { ReactComponent as Logo } from '../assets/images/logo.svg';
 import { icons } from '../assets/icons';
 import { Color } from '../assets/constants';
 import { Cart } from './Cart';
-import { useSelector } from 'react-redux';
+import { useAppSelector } from '../hooks/useRedux';
 import { HeaderLinks } from './HeaderLinks';
-import { InitialState } from '../store/cartSlice';
 
 interface Props {
   topNavigationShow: boolean;
@@ -19,7 +18,7 @@ interface ChevronContainerProps {
 
 export const Header = ({ setTopNavigationShow, topNavigationShow }: Props) => {
   const [showModal, setShowModal] = useState<boolean>(false);
-  const cartItems = useSelector((state: InitialState) => state);
+  const cartItems = useAppSelector((state) => state.cart);
 
   return (
     <HeaderContainer>
