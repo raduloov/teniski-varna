@@ -20,17 +20,19 @@ export const DetailsPage = () => {
   };
 
   const { products } = useProducts(productId);
-  const [product] = products ?? [];
+  const [product] = products;
 
   return (
-    <DetailsContainer
-      selectedSize={selectedSize}
-      onSelectSize={setSelectedSize}
-      selectedQuantity={selectedQuantity}
-      onGoBack={goBack}
-      onIncreaseQuantity={increaseQuantity}
-      onDecreaseQuantity={decreaseQuantity}
-      product={product}
-    />
+    product && (
+      <DetailsContainer
+        selectedSize={selectedSize}
+        onSelectSize={setSelectedSize}
+        selectedQuantity={selectedQuantity}
+        onGoBack={goBack}
+        onIncreaseQuantity={increaseQuantity}
+        onDecreaseQuantity={decreaseQuantity}
+        product={product}
+      />
+    )
   );
 };
