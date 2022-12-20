@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { Color } from '../assets/constants';
 import { Button } from '../components/Button';
@@ -16,14 +17,14 @@ export const AdminPanelAuth = () => {
       <Title>Admin Panel</Title>
       <PanelContainer>
         <InputContainer>
-          <Text>Admin Email</Text>
+          <Text>Email</Text>
           <Input
             placeholder={'Email...'}
             onChange={(e) => setEmail(e.target.value)}
           />
         </InputContainer>
         <InputContainer>
-          <Text>Admin Password</Text>
+          <Text>Password</Text>
           <Input
             placeholder={'Password...'}
             onChange={(e) => setPassword(e.target.value)}
@@ -31,7 +32,14 @@ export const AdminPanelAuth = () => {
           />
         </InputContainer>
         <ButtonContainer>
-          <Button label={'Sign in'} onClick={() => signIn(email, password)} />
+          <Button
+            label={'Sign in'}
+            loading={isLoading}
+            onClick={() => signIn(email, password)}
+          />
+          <BackLinkText to={'/'}>
+            <p>Back to Teniski-Varna</p>
+          </BackLinkText>
         </ButtonContainer>
       </PanelContainer>
     </Container>
@@ -40,7 +48,15 @@ export const AdminPanelAuth = () => {
 
 const ButtonContainer = styled.div`
   display: flex;
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
+  gap: 10px;
+`;
+
+const BackLinkText = styled(Link)`
+  text-decoration: none;
+  color: ${Color.LIGHT_GRAY};
 `;
 
 const Text = styled.p`
