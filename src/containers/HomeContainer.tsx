@@ -14,10 +14,14 @@ export const HomeContainer = ({ products }: Props) => {
   const [selectedCategory, setSelectedCategory] = useState<string>(
     categories[0]
   );
+  const [topNavigationShow, setTopNavigationShow] = useState<boolean>(false);
 
   return (
     <>
-      <Header />
+      <Header
+        setTopNavigationShow={setTopNavigationShow}
+        topNavigationShow={topNavigationShow}
+      />
       <Banner />
       <HorizontalScroll
         categories={categories}

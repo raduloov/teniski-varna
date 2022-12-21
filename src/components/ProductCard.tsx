@@ -47,8 +47,8 @@ export const ProductCard = ({ product }: Props) => {
       <img src={product.image} />
       <h1>{product.title}</h1>
       <p>{product.description}</p>
-      <h1>{product.price}</h1>
       <FavoriteButton>
+        <h1>${product.price}</h1>
         {isFavorite ? (
           <IconButton icon={icons.FcLike} onClick={addToFavorites} />
         ) : (
@@ -76,6 +76,9 @@ const Card = styled.div`
   }
   transition: ease-out 0.2s;
   img {
+    width: 100px;
+    height: 150px;
+    margin: auto;
     background-size: cover;
     object-fit: cover;
     border-radius: 10px;
@@ -93,7 +96,11 @@ const Card = styled.div`
 `;
 
 const FavoriteButton = styled.div`
-  position: absolute;
+  display: flex;
+  justify-content: space-between;
   bottom: 0.5rem;
   right: 0.5rem;
+  h1 {
+    margin-top: auto;
+  }
 `;

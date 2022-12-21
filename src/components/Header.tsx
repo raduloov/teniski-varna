@@ -6,8 +6,17 @@ import { icons } from '../assets/icons';
 import { Color } from '../assets/constants';
 import { Cart } from './Cart';
 import { useAppSelector } from '../hooks/useRedux';
+import { HeaderLinks } from './HeaderLinks';
 
-export const Header = () => {
+interface Props {
+  topNavigationShow: boolean;
+  setTopNavigationShow: React.Dispatch<React.SetStateAction<boolean>>;
+}
+interface ChevronContainerProps {
+  topNavigationShow: boolean;
+}
+
+export const Header = ({ setTopNavigationShow, topNavigationShow }: Props) => {
   const [showModal, setShowModal] = useState<boolean>(false);
   const cartItems = useAppSelector((state) => state.cart);
 
@@ -25,12 +34,20 @@ export const Header = () => {
           <CartItemTick>{cartItems.length}</CartItemTick>
         </CartContainer>
       </LogoContainer>
+      {topNavigationShow && <HeaderLinks />}
       <Input icon={icons.FaSearch} />
+      <ChevronContainer topNavigationShow={topNavigationShow}>
+        <icons.BsChevronCompactDown
+          color={Color.GRAY}
+          onClick={() => setTopNavigationShow(!topNavigationShow)}
+        />
+      </ChevronContainer>
     </HeaderContainer>
   );
 };
 
 const HeaderContainer = styled.div`
+  position: relative;
   padding: 1.5rem;
   display: flex;
   gap: 1.5rem;
@@ -38,6 +55,21 @@ const HeaderContainer = styled.div`
   border-bottom-left-radius: 2rem;
   border-bottom-right-radius: 2rem;
   box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.15);
+  svg:last-child {
+    padding: 0;
+    cursor: pointer;
+    postion: absolute;
+  }
+`;
+const ChevronContainer = styled.div<ChevronContainerProps>`
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, 0);
+  bottom: 0rem;
+  svg {
+    cursor: pointer;
+    ${(props) => props.topNavigationShow && 'transform: rotate(180deg);'}
+  }
 `;
 
 const LogoContainer = styled.div`
