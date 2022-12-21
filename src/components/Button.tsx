@@ -143,7 +143,10 @@ const ButtonUnselected = styled.button<ButtonContainerProps>`
   padding-left: 20px;
   padding-right: 20px;
   font-weight: 500;
-  :active {
+  &:active {
+    filter: brightness(0.9);
+  }
+  &:hover {
     filter: brightness(0.9);
   }
   ${(props) => props.size}
@@ -164,7 +167,10 @@ const ButtonPrimary = styled.button<ButtonContainerProps>`
   padding-left: 20px;
   padding-right: 20px;
   font-weight: 500;
-  :active {
+  &:active {
+    filter: brightness(0.9);
+  }
+  &:hover {
     filter: brightness(0.9);
   }
   ${(props) => props.size}

@@ -2,6 +2,9 @@ import React, { useRef } from 'react';
 import styled from 'styled-components';
 import { Color } from '../assets/constants';
 
+interface FileButtonProps {
+  fileSelected: boolean;
+}
 interface Props {
   fileName?: string;
   supportedTypes: Array<string>;
@@ -26,14 +29,10 @@ export const ImageInput = ({ fileName, supportedTypes, onChange }: Props) => {
 
   return (
     <FileInputContainer>
-      <CustomFileInput
-        type="file"
-        ref={fileInputRef}
-        onChange={onImagePicked}
-      />
-      <CustomFileButton onClick={handleButtonClick}>
+      <FileInput type="file" ref={fileInputRef} onChange={onImagePicked} />
+      <FileButton fileSelected={!!fileName} onClick={handleButtonClick}>
         {fileName ?? 'Choose File'}
-      </CustomFileButton>
+      </FileButton>
     </FileInputContainer>
   );
 };
@@ -43,19 +42,19 @@ const FileInputContainer = styled.label`
   align-items: center;
 `;
 
-const CustomFileInput = styled.input`
+const FileInput = styled.input`
   display: none;
 `;
 
-const CustomFileButton = styled.button`
+const FileButton = styled.button<FileButtonProps>`
   border: none;
   padding: 8px 16px;
-  background-color: ${Color.LIGHT_GRAY};
+  background-color: ${(props) =>
+    props.fileSelected ? Color.ACCENT : Color.LIGHT_GRAY};
   border-radius: 2rem;
-  color: ${Color.GRAY};
+  color: ${(props) => (props.fileSelected ? Color.BLACK : Color.GRAY)};
   cursor: pointer;
   &:hover {
-    background-color: ${Color.ACCENT};
-    color: ${Color.BLACK};
+    filter: brightness(0.9);
   }
 `;

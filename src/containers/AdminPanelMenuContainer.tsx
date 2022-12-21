@@ -47,7 +47,6 @@ const NewProductContainer = () => {
         <Input
           placeholder={'Description...'}
           onChange={(e) => setDescription(e.target.value)}
-          password
         />
       </InputContainer>
       <InputContainer>
@@ -55,7 +54,6 @@ const NewProductContainer = () => {
         <Input
           placeholder={'Price...'}
           onChange={(e) => setPrice(e.target.value)}
-          password
         />
       </InputContainer>
       <InputContainer>
