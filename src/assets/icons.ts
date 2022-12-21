@@ -1,11 +1,30 @@
-import { FaSearch, FaRegHeart, FaSignOutAlt } from 'react-icons/fa';
-import { MdOutlineShoppingBag } from 'react-icons/md';
-import { FaChevronLeft } from 'react-icons/fa';
-import { RiCloseFill } from 'react-icons/ri';
-import { BsStar, BsStarFill, BsStarHalf } from 'react-icons/bs';
+import {
+  MdOutlineShoppingBag,
+  MdFavorite,
+  MdPolicy,
+  MdOutlinePermContactCalendar,
+  MdPermContactCalendar
+} from 'react-icons/md';
+import {
+  FaChevronLeft,
+  FaQuestionCircle,
+  FaHome,
+  FaSearch,
+  FaRegHeart,
+  FaSignOutAlt
+} from 'react-icons/fa';
+import { RiCloseFill, RiInformationFill } from 'react-icons/ri';
+import {
+  BsStar,
+  BsStarFill,
+  BsStarHalf,
+  BsChevronCompactDown
+} from 'react-icons/bs';
 import { FcLike } from 'react-icons/fc';
 
 export const icons = {
+  MdPolicy,
+  RiInformationFill,
   FaSearch,
   MdOutlineShoppingBag,
   FaRegHeart,
@@ -15,5 +34,11 @@ export const icons = {
   BsStarFill,
   BsStarHalf,
   FcLike,
-  FaSignOutAlt
+  FaSignOutAlt,
+  MdOutlinePermContactCalendar,
+  MdFavorite,
+  FaHome,
+  FaQuestionCircle,
+  BsChevronCompactDown,
+  MdPermContactCalendar
 };

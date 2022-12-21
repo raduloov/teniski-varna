@@ -13,7 +13,7 @@ const NewProductContainer = () => {
   const [title, setTitle] = useState<string>('');
   const [description, setDescription] = useState<string>('');
   const [price, setPrice] = useState<string>('');
-  const [image, setImage] = useState<File>();
+  const [image, setImage] = useState<File | null>(null);
 
   return (
     <Wrapper>
