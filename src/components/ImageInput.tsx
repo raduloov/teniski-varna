@@ -3,22 +3,36 @@ import styled from 'styled-components';
 import { Color } from '../assets/constants';
 
 interface Props {
-  file?: File | null;
-  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  fileName?: string;
+  supportedTypes: Array<string>;
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-export const ImageInput = ({ file, onChange }: Props) => {
+export const ImageInput = ({ fileName, supportedTypes, onChange }: Props) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleButtonClick = () => {
     fileInputRef.current?.click();
   };
 
+  const onImagePicked = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files && event.target.files[0];
+    const typeSupported = file && supportedTypes.includes(file.type);
+
+    if (typeSupported) {
+      onChange(event);
+    }
+  };
+
   return (
     <FileInputContainer>
-      <CustomFileInput type="file" ref={fileInputRef} onChange={onChange} />
+      <CustomFileInput
+        type="file"
+        ref={fileInputRef}
+        onChange={onImagePicked}
+      />
       <CustomFileButton onClick={handleButtonClick}>
-        {file ? file.name : 'Choose File'}
+        {fileName ?? 'Choose File'}
       </CustomFileButton>
     </FileInputContainer>
   );

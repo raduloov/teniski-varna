@@ -15,6 +15,8 @@ const NewProductContainer = () => {
   const [price, setPrice] = useState<string>('');
   const [image, setImage] = useState<File | null>(null);
 
+  const supportedImageTypes = ['image/jpeg'];
+
   return (
     <Wrapper>
       <Title>Add new product</Title>
@@ -44,12 +46,9 @@ const NewProductContainer = () => {
       <InputContainer>
         <Text>Image</Text>
         <ImageInput
-          file={image}
-          onChange={(e) => {
-            if (e.target.files && e.target.files[0].type === 'image/jpeg') {
-              setImage(e.target.files[0]);
-            }
-          }}
+          fileName={image?.name}
+          supportedTypes={supportedImageTypes}
+          onChange={(e) => e.target.files && setImage(e.target.files[0])}
         />
       </InputContainer>
       <ButtonContainer>
