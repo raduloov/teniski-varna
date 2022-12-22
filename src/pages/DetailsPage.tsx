@@ -3,6 +3,9 @@ import { useNavigate, useParams } from 'react-router';
 import { DetailsContainer } from '../containers/DetailsContainer';
 import { useProducts } from '../hooks/useProducts';
 import { TShirtSize } from '../domain/models/ProductDTO';
+import styled from 'styled-components';
+import { ActivityIndicator } from '../components/ActivityIndicator';
+import { Color } from '../assets/constants';
 
 export const DetailsPage = () => {
   const [selectedSize, setSelectedSize] = useState<TShirtSize | null>(null);
@@ -19,8 +22,16 @@ export const DetailsPage = () => {
     setSelectedQuantity((q) => (q -= 1));
   };
 
-  const { products } = useProducts(productId);
+  const { products, isLoading } = useProducts(productId);
   const [product] = products;
+
+  if (isLoading) {
+    return (
+      <ActivityIndicatorWrapper>
+        <ActivityIndicator size={100} color={Color.ACCENT} />
+      </ActivityIndicatorWrapper>
+    );
+  }
 
   return (
     product && (
@@ -36,3 +47,11 @@ export const DetailsPage = () => {
     )
   );
 };
+
+const ActivityIndicatorWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+`;

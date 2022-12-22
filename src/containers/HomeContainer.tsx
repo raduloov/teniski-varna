@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import { Color } from '../assets/constants';
+import { ActivityIndicator } from '../components/ActivityIndicator';
 import { Banner } from '../components/Banner';
 import { Header } from '../components/Header';
 import { categories, HorizontalScroll } from '../components/HorizontalScroll';
@@ -8,9 +10,10 @@ import { Product } from '../domain/models/ProductDTO';
 
 interface Props {
   products: Array<Product>;
+  isLoading: boolean;
 }
 
-export const HomeContainer = ({ products }: Props) => {
+export const HomeContainer = ({ products, isLoading }: Props) => {
   const [selectedCategory, setSelectedCategory] = useState<string>(
     categories[0]
   );
@@ -29,6 +32,7 @@ export const HomeContainer = ({ products }: Props) => {
         onSelectCategory={(category) => setSelectedCategory(category)}
       />
       <ProductListContainer>
+        {isLoading && <ActivityIndicator size={75} color={Color.ACCENT} />}
         {products.length > 0 && <ProductList products={products} />}
       </ProductListContainer>
     </>

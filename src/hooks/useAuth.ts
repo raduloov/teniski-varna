@@ -16,7 +16,8 @@ export const useAuth = () => {
       setError(null);
       setIsLoading(true);
 
-      await signInWithEmailAndPassword(auth, email, password);
+      const formattedEmail = email.toLowerCase().trim();
+      await signInWithEmailAndPassword(auth, formattedEmail, password);
     } catch (err: any) {
       setError(err.message);
     } finally {

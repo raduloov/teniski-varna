@@ -1,6 +1,7 @@
 import React from 'react';
-import styled, { css } from 'styled-components';
+import styled, { css, FlattenSimpleInterpolation } from 'styled-components';
 import { Color } from '../assets/constants';
+import { ActivityIndicator } from './ActivityIndicator';
 
 interface Props {
   label: string;
@@ -8,12 +9,13 @@ interface Props {
   backgroundColor?: Color;
   type?: ButtonType;
   size?: ButtonSize;
+  loading?: boolean;
 }
 
 interface ButtonContainerProps {
   backgroundColor?: Color;
   type?: ButtonType;
-  size: any; // TODO Yavor: Set type
+  size?: FlattenSimpleInterpolation;
 }
 
 export enum ButtonType {
@@ -33,14 +35,17 @@ export const Button = ({
   backgroundColor = Color.ACCENT,
   type = ButtonType.PRIMARY,
   size = ButtonSize.MEDIUM,
+  loading,
   onClick
-}: Props) => ButtonContainer({ label, backgroundColor, type, size, onClick });
+}: Props) =>
+  ButtonContainer({ label, backgroundColor, type, size, loading, onClick });
 
 const ButtonContainer = ({
   label,
   backgroundColor = Color.ACCENT,
   type = ButtonType.PRIMARY,
   size = ButtonSize.MEDIUM,
+  loading,
   onClick
 }: Props) => {
   const buttonSize = getButtonSize(size);
@@ -53,7 +58,14 @@ const ButtonContainer = ({
           size={buttonSize}
           onClick={onClick}
         >
-          {label}
+          {loading ? (
+            <ActivityIndicator
+              size={getActivityIndicatorSize(size)}
+              color={Color.WHITE}
+            />
+          ) : (
+            label
+          )}
         </ButtonPrimary>
       );
     case ButtonType.SECONDARY:
@@ -79,12 +91,34 @@ const ButtonContainer = ({
   }
 };
 
+const getActivityIndicatorSize = (size: ButtonSize): number => {
+  switch (size) {
+    case ButtonSize.SMALL:
+      return 10;
+    case ButtonSize.MEDIUM:
+      return 20;
+    case ButtonSize.LARGE:
+      return 30;
+  }
+};
+
 const getButtonSize = (size: ButtonSize) => {
   switch (size) {
     case ButtonSize.SMALL:
-      return;
+      return css`
+        min-height: 30px;
+        min-width: 80px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        padding-left: 12px;
+        padding-right: 12px;
+        border-radius: 12px;
+        font-size: 12px;
+      `;
     case ButtonSize.MEDIUM:
       return css`
+        min-height: 55px;
+        min-width: 120px;
         padding-top: 16px;
         padding-bottom: 16px;
         padding-left: 32px;
@@ -94,6 +128,8 @@ const getButtonSize = (size: ButtonSize) => {
       `;
     case ButtonSize.LARGE:
       return css`
+        min-height: 65px;
+        min-width: 200px;
         padding-top: 20px;
         padding-bottom: 20px;
         padding-left: 60px;
@@ -116,14 +152,35 @@ const ButtonUnselected = styled.button<ButtonContainerProps>`
   padding-left: 20px;
   padding-right: 20px;
   font-weight: 500;
-  :active {
+  &:active {
+    filter: brightness(0.9);
+  }
+  &:hover {
     filter: brightness(0.9);
   }
   ${(props) => props.size}
 `;
 
 const ButtonSecondary = styled.button<ButtonContainerProps>`
-  /* TODO Yavor: Implement secondary button style  */
+  cursor: pointer;
+  white-space: nowrap;
+  min-width: max-content;
+  background: transparent;
+  border: 2px solid ${(props) => props.backgroundColor};
+  color: ${Color.WHITE};
+  border-radius: 10px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 20px;
+  padding-right: 20px;
+  font-weight: 500;
+  &:active {
+    filter: brightness(0.9);
+  }
+  &:hover {
+    filter: brightness(0.9);
+  }
+  ${(props) => props.size}
 `;
 
 const ButtonPrimary = styled.button<ButtonContainerProps>`
@@ -137,7 +194,10 @@ const ButtonPrimary = styled.button<ButtonContainerProps>`
   padding-left: 20px;
   padding-right: 20px;
   font-weight: 500;
-  :active {
+  &:active {
+    filter: brightness(0.9);
+  }
+  &:hover {
     filter: brightness(0.9);
   }
   ${(props) => props.size}

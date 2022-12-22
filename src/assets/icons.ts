@@ -1,15 +1,17 @@
 import {
   MdOutlineShoppingBag,
-  MdPermContactCalendar,
   MdFavorite,
-  MdPolicy
+  MdPolicy,
+  MdOutlinePermContactCalendar,
+  MdPermContactCalendar
 } from 'react-icons/md';
 import {
   FaChevronLeft,
   FaQuestionCircle,
   FaHome,
   FaSearch,
-  FaRegHeart
+  FaRegHeart,
+  FaSignOutAlt
 } from 'react-icons/fa';
 import { RiCloseFill, RiInformationFill } from 'react-icons/ri';
 import {
@@ -32,9 +34,11 @@ export const icons = {
   BsStarFill,
   BsStarHalf,
   FcLike,
-  MdPermContactCalendar,
+  FaSignOutAlt,
+  MdOutlinePermContactCalendar,
   MdFavorite,
   FaHome,
   FaQuestionCircle,
-  BsChevronCompactDown
+  BsChevronCompactDown,
+  MdPermContactCalendar
 };
