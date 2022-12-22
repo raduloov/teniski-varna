@@ -1,14 +1,6 @@
 import { useState, useEffect } from 'react';
 import { getDownloadURL, ref } from 'firebase/storage';
-import {
-  collection,
-  getDocs,
-  query,
-  where,
-  documentId,
-  doc,
-  getDoc
-} from 'firebase/firestore';
+import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
 import { db, storage } from '../firebase/firebaseConfig';
 import { Product } from '../domain/models/ProductDTO';
 

@@ -34,6 +34,7 @@ const NewProductContainer = () => {
   const [price, setPrice] = useState<number | null>(null);
   const [image, setImage] = useState<File | null>(null);
   const [sizes, setSizes] = useState<SizesCheckbox>(defaultSizesObj);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const resetForm = () => {
     setTitle('');
@@ -92,6 +93,7 @@ const NewProductContainer = () => {
       );
     }
 
+    setIsLoading(true);
     try {
       await createProduct();
       await uploadImage();
@@ -99,7 +101,9 @@ const NewProductContainer = () => {
       resetForm();
       return toast.success('🎉 Product added successfully!');
     } catch (e: any) {
-      return toast.error(e.message);
+      return toast.error(`💥 ${e.message}`);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -170,7 +174,60 @@ const NewProductContainer = () => {
         </SizesContainer>
       </InputContainer>
       <ButtonContainer>
-        <Button label={'Add new product'} onClick={addNewProduct} />
+        <Button
+          label={'Add new product'}
+          loading={isLoading}
+          onClick={addNewProduct}
+        />
+      </ButtonContainer>
+    </Wrapper>
+  );
+};
+
+const ChangeBannerImageContainer = () => {
+  const [image, setImage] = useState<File | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const updateBannerImage = async () => {
+    if (!image) {
+      return toast.error('💥 Please add a banner image to update.');
+    }
+
+    setIsLoading(true);
+
+    const storageRef = ref(storage, `bannerImage.jpeg`);
+    try {
+      await uploadBytes(storageRef, image);
+
+      setImage(null);
+      return toast.success('🎉 Banner image updated successfully!');
+    } catch (e: any) {
+      return toast.error(`💥 ${e.message}`);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <Wrapper>
+      <Title>Change banner image</Title>
+      <InputContainer>
+        <Text>Banner image</Text>
+        <ImageInput
+          fileName={image?.name}
+          supportedTypes={supportedImageTypes}
+          onChange={(e) => {
+            e.target.files && setImage(e.target.files[0]);
+            console.log('a');
+          }}
+        />
+      </InputContainer>
+      <ButtonContainer>
+        <Button
+          label={'Update banner image'}
+          loading={isLoading}
+          onClick={updateBannerImage}
+        />
       </ButtonContainer>
     </Wrapper>
   );
@@ -178,6 +235,8 @@ const NewProductContainer = () => {
 
 export const AdminPanelMenuContainer = () => {
   const [showAddNewProduct, setShowAddNewProduct] = useState<boolean>(false);
+  const [showChangeBannerImage, setShowChangeBannerImage] =
+    useState<boolean>(false);
   const { signOut } = useAuth();
 
   return (
@@ -197,18 +256,27 @@ export const AdminPanelMenuContainer = () => {
           />
         </Header>
         {showAddNewProduct && <NewProductContainer />}
-        {!showAddNewProduct && (
+        {showChangeBannerImage && <ChangeBannerImageContainer />}
+        {!showAddNewProduct && !showChangeBannerImage && (
           <ButtonContainer>
             <Button
               label={'Add new product'}
               onClick={() => setShowAddNewProduct(true)}
             />
-            <Button label={'Change banner image'} />
+            <Button
+              label={'Change banner image'}
+              onClick={() => setShowChangeBannerImage(true)}
+            />
           </ButtonContainer>
         )}
       </PanelContainer>
-      {showAddNewProduct && (
-        <BackToMenuText onClick={() => setShowAddNewProduct(false)}>
+      {(showAddNewProduct || showChangeBannerImage) && (
+        <BackToMenuText
+          onClick={() => {
+            setShowAddNewProduct(false);
+            setShowChangeBannerImage(false);
+          }}
+        >
           <p>Back to Menu</p>
         </BackToMenuText>
       )}
