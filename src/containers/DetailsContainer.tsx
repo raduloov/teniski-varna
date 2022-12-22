@@ -41,6 +41,7 @@ export const DetailsContainer = ({
       <ActionButtonsWrapper>
         <IconButton icon={icons.FaChevronLeft} onClick={onGoBack} />
       </ActionButtonsWrapper>
+      <Image src={product.image} />
       <BottomSheetContainer>
         <HeaderWrapper>
           <TitleWrapper>
@@ -81,6 +82,11 @@ export const DetailsContainer = ({
     </Container>
   );
 };
+
+const Image = styled.img`
+  max-height: 100%;
+  max-width: 100%;
+`;
 
 const SelectSizeTitle = styled.p`
   font-size: 18px;
@@ -152,6 +158,7 @@ const BottomSheetContainer = styled.div`
   border-top-right-radius: 45px;
   background: ${Color.WHITE};
   padding: 1.5rem;
+  box-shadow: 0px -10px 20px -10px rgba(0, 0, 0, 0.75);
 `;
 
 const ActionButtonsWrapper = styled.div`

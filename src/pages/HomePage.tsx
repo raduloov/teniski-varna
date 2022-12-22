@@ -3,7 +3,7 @@ import { HomeContainer } from '../containers/HomeContainer';
 import { useProducts } from '../hooks/useProducts';
 
 export const HomePage = () => {
-  const { products } = useProducts();
+  const { products, isLoading } = useProducts();
 
-  return <HomeContainer products={products} />;
+  return <HomeContainer products={products} isLoading={isLoading} />;
 };
