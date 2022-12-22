@@ -28,7 +28,7 @@ export const AdminPanelAuth = () => {
           <Input
             placeholder={'Password...'}
             onChange={(e) => setPassword(e.target.value)}
-            password
+            type={'password'}
           />
         </InputContainer>
         <ButtonContainer>

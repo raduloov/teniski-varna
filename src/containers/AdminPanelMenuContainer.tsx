@@ -1,36 +1,107 @@
 import React, { useState } from 'react';
+import { addDoc, collection } from 'firebase/firestore';
+import { ref, uploadBytes } from 'firebase/storage';
 import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import styled from 'styled-components';
 import { Color } from '../assets/constants';
-import { icons } from '../assets/icons';
-import { Button } from '../components/Button';
+import { Button, ButtonSize, ButtonType } from '../components/Button';
 import { Checkbox } from '../components/Checkbox';
-import { IconButton } from '../components/IconButton';
 import { ImageInput } from '../components/ImageInput';
 import { Input } from '../components/Input';
 import { TShirtSize } from '../domain/models/ProductDTO';
+import { db, storage } from '../firebase/firebaseConfig';
 import { useAuth } from '../hooks/useAuth';
 
 interface SizesCheckbox {
-  s: boolean;
-  m: boolean;
-  l: boolean;
-  xl: boolean;
+  S: boolean;
+  M: boolean;
+  L: boolean;
+  XL: boolean;
 }
+
+const defaultSizesObj: SizesCheckbox = {
+  S: false,
+  M: false,
+  L: false,
+  XL: false
+};
+const supportedImageTypes = ['image/jpeg'];
 
 const NewProductContainer = () => {
   const [title, setTitle] = useState<string>('');
   const [description, setDescription] = useState<string>('');
-  const [price, setPrice] = useState<string>('');
+  const [price, setPrice] = useState<number | null>(null);
   const [image, setImage] = useState<File | null>(null);
-  const [sizes, setSizes] = useState<SizesCheckbox>({
-    s: false,
-    m: false,
-    l: false,
-    xl: false
-  });
+  const [sizes, setSizes] = useState<SizesCheckbox>(defaultSizesObj);
 
-  const supportedImageTypes = ['image/jpeg'];
+  const resetForm = () => {
+    setTitle('');
+    setDescription('');
+    setPrice(0);
+    setImage(null);
+    setSizes(defaultSizesObj);
+  };
+
+  const createProduct = async () => {
+    const sizesArray: TShirtSize[] = [];
+    for (const [size, selected] of Object.entries(sizes)) {
+      if (selected) {
+        sizesArray.push(size as TShirtSize);
+      }
+    }
+
+    const product = {
+      title,
+      description,
+      price,
+      image: title,
+      sizes: sizesArray,
+      colors: []
+    };
+
+    await addDoc(collection(db, 'products'), product);
+  };
+
+  const uploadImage = async () => {
+    if (!image) {
+      return;
+    }
+
+    const storageRef = ref(storage, `images/${title}`);
+    await uploadBytes(storageRef, image);
+  };
+
+  const addNewProduct = async () => {
+    if (!title) {
+      return toast.error('💥 Please add a title for your product!');
+    }
+    if (!description) {
+      return toast.error('💥 Please add a description for your product.');
+    }
+    if (!price) {
+      return toast.error('💥 Please add a price for your product.');
+    }
+    if (!image) {
+      return toast.error('💥 Please add an image for your product.');
+    }
+    const hasSize = Object.values(sizes).filter((selected) => selected).length;
+    if (!hasSize) {
+      return toast.error(
+        '💥 Please choose at least one size for your product.'
+      );
+    }
+
+    try {
+      await createProduct();
+      await uploadImage();
+
+      resetForm();
+      return toast.success('🎉 Product added successfully!');
+    } catch (e: any) {
+      return toast.error(e.message);
+    }
+  };
 
   return (
     <Wrapper>
@@ -53,7 +124,8 @@ const NewProductContainer = () => {
         <Text>Price</Text>
         <Input
           placeholder={'Price...'}
-          onChange={(e) => setPrice(e.target.value)}
+          type={'number'}
+          onChange={(e) => setPrice(Number(e.target.value))}
         />
       </InputContainer>
       <InputContainer>
@@ -70,35 +142,35 @@ const NewProductContainer = () => {
           <CheckboxContainer>
             <Checkbox
               label={TShirtSize.S}
-              checked={sizes.s}
-              onClick={() => setSizes((sizes) => ({ ...sizes, s: !sizes.s }))}
+              checked={sizes.S}
+              onClick={() => setSizes((sizes) => ({ ...sizes, S: !sizes.S }))}
             />
           </CheckboxContainer>
           <CheckboxContainer>
             <Checkbox
               label={TShirtSize.M}
-              checked={sizes.m}
-              onClick={() => setSizes((sizes) => ({ ...sizes, m: !sizes.m }))}
+              checked={sizes.M}
+              onClick={() => setSizes((sizes) => ({ ...sizes, M: !sizes.M }))}
             />
           </CheckboxContainer>
           <CheckboxContainer>
             <Checkbox
               label={TShirtSize.L}
-              checked={sizes.l}
-              onClick={() => setSizes((sizes) => ({ ...sizes, l: !sizes.l }))}
+              checked={sizes.L}
+              onClick={() => setSizes((sizes) => ({ ...sizes, L: !sizes.L }))}
             />
           </CheckboxContainer>
           <CheckboxContainer>
             <Checkbox
               label={TShirtSize.XL}
-              checked={sizes.xl}
-              onClick={() => setSizes((sizes) => ({ ...sizes, xl: !sizes.xl }))}
+              checked={sizes.XL}
+              onClick={() => setSizes((sizes) => ({ ...sizes, XL: !sizes.XL }))}
             />
           </CheckboxContainer>
         </SizesContainer>
       </InputContainer>
       <ButtonContainer>
-        <Button label={'Add new product'} />
+        <Button label={'Add new product'} onClick={addNewProduct} />
       </ButtonContainer>
     </Wrapper>
   );
@@ -116,7 +188,13 @@ export const AdminPanelMenuContainer = () => {
             <HeaderText>Signed in as</HeaderText>
             <BoldText>test@admin.com</BoldText>
           </AdminWrapper>
-          <IconButton icon={icons.FaSignOutAlt} onClick={() => signOut()} />
+          <Button
+            label={'Sign out'}
+            type={ButtonType.SECONDARY}
+            size={ButtonSize.SMALL}
+            backgroundColor={Color.WHITE}
+            onClick={() => signOut()}
+          />
         </Header>
         {showAddNewProduct && <NewProductContainer />}
         {!showAddNewProduct && (
@@ -129,6 +207,11 @@ export const AdminPanelMenuContainer = () => {
           </ButtonContainer>
         )}
       </PanelContainer>
+      {showAddNewProduct && (
+        <BackToMenuText onClick={() => setShowAddNewProduct(false)}>
+          <p>Back to Menu</p>
+        </BackToMenuText>
+      )}
       <BackLinkText to={'/'}>
         <p>Back to Teniski-Varna</p>
       </BackLinkText>
@@ -145,8 +228,7 @@ const CheckboxContainer = styled.div`
 
 const SizesContainer = styled.div`
   display: flex;
-  justify-content: space-between;
-  width: 50%;
+  gap: 10px;
 `;
 
 const Text = styled.p`
@@ -161,6 +243,12 @@ const InputContainer = styled.div`
   flex-direction: column;
   gap: 5px;
   margin: 10px 0 10px 0;
+`;
+
+const BackToMenuText = styled.a`
+  text-decoration: none;
+  color: ${Color.BLACK};
+  padding-top: 20px;
 `;
 
 const BackLinkText = styled(Link)`
