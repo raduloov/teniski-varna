@@ -23,7 +23,7 @@ export const Cart = ({ setShowModal, showModal, cartItems }: Props) => {
       {showModal && (
         <Modal onClose={() => setShowModal(false)}>
           <Teeest>
-            <CartHeader>My Cart</CartHeader>
+            <CartHeader>Количка</CartHeader>
 
             <CartContainer>
               <>
@@ -35,16 +35,16 @@ export const Cart = ({ setShowModal, showModal, cartItems }: Props) => {
             </CartContainer>
             <CartFooter>
               <CartPriceContainer>
-                Sub Total:<p>${cartPrice.toFixed(2)}</p>
+                Тениски:<p>{cartPrice.toFixed(2)}лв</p>
               </CartPriceContainer>
               <CartPriceContainer>
-                Shipping:<p>${shippingPrice}</p>
+                Доставка:<p>{shippingPrice}лв</p>
               </CartPriceContainer>
               <CartDivider></CartDivider>
               <CartPriceContainer>
-                Bag Total: <p>${totalPrice.toFixed(2)}</p>
+                Общо: <p>{totalPrice.toFixed(2)}лв</p>
               </CartPriceContainer>
-              <Button label={'Checkout'}></Button>
+              <Button label={'Купи'}></Button>
             </CartFooter>
           </Teeest>
         </Modal>

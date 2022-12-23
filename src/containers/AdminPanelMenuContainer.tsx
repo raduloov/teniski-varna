@@ -31,7 +31,7 @@ const supportedImageTypes = ['image/jpeg'];
 const NewProductContainer = () => {
   const [title, setTitle] = useState<string>('');
   const [description, setDescription] = useState<string>('');
-  const [price, setPrice] = useState<number | null>(null);
+  const [price, setPrice] = useState<number | string>('');
   const [image, setImage] = useState<File | null>(null);
   const [sizes, setSizes] = useState<SizesCheckbox>(defaultSizesObj);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -113,6 +113,7 @@ const NewProductContainer = () => {
       <InputContainer>
         <Text>Title</Text>
         <Input
+          value={title}
           placeholder={'Title...'}
           onChange={(e) => setTitle(e.target.value)}
         />
@@ -120,6 +121,7 @@ const NewProductContainer = () => {
       <InputContainer>
         <Text>Description</Text>
         <Input
+          value={description}
           placeholder={'Description...'}
           onChange={(e) => setDescription(e.target.value)}
         />
@@ -127,9 +129,10 @@ const NewProductContainer = () => {
       <InputContainer>
         <Text>Price</Text>
         <Input
+          value={price}
           placeholder={'Price...'}
           type={'number'}
-          onChange={(e) => setPrice(Number(e.target.value))}
+          onChange={(e) => setPrice(e.target.value)}
         />
       </InputContainer>
       <InputContainer>

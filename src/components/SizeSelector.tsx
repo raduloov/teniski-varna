@@ -14,6 +14,7 @@ interface SizeButtonProps {
 }
 
 interface SizeSelectorProps {
+  availableSizes: Array<TShirtSize>;
   selectedSize: TShirtSize | null;
   onSelectSize: (size: TShirtSize) => void;
 }
@@ -27,31 +28,20 @@ const SizeButton = ({ label, selected, onSelectSize }: SizeButtonProps) => {
 };
 
 export const SizeSelector = ({
+  availableSizes,
   selectedSize,
   onSelectSize
 }: SizeSelectorProps) => {
   return (
     <SelectorWrapper>
-      <SizeButton
-        label={TShirtSize.S}
-        selected={selectedSize === TShirtSize.S}
-        onSelectSize={(size) => onSelectSize(size)}
-      />
-      <SizeButton
-        label={TShirtSize.M}
-        selected={selectedSize === TShirtSize.M}
-        onSelectSize={(size) => onSelectSize(size)}
-      />
-      <SizeButton
-        label={TShirtSize.L}
-        selected={selectedSize === TShirtSize.L}
-        onSelectSize={(size) => onSelectSize(size)}
-      />
-      <SizeButton
-        label={TShirtSize.XL}
-        selected={selectedSize === TShirtSize.XL}
-        onSelectSize={(size) => onSelectSize(size)}
-      />
+      {availableSizes.map((size) => (
+        <SizeButton
+          label={size}
+          selected={selectedSize === size}
+          onSelectSize={(size) => onSelectSize(size)}
+          key={size}
+        />
+      ))}
     </SelectorWrapper>
   );
 };
