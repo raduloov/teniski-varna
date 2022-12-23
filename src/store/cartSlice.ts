@@ -32,9 +32,11 @@ export const cartSlice = createSlice({
       );
 
       const localItems = getLocalItems();
-      const itemExistsInState = state.find((item) => item.id === product.id);
+      const itemExistsInState = state.find(
+        (item) => item.id === product.id && item.size === product.size
+      );
       const itemExistsInLocalStorage = localItems.find(
-        (item) => item.id === product.id
+        (item) => item.id === product.id && item.size === product.size
       );
 
       if (!itemExistsInState && !itemExistsInLocalStorage) {
@@ -42,10 +44,12 @@ export const cartSlice = createSlice({
         localItems.push(product);
         localStorage.setItem('cartItems', JSON.stringify(localItems));
       } else {
-        const stateIndex = state.findIndex((item) => item.id === product.id);
+        const stateIndex = state.findIndex(
+          (item) => item.id === product.id && item.size === product.size
+        );
         state[stateIndex].quantity++;
         const localIndex = localItems.findIndex(
-          (item) => item.id === product.id
+          (item) => item.id === product.id && item.size === product.size
         );
         localItems[localIndex].quantity++;
         localStorage.setItem('cartItems', JSON.stringify(localItems));
@@ -54,11 +58,11 @@ export const cartSlice = createSlice({
     removeFromCart: (state, { payload }) => {
       const localItems = getLocalItems();
       const stateIndex = state.findIndex(
-        (product) => product.id === payload.product.id
+        (item) => item.id === payload.item.id && item.size === payload.item.size
       );
       const currentStateQuantity = state[stateIndex].quantity;
       const localIndex = localItems.findIndex(
-        (product) => product.id === payload.product.id
+        (item) => item.id === payload.item.id && item.size === payload.item.size
       );
       const currentLocalQuantity = localItems[localIndex].quantity;
 
