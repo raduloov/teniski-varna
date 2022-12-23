@@ -25,7 +25,7 @@ export const ProductCard = ({ product }: Props) => {
   const addToFavorites = (e?: React.MouseEvent) => {
     e?.stopPropagation();
     const favorites = localStorage.getItem('Favorites');
-    const favoritesArray = JSON.parse(favorites || '[]');
+    const favoritesArray = JSON.parse(favorites ?? '[]');
     if (favoritesArray.find((item: Product) => item.id === product.id)) {
       const newFavorites = favoritesArray.filter(
         (item: Product) => item.id !== product.id

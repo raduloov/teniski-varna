@@ -58,7 +58,6 @@ const HeaderContainer = styled.div`
   svg:last-child {
     padding: 0;
     cursor: pointer;
-    postion: absolute;
   }
 `;
 const ChevronContainer = styled.div<ChevronContainerProps>`

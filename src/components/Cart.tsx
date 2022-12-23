@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { Modal } from './Modal';
 import { CartProductCard } from './CartProductCard';
 import { Button } from './Button';
 import { CartProduct } from '../domain/mappers/cartProductMapper';
+import { useAppDispatch } from '../hooks/useRedux';
+import { cartActions } from '../store/cartSlice';
 
 interface Props {
   showModal: boolean;
@@ -12,6 +14,12 @@ interface Props {
 }
 
 export const Cart = ({ setShowModal, showModal, cartItems }: Props) => {
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(cartActions.fillCartFromLocalStorage());
+  }, []);
+
   const cartPrice = cartItems.reduce((acc, product) => {
     return acc + product.price * product.quantity;
   }, 0);
