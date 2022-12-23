@@ -35,15 +35,19 @@ export const useProducts = (id?: string) => {
     setIsLoading(true);
 
     const docRef = doc(db, 'products', id);
-    const product = (await getDoc(docRef)).data() as Product;
+    const productDoc = await getDoc(docRef);
 
-    const imageRef = ref(storage, `images/${product.image}`);
-    const imageUrl = await getDownloadURL(imageRef);
+    if (productDoc) {
+      const product = { ...productDoc.data(), id: productDoc.id } as Product;
 
-    const mappedProduct = { ...product, image: imageUrl };
+      const imageRef = ref(storage, `images/${product.image}`);
+      const imageUrl = await getDownloadURL(imageRef);
 
-    setProducts([mappedProduct]);
-    setIsLoading(false);
+      const mappedProduct = { ...product, image: imageUrl };
+
+      setProducts([mappedProduct]);
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {

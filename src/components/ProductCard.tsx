@@ -15,6 +15,7 @@ export const ProductCard = ({ product }: Props) => {
   const [favorites, setFavorites] = useState(
     JSON.parse(localStorage.getItem('Favorites') || '[]')
   );
+
   const navigateToDetails = (productId: string) => {
     navigate(`/products/${productId}`, {
       state: { productId }
@@ -48,7 +49,7 @@ export const ProductCard = ({ product }: Props) => {
       <h1>{product.title}</h1>
       <p>{product.description}</p>
       <FavoriteButton>
-        <h1>${product.price}</h1>
+        <h1>{product.price}лв</h1>
         {isFavorite ? (
           <IconButton icon={icons.FcLike} onClick={addToFavorites} />
         ) : (

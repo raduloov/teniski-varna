@@ -10,6 +10,7 @@ import { SizeSelector } from '../components/SizeSelector';
 import { cartActions } from '../store/cartSlice';
 import { Product, TShirtSize } from '../domain/models/ProductDTO';
 import { useAppDispatch } from '../hooks/useRedux';
+import { toast } from 'react-toastify';
 
 interface Props {
   product: Product;
@@ -33,7 +34,14 @@ export const DetailsContainer = ({
   const dispatch = useAppDispatch();
 
   const addToCartHandler = () => {
-    dispatch(cartActions.addToCart({ product, selectedQuantity }));
+    if (!selectedSize) {
+      return toast.error('Моля изберете размер за вашата тениска.');
+    }
+
+    dispatch(
+      cartActions.addToCart({ product, selectedQuantity, selectedSize })
+    );
+    toast.success(`🎉 ${product.title} беше успешно добавен в количката.`);
   };
 
   return (
@@ -50,9 +58,10 @@ export const DetailsContainer = ({
           </TitleWrapper>
           <RatingStars />
         </HeaderWrapper>
-        <SelectSizeTitle>Select Size</SelectSizeTitle>
+        <SelectSizeTitle>Изберете размер</SelectSizeTitle>
         <SizeAndQuantityWrapper>
           <SizeSelector
+            availableSizes={product.sizes}
             selectedSize={selectedSize}
             onSelectSize={(size) => onSelectSize(size)}
           />
@@ -63,17 +72,14 @@ export const DetailsContainer = ({
           />
         </SizeAndQuantityWrapper>
         <DescriptionWrapper>
-          <DescriptionTitle>Description</DescriptionTitle>
+          <DescriptionTitle>Описание</DescriptionTitle>
           {/* TODO Yavor: Implement read more functionality */}
-          <DescriptionContent>
-            Clothing products are currently one of the best and high-quality
-            clothig lines among local Brands. Collared shirt with...
-          </DescriptionContent>
+          <DescriptionContent>{product.description}</DescriptionContent>
         </DescriptionWrapper>
         <CtaWrapper>
-          <Price>${product.price}</Price>
+          <Price>{product.price}лв</Price>
           <Button
-            label="Shop Now"
+            label="Добави в количката"
             size={ButtonSize.LARGE}
             onClick={addToCartHandler}
           />
@@ -95,7 +101,7 @@ const SelectSizeTitle = styled.p`
 `;
 
 const Price = styled.p`
-  font-size: 50px;
+  font-size: 35px;
   font-weight: 800;
 `;
 

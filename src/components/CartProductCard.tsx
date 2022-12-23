@@ -35,8 +35,9 @@ export const CartProductCard = ({ product }: Props) => {
       <ProductDetails>
         <h1>{product.title}</h1>
         <p>{product.description}</p>
+        <p>Размер: {product.size}</p>
         <h1>
-          ${product.price}
+          {product.price}лв
           <QuantitySelector
             quantity={product.quantity}
             onIncreaseQuantity={(e?: React.MouseEvent) => {

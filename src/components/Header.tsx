@@ -35,7 +35,7 @@ export const Header = ({ setTopNavigationShow, topNavigationShow }: Props) => {
         </CartContainer>
       </LogoContainer>
       {topNavigationShow && <HeaderLinks />}
-      <Input icon={icons.FaSearch} />
+      <Input value={''} icon={icons.FaSearch} />
       <ChevronContainer topNavigationShow={topNavigationShow}>
         <icons.BsChevronCompactDown
           color={Color.GRAY}

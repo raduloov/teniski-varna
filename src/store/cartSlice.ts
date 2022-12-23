@@ -15,7 +15,8 @@ export const cartSlice = createSlice({
     addToCart: (state, { payload }) => {
       const product: CartProduct = mapProductToCartProduct(
         payload.product,
-        payload.selectedQuantity
+        payload.selectedQuantity,
+        payload.selectedSize
       );
 
       if (!state.find((item) => item.id === product.id)) {

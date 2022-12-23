@@ -5,6 +5,7 @@ import { IconButton } from './IconButton';
 import { Color } from '../assets/constants';
 
 interface Props {
+  value: string | number;
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   placeholder?: string;
   icon?: IconType;
@@ -12,6 +13,7 @@ interface Props {
 }
 
 export const Input = ({
+  value,
   onChange,
   placeholder = 'Looking for fashion',
   icon,
@@ -20,7 +22,12 @@ export const Input = ({
   return (
     <InputContainer>
       {icon && <IconButton icon={icon} />}
-      <input placeholder={placeholder} onChange={onChange} type={type} />
+      <input
+        value={value}
+        placeholder={placeholder}
+        onChange={onChange}
+        type={type}
+      />
     </InputContainer>
   );
 };

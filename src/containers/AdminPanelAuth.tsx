@@ -19,6 +19,7 @@ export const AdminPanelAuth = () => {
         <InputContainer>
           <Text>Email</Text>
           <Input
+            value={email}
             placeholder={'Email...'}
             onChange={(e) => setEmail(e.target.value)}
           />
@@ -26,6 +27,7 @@ export const AdminPanelAuth = () => {
         <InputContainer>
           <Text>Password</Text>
           <Input
+            value={password}
             placeholder={'Password...'}
             onChange={(e) => setPassword(e.target.value)}
             type={'password'}

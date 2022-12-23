@@ -132,8 +132,6 @@ const getButtonSize = (size: ButtonSize) => {
         min-width: 200px;
         padding-top: 20px;
         padding-bottom: 20px;
-        padding-left: 60px;
-        padding-right: 60px;
         border-radius: 20px;
         font-size: 20px;
       `;
@@ -142,7 +140,6 @@ const getButtonSize = (size: ButtonSize) => {
 
 const ButtonUnselected = styled.button<ButtonContainerProps>`
   cursor: pointer;
-  white-space: nowrap;
   min-width: max-content;
   background: ${Color.LIGHT_GRAY};
   color: ${Color.MEDIUM_GRAY};
@@ -163,7 +160,6 @@ const ButtonUnselected = styled.button<ButtonContainerProps>`
 
 const ButtonSecondary = styled.button<ButtonContainerProps>`
   cursor: pointer;
-  white-space: nowrap;
   min-width: max-content;
   background: transparent;
   border: 2px solid ${(props) => props.backgroundColor};
@@ -185,7 +181,6 @@ const ButtonSecondary = styled.button<ButtonContainerProps>`
 
 const ButtonPrimary = styled.button<ButtonContainerProps>`
   cursor: pointer;
-  white-space: nowrap;
   min-width: max-content;
   background: ${(props) => props.backgroundColor};
   border-radius: 10px;
