@@ -1,9 +1,9 @@
 import { getDownloadURL, ref } from 'firebase/storage';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { Color } from '../assets/constants';
-import { storage } from '../firebase/firebaseConfig';
-import { ActivityIndicator } from './ActivityIndicator';
+import { Color } from '../../../assets/constants';
+import { storage } from '../../../firebase/firebaseConfig';
+import { ActivityIndicator } from '../../common/ActivityIndicator';
 
 export const Banner = () => {
   const [imageUrl, setImageUrl] = useState<string | null>(null);

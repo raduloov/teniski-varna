@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
 import styled from 'styled-components';
-import { Color } from '../assets/constants';
-import { icons } from '../assets/icons';
-import { Product } from '../domain/models/ProductDTO';
-import { IconButton } from './IconButton';
+import { Color } from '../../../assets/constants';
+import { icons } from '../../../assets/icons';
+import { Product } from '../../../domain/models/ProductDTO';
+import { IconButton } from '../../common/IconButton';
 
 interface Props {
   product: Product;

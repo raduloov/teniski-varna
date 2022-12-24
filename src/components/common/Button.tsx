@@ -1,6 +1,6 @@
 import React from 'react';
 import styled, { css, FlattenSimpleInterpolation } from 'styled-components';
-import { Color } from '../assets/constants';
+import { Color } from '../../assets/constants';
 import { ActivityIndicator } from './ActivityIndicator';
 
 interface Props {

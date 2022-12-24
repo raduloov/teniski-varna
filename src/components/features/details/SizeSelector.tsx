@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Color } from '../assets/constants';
-import { TShirtSize } from '../domain/models/ProductDTO';
+import { Color } from '../../../assets/constants';
+import { TShirtSize } from '../../../domain/models/ProductDTO';
 
 interface ButtonWrapperProps {
   selected: boolean;

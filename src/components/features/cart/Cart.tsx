@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
-import { Modal } from './Modal';
+import { Modal } from '../../common/Modal';
+import { Button } from '../../common/Button';
+import { CartProduct } from '../../../domain/mappers/cartProductMapper';
+import { useAppDispatch } from '../../../hooks/useRedux';
+import { cartActions } from '../../../store/cartSlice';
 import { CartProductCard } from './CartProductCard';
-import { Button } from './Button';
-import { CartProduct } from '../domain/mappers/cartProductMapper';
-import { useAppDispatch } from '../hooks/useRedux';
-import { cartActions } from '../store/cartSlice';
 
 interface Props {
   showModal: boolean;

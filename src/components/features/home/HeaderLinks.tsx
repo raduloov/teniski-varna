@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { Color } from '../assets/constants';
-import { icons } from '../assets/icons';
+import { Color } from '../../../assets/constants';
+import { icons } from '../../../assets/icons';
 
 export const HeaderLinks = () => {
   return (

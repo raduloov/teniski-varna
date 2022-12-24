@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import styled from 'styled-components';
-import { Color } from '../assets/constants';
+import { Color } from '../../assets/constants';
 
 interface FileButtonProps {
   fileSelected: boolean;

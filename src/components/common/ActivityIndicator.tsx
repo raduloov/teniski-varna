@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { ThreeDots } from 'react-loader-spinner';
-import { Color } from '../assets/constants';
+import { Color } from '../../assets/constants';
 
 interface Props {
   color: Color;
