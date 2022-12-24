@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { IconType } from 'react-icons';
 import { IconButton } from './IconButton';
-import { Color } from '../assets/constants';
+import { Color } from '../../assets/constants';
 
 interface Props {
   value: string | number;

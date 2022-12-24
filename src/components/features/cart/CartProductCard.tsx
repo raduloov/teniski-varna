@@ -1,11 +1,11 @@
 import React from 'react';
 import { useNavigate } from 'react-router';
 import styled from 'styled-components';
-import { Color } from '../assets/constants';
-import { cartActions } from '../store/cartSlice';
-import { QuantitySelector } from './QuantitySelector';
-import { CartProduct } from '../domain/mappers/cartProductMapper';
-import { useAppDispatch } from '../hooks/useRedux';
+import { Color } from '../../../assets/constants';
+import { cartActions } from '../../../store/cartSlice';
+import { QuantitySelector } from '../details/QuantitySelector';
+import { CartProduct } from '../../../domain/mappers/cartProductMapper';
+import { useAppDispatch } from '../../../hooks/useRedux';
 
 interface Props {
   product: CartProduct;

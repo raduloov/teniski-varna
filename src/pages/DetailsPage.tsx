@@ -4,7 +4,7 @@ import { DetailsContainer } from '../containers/DetailsContainer';
 import { useProducts } from '../hooks/useProducts';
 import { TShirtSize } from '../domain/models/ProductDTO';
 import styled from 'styled-components';
-import { ActivityIndicator } from '../components/ActivityIndicator';
+import { ActivityIndicator } from '../components/common/ActivityIndicator';
 import { Color } from '../assets/constants';
 
 export const DetailsPage = () => {

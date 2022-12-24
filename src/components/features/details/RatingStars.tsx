@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Color } from '../assets/constants';
-import { icons } from '../assets/icons';
+import { Color } from '../../../assets/constants';
+import { icons } from '../../../assets/icons';
 
 enum StarType {
   FILLED = 'FILLED',

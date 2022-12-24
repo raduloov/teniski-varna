@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import styled from 'styled-components';
-import { icons } from '../assets/icons';
+import { icons } from '../../assets/icons';
 import { IconButton } from './IconButton';
 
 const portalElement = document.getElementById('overlays') as HTMLElement;

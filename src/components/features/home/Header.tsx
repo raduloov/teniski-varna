@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { Input } from './Input';
-import { ReactComponent as Logo } from '../assets/images/logo.svg';
-import { icons } from '../assets/icons';
-import { Color } from '../assets/constants';
-import { Cart } from './Cart';
-import { useAppSelector } from '../hooks/useRedux';
+import { Input } from '../../common/Input';
+import { ReactComponent as Logo } from '../../../assets/images/logo.svg';
+import { icons } from '../../../assets/icons';
+import { Color } from '../../../assets/constants';
+import { Cart } from '../cart/Cart';
+import { useAppSelector } from '../../../hooks/useRedux';
 import { HeaderLinks } from './HeaderLinks';
 
 interface Props {

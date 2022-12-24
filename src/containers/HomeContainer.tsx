@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Color } from '../assets/constants';
-import { ActivityIndicator } from '../components/ActivityIndicator';
-import { Banner } from '../components/Banner';
-import { Header } from '../components/Header';
-import { categories, HorizontalScroll } from '../components/HorizontalScroll';
-import { ProductList } from '../components/ProductList';
+import { ActivityIndicator } from '../components/common/ActivityIndicator';
+import { Banner } from '../components/features/home/Banner';
+import { Header } from '../components/features/home/Header';
+import {
+  categories,
+  HorizontalScroll
+} from '../components/common/HorizontalScroll';
+import { ProductList } from '../components/features/home/ProductList';
 import { Product } from '../domain/models/ProductDTO';
 
 interface Props {
