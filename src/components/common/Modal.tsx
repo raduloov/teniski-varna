@@ -68,7 +68,6 @@ const ModalOverlayCont = styled.div`
   transition: all 0.5s ease-out;
   animation: slide-in 0.5s ease-out forwards;
 
-  //add media query for mobile
   @keyframes slide-in {
     0% {
       opacity: 0;

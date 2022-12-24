@@ -6,7 +6,7 @@ import { CartProduct } from '../../../domain/mappers/cartProductMapper';
 import { useAppDispatch } from '../../../hooks/useRedux';
 import { cartActions } from '../../../store/cartSlice';
 import { CartProductCard } from './CartProductCard';
-
+import { useNavigate } from 'react-router';
 interface Props {
   showModal: boolean;
   setShowModal: (showModal: boolean) => void;
@@ -15,6 +15,7 @@ interface Props {
 
 export const Cart = ({ setShowModal, showModal, cartItems }: Props) => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(cartActions.fillCartFromLocalStorage());
@@ -30,9 +31,8 @@ export const Cart = ({ setShowModal, showModal, cartItems }: Props) => {
     <>
       {showModal && (
         <Modal onClose={() => setShowModal(false)}>
-          <Teeest>
+          <CartMainContainer>
             <CartHeader>Количка</CartHeader>
-
             <CartContainer>
               <>
                 {cartItems.length > 0 &&
@@ -52,16 +52,19 @@ export const Cart = ({ setShowModal, showModal, cartItems }: Props) => {
               <CartPriceContainer>
                 Общо: <p>{totalPrice.toFixed(2)}лв</p>
               </CartPriceContainer>
-              <Button label={'Купи'}></Button>
+              <Button
+                label={'Купи'}
+                onClick={() => navigate('checkout')}
+              ></Button>
             </CartFooter>
-          </Teeest>
+          </CartMainContainer>
         </Modal>
       )}
     </>
   );
 };
 
-const Teeest = styled.div`
+const CartMainContainer = styled.div`
   display: flex;
   flex-direction: column;
   height: 92vh;
