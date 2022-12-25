@@ -1,21 +1,31 @@
 import React, { useState } from 'react';
 import { PayPalButtons } from '@paypal/react-paypal-js';
-import { CreateOrderActions, CreateOrderData } from '@paypal/paypal-js';
+import {
+  CreateOrderActions,
+  CreateOrderData,
+  OnApproveData,
+  OnApproveActions,
+  OrderResponseBody
+} from '@paypal/paypal-js';
 import { useAppSelector } from '../hooks/useRedux';
 import styled from 'styled-components';
 import { Input } from '../components/common/Input';
 import speedy from '../assets/images/speedy.webp';
 import { Color } from '../assets/constants';
 import { Button, ButtonSize } from '../components/common/Button';
+import { useNavigate } from 'react-router';
 
 export const CheckoutContainer = () => {
+  const navigate = useNavigate();
+  const [orderPaid, setOrderPaid] = useState<boolean>(false);
   const [buyWithSpeedy, setBuyWithSpeedy] = useState<boolean>(false);
   const cartItems = useAppSelector((state) => state.cart);
-  const totalPrice = cartItems.reduce(
-    (acc, product) => acc + product.price * product.quantity,
-    0
-  );
-  console.log(totalPrice);
+  const totalPrice =
+    cartItems.reduce(
+      (acc, product) => acc + product.price * product.quantity,
+      0
+    ) + 5.0;
+  console.log((totalPrice / 1.96).toFixed(2).toString());
   const createOrderHandler = (
     data: CreateOrderData,
     actions: CreateOrderActions
@@ -24,11 +34,26 @@ export const CheckoutContainer = () => {
       purchase_units: [
         {
           amount: {
-            value: totalPrice.toFixed(2).toString()
+            value:
+              totalPrice > 20 ? (totalPrice / 1.96).toFixed(2).toString() : ''
           }
         }
       ]
     });
+  };
+  const handleOrderApproved = (order: OrderResponseBody | undefined) => {
+    if (order) {
+      setOrderPaid(true);
+      console.log(order);
+      navigate(-1);
+    }
+  };
+  const onApproveHandler = async (
+    data: OnApproveData,
+    actions: OnApproveActions
+  ) => {
+    const order = await actions.order?.capture();
+    handleOrderApproved(order);
   };
   return (
     <CheckoutMainContainer>
@@ -51,6 +76,7 @@ export const CheckoutContainer = () => {
             shape: 'pill'
           }}
           createOrder={createOrderHandler}
+          onApprove={onApproveHandler}
         ></PayPalButtons>
       </ButtonContainer>
     </CheckoutMainContainer>
@@ -75,7 +101,6 @@ const ButtonContainer = styled.div`
     border-radius: 23px;
     padding: 0.6rem;
   }
-  overflow-y: scroll;
 `;
 
 const CheckoutMainContainer = styled.div`
@@ -83,13 +108,11 @@ const CheckoutMainContainer = styled.div`
   margin: auto;
   margin-top: 35%;
   width: 85%;
-  height: 60vh;
+
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  border-radius: 20px;
-  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2);
   gap: 1rem;
 
   form {
@@ -102,6 +125,7 @@ const CheckoutMainContainer = styled.div`
 const CheckoutTitle = styled.h1`
   font-size: 2rem;
   padding-top: 5%;
+  margin-bottom: 5%;
   font-weight: 600;
   color: #000000;
 `;
