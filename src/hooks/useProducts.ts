@@ -1,16 +1,15 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { getDownloadURL, ref } from 'firebase/storage';
 import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
 import { db, storage } from '../firebase/firebaseConfig';
 import { Product } from '../domain/models/ProductDTO';
 
-export const useProducts = (id?: string) => {
-  const [products, setProducts] = useState<Product[]>([]);
+export const useProducts = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const productCollectionRef = collection(db, 'products');
 
-  const getProducts = async () => {
+  const getAllProducts = async (): Promise<Product[]> => {
     setIsLoading(true);
 
     const data = await getDocs(productCollectionRef);
@@ -27,11 +26,11 @@ export const useProducts = (id?: string) => {
       mappedProducts.push({ ...product, image: imageUrl });
     }
 
-    setProducts(mappedProducts);
     setIsLoading(false);
+    return mappedProducts;
   };
 
-  const getProductById = async (id: string) => {
+  const getProductById = async (id: string): Promise<Product | undefined> => {
     setIsLoading(true);
 
     const docRef = doc(db, 'products', id);
@@ -45,18 +44,10 @@ export const useProducts = (id?: string) => {
 
       const mappedProduct = { ...product, image: imageUrl };
 
-      setProducts([mappedProduct]);
       setIsLoading(false);
+      return mappedProduct;
     }
   };
 
-  useEffect(() => {
-    if (id) {
-      getProductById(id);
-    } else {
-      getProducts();
-    }
-  }, []);
-
-  return { products, isLoading };
+  return { getAllProducts, getProductById, isLoading };
 };

@@ -267,6 +267,10 @@ export const AdminPanelMenuContainer = () => {
               onClick={() => setShowAddNewProduct(true)}
             />
             <Button
+              label={'Update existing product'}
+              onClick={() => setShowAddNewProduct(true)}
+            />
+            <Button
               label={'Change banner image'}
               onClick={() => setShowChangeBannerImage(true)}
             />

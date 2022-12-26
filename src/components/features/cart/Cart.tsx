@@ -2,10 +2,15 @@ import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { Modal } from '../../common/Modal';
 import { Button } from '../../common/Button';
-import { CartProduct } from '../../../domain/mappers/cartProductMapper';
+import {
+  CartProduct,
+  mapProductToCartProduct
+} from '../../../domain/mappers/cartProductMapper';
 import { useAppDispatch } from '../../../hooks/useRedux';
-import { cartActions } from '../../../store/cartSlice';
+import { cartActions, LocalItem } from '../../../store/cartSlice';
 import { CartProductCard } from './CartProductCard';
+import { useProducts } from '../../../hooks/useProducts';
+import { getLocalItems } from '../../../store/utils';
 
 interface Props {
   showModal: boolean;
@@ -14,10 +19,44 @@ interface Props {
 }
 
 export const Cart = ({ setShowModal, showModal, cartItems }: Props) => {
+  const { getProductById } = useProducts();
   const dispatch = useAppDispatch();
 
+  const setItemsToCart = async () => {
+    const localCartItems: LocalItem[] = getLocalItems();
+
+    const cartItems: CartProduct[] = [];
+
+    for await (const localCartItem of localCartItems) {
+      const product = await getProductById(localCartItem.id);
+
+      if (product) {
+        const existingItem = cartItems.find(
+          (item) =>
+            item.id === localCartItem.id && item.size === localCartItem.size
+        );
+
+        if (!existingItem) {
+          const mappedProduct = mapProductToCartProduct(
+            product,
+            1,
+            localCartItem.size
+          );
+          cartItems.push(mappedProduct);
+        } else {
+          const itemIndex = cartItems.findIndex(
+            (item) => item.id === localCartItem.id
+          );
+          cartItems[itemIndex].quantity++;
+        }
+      }
+    }
+
+    dispatch(cartActions.fillCart(cartItems));
+  };
+
   useEffect(() => {
-    dispatch(cartActions.fillCartFromLocalStorage());
+    setItemsToCart();
   }, []);
 
   const cartPrice = cartItems.reduce((acc, product) => {
