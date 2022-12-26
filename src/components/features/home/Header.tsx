@@ -7,6 +7,7 @@ import { Color } from '../../../assets/constants';
 import { Cart } from '../cart/Cart';
 import { useAppSelector } from '../../../hooks/useRedux';
 import { HeaderLinks } from './HeaderLinks';
+import { CartProduct } from '../../../domain/mappers/cartProductMapper';
 
 interface Props {
   topNavigationShow: boolean;
@@ -20,6 +21,9 @@ export const Header = ({ setTopNavigationShow, topNavigationShow }: Props) => {
   const [showModal, setShowModal] = useState<boolean>(false);
   const cartItems = useAppSelector((state) => state.cart);
 
+  let cartItemsQuantity = 0;
+  cartItems.forEach((item) => (cartItemsQuantity += item.quantity));
+
   return (
     <HeaderContainer>
       <Cart
@@ -31,7 +35,7 @@ export const Header = ({ setTopNavigationShow, topNavigationShow }: Props) => {
         <Logo />
         <CartContainer onClick={() => setShowModal(true)}>
           <icons.MdOutlineShoppingBag />
-          <CartItemTick>{cartItems.length}</CartItemTick>
+          <CartItemTick>{cartItemsQuantity}</CartItemTick>
         </CartContainer>
       </LogoContainer>
       {topNavigationShow && <HeaderLinks />}
