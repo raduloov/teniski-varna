@@ -3,6 +3,7 @@ import { getDownloadURL, ref } from 'firebase/storage';
 import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
 import { db, storage } from '../firebase/firebaseConfig';
 import { Product } from '../domain/models/ProductDTO';
+import { DEFAULT_TSHIRT_COLOR } from '../assets/constants';
 
 export const useProducts = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -20,7 +21,10 @@ export const useProducts = () => {
 
     const mappedProducts = [];
     for await (const product of products) {
-      const imageRef = ref(storage, `images/${product.image}`);
+      const imageRef = ref(
+        storage,
+        `images/${product.image}-${DEFAULT_TSHIRT_COLOR}`
+      );
       const imageUrl = await getDownloadURL(imageRef);
 
       mappedProducts.push({ ...product, image: imageUrl });
@@ -39,7 +43,10 @@ export const useProducts = () => {
     if (productDoc) {
       const product = { ...productDoc.data(), id: productDoc.id } as Product;
 
-      const imageRef = ref(storage, `images/${product.image}`);
+      const imageRef = ref(
+        storage,
+        `images/${product.image}-${DEFAULT_TSHIRT_COLOR}`
+      );
       const imageUrl = await getDownloadURL(imageRef);
 
       const mappedProduct = { ...product, image: imageUrl };

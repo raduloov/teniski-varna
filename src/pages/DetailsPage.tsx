@@ -6,10 +6,12 @@ import { Product, TShirtSize } from '../domain/models/ProductDTO';
 import styled from 'styled-components';
 import { ActivityIndicator } from '../components/common/ActivityIndicator';
 import { Color } from '../assets/constants';
+import { TShirtColor } from '../containers/adminPanel/utils';
 
 export const DetailsPage = () => {
   const [product, setProduct] = useState<Product>();
   const [selectedSize, setSelectedSize] = useState<TShirtSize | null>(null);
+  const [selectedColor, setSelectedColor] = useState<TShirtColor | null>(null);
   const [selectedQuantity, setSelectedQuantity] = useState<number>(1);
   const { getProductById, isLoading } = useProducts();
   const { productId } = useParams();
@@ -47,6 +49,8 @@ export const DetailsPage = () => {
         <DetailsContainer
           selectedSize={selectedSize}
           onSelectSize={setSelectedSize}
+          selectedColor={selectedColor}
+          onSelectColor={setSelectedColor}
           selectedQuantity={selectedQuantity}
           onGoBack={goBack}
           onIncreaseQuantity={increaseQuantity}

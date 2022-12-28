@@ -11,11 +11,15 @@ import { cartActions } from '../store/cartSlice';
 import { Product, TShirtSize } from '../domain/models/ProductDTO';
 import { useAppDispatch } from '../hooks/useRedux';
 import { toast } from 'react-toastify';
+import { ColorSelector } from '../components/features/details/ColorSelector';
+import { TShirtColor } from './adminPanel/utils';
 
 interface Props {
   product: Product;
   selectedSize: TShirtSize | null;
   onSelectSize: (size: TShirtSize) => void;
+  selectedColor: TShirtColor | null;
+  onSelectColor: (color: TShirtColor) => void;
   selectedQuantity: number;
   onGoBack: () => void;
   onIncreaseQuantity: () => void;
@@ -25,6 +29,8 @@ interface Props {
 export const DetailsContainer = ({
   selectedSize,
   onSelectSize,
+  selectedColor,
+  onSelectColor,
   selectedQuantity,
   onGoBack,
   onIncreaseQuantity,
@@ -58,6 +64,13 @@ export const DetailsContainer = ({
           </TitleWrapper>
           <RatingStars />
         </HeaderWrapper>
+        <SelectSizeTitle>Изберете цвят</SelectSizeTitle>
+        <SizeAndQuantityWrapper>
+          <ColorSelector
+            selectedColor={selectedColor}
+            onSelectColor={(color) => onSelectColor(color)}
+          />
+        </SizeAndQuantityWrapper>
         <SelectSizeTitle>Изберете размер</SelectSizeTitle>
         <SizeAndQuantityWrapper>
           <SizeSelector
@@ -71,11 +84,6 @@ export const DetailsContainer = ({
             onDecreaseQuantity={onDecreaseQuantity}
           />
         </SizeAndQuantityWrapper>
-        <DescriptionWrapper>
-          <DescriptionTitle>Описание</DescriptionTitle>
-          {/* TODO Yavor: Implement read more functionality */}
-          <DescriptionContent>{product.description}</DescriptionContent>
-        </DescriptionWrapper>
         <CtaWrapper>
           <Price>{product.price}лв</Price>
           <Button
@@ -112,21 +120,6 @@ const CtaWrapper = styled.div`
   gap: 15px;
   align-items: center;
   justify-content: space-between;
-`;
-
-const DescriptionContent = styled.p`
-  color: ${Color.GRAY};
-`;
-
-const DescriptionTitle = styled.p`
-  font-size: 18px;
-  font-weight: 500;
-  margin-bottom: 10px;
-`;
-
-const DescriptionWrapper = styled.div`
-  flex-direction: column;
-  margin-top: 15px;
 `;
 
 const SizeAndQuantityWrapper = styled.div`

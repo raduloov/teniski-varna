@@ -47,6 +47,7 @@ export const SizeSelector = ({
 };
 
 const ButtonWrapper = styled.div<ButtonWrapperProps>`
+  cursor: pointer;
   width: 50px;
   height: 50px;
   background: ${(props) => (props.selected ? Color.ACCENT : Color.LIGHT_GRAY)};
