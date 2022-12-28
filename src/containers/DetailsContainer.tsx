@@ -55,7 +55,11 @@ export const DetailsContainer = ({
       <ActionButtonsWrapper>
         <IconButton icon={icons.FaChevronLeft} onClick={onGoBack} />
       </ActionButtonsWrapper>
-      <Image src={product.image} />
+      <Image
+        src={
+          selectedColor ? product.images[selectedColor] : product.images.white
+        }
+      />
       <BottomSheetContainer>
         <HeaderWrapper>
           <TitleWrapper>

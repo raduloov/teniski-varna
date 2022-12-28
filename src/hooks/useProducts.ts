@@ -1,9 +1,9 @@
+import { availableTShirtColors } from './../containers/adminPanel/utils';
 import { useState } from 'react';
 import { getDownloadURL, ref } from 'firebase/storage';
 import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
 import { db, storage } from '../firebase/firebaseConfig';
-import { Product } from '../domain/models/ProductDTO';
-import { DEFAULT_TSHIRT_COLOR } from '../assets/constants';
+import { Product, ProductImages } from '../domain/models/ProductDTO';
 
 export const useProducts = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -20,14 +20,21 @@ export const useProducts = () => {
     })) as Product[];
 
     const mappedProducts = [];
-    for await (const product of products) {
-      const imageRef = ref(
-        storage,
-        `images/${product.image}-${DEFAULT_TSHIRT_COLOR}`
-      );
-      const imageUrl = await getDownloadURL(imageRef);
+    for (const product of products) {
+      const imageUrls: ProductImages = {
+        white: '',
+        black: '',
+        red: '',
+        blue: ''
+      };
 
-      mappedProducts.push({ ...product, image: imageUrl });
+      for (const color of availableTShirtColors) {
+        const imageRef = ref(storage, `images/${product.title}-${color}`);
+        const imageUrl = await getDownloadURL(imageRef);
+        imageUrls[color] = imageUrl;
+      }
+
+      mappedProducts.push({ ...product, images: imageUrls });
     }
 
     setIsLoading(false);
@@ -43,13 +50,20 @@ export const useProducts = () => {
     if (productDoc) {
       const product = { ...productDoc.data(), id: productDoc.id } as Product;
 
-      const imageRef = ref(
-        storage,
-        `images/${product.image}-${DEFAULT_TSHIRT_COLOR}`
-      );
-      const imageUrl = await getDownloadURL(imageRef);
+      const imageUrls: ProductImages = {
+        white: '',
+        black: '',
+        red: '',
+        blue: ''
+      };
 
-      const mappedProduct = { ...product, image: imageUrl };
+      for (const color of availableTShirtColors) {
+        const imageRef = ref(storage, `images/${product.title}-${color}`);
+        const imageUrl = await getDownloadURL(imageRef);
+        imageUrls[color] = imageUrl;
+      }
+
+      const mappedProduct = { ...product, images: imageUrls };
 
       setIsLoading(false);
       return mappedProduct;

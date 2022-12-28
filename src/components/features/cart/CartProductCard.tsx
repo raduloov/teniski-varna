@@ -31,7 +31,7 @@ export const CartProductCard = ({ product }: Props) => {
 
   return (
     <Card onClick={() => navigateToDetails(product.id)}>
-      <img src={product.image} />
+      <img src={product.images.white} />
       <ProductDetails>
         <h1>{product.title}</h1>
         <p>{product.description}</p>

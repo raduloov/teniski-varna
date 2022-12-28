@@ -170,7 +170,7 @@ export const UpdateProductContainer = () => {
       </InputContainer>
       <InputContainer>
         <Text>Image</Text>
-        {selectedProduct && <Image src={selectedProduct.image} />}
+        {/* {selectedProduct && <Image src={selectedProduct.image} />} */}
         <ImageInput
           fileName={image?.name}
           supportedTypes={supportedImageTypes}

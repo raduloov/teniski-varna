@@ -64,7 +64,6 @@ export const NewProductContainer = () => {
     for await (const [color, image] of Object.entries(images)) {
       const storageRef = ref(storage, `images/${title}-${color}`);
       await uploadBytes(storageRef, image);
-      console.log(`${title}-${color} uploaded`);
     }
   };
 
