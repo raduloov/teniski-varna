@@ -8,6 +8,7 @@ import { getLocalItems, cartItemExists } from './utils';
 
 export type LocalItem = {
   id: string;
+  color: string;
   size: TShirtSize;
 };
 
@@ -29,6 +30,7 @@ export const cartSlice = createSlice({
       } else {
         product = mapProductToCartProduct(
           payload.product,
+          payload.selectedColor,
           payload.selectedQuantity,
           payload.selectedSize
         );
@@ -44,6 +46,7 @@ export const cartSlice = createSlice({
 
       const localItem: LocalItem = {
         id: product.id,
+        color: product.color,
         size: product.size
       };
 
@@ -52,8 +55,8 @@ export const cartSlice = createSlice({
         localItems.push(localItem);
         localStorage.setItem('cartItems', JSON.stringify(localItems));
       } else {
-        const stateIndex = state.findIndex(
-          (item) => item.id === product.id && item.size === product.size
+        const stateIndex = state.findIndex((item) =>
+          cartItemExists(item, product)
         );
         state[stateIndex].quantity++;
         localItems.push(localItem);

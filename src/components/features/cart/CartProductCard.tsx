@@ -6,6 +6,7 @@ import { cartActions } from '../../../store/cartSlice';
 import { QuantitySelector } from '../details/QuantitySelector';
 import { CartProduct } from '../../../domain/mappers/cartProductMapper';
 import { useAppDispatch } from '../../../hooks/useRedux';
+import { translateColorToBulgarian } from './utils';
 
 interface Props {
   product: CartProduct;
@@ -31,11 +32,17 @@ export const CartProductCard = ({ product }: Props) => {
 
   return (
     <Card onClick={() => navigateToDetails(product.id)}>
-      <img src={product.images.white} />
+      <img src={product.images[product.color]} />
       <ProductDetails>
         <h1>{product.title}</h1>
-        <p>{product.description}</p>
-        <p>Размер: {product.size}</p>
+        <TextRow>
+          <p>Цвят:</p>
+          <BoldText>{translateColorToBulgarian(product.color)}</BoldText>
+        </TextRow>
+        <TextRow>
+          <p>Размер:</p>
+          <BoldText>{product.size}</BoldText>
+        </TextRow>
         <h1>
           {product.price}лв
           <QuantitySelector
@@ -54,6 +61,15 @@ export const CartProductCard = ({ product }: Props) => {
     </Card>
   );
 };
+
+const TextRow = styled.div`
+  display: flex;
+  gap: 5px;
+`;
+
+const BoldText = styled.p`
+  font-weight: bold;
+`;
 
 const Card = styled.div`
   cursor: pointer;

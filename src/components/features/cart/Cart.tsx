@@ -11,6 +11,7 @@ import { cartActions, LocalItem } from '../../../store/cartSlice';
 import { CartProductCard } from './CartProductCard';
 import { useProducts } from '../../../hooks/useProducts';
 import { getLocalItems } from '../../../store/utils';
+import { TShirtColor } from '../../../containers/adminPanel/utils';
 
 interface Props {
   showModal: boolean;
@@ -39,6 +40,7 @@ export const Cart = ({ setShowModal, showModal, cartItems }: Props) => {
         if (!existingItem) {
           const mappedProduct = mapProductToCartProduct(
             product,
+            localCartItem.color as TShirtColor,
             1,
             localCartItem.size
           );
