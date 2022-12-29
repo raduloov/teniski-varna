@@ -1,11 +1,11 @@
-import { TShirtSize } from './../models/ProductDTO';
+import { ProductImages, TShirtSize } from './../models/ProductDTO';
 import { Product } from '../models/ProductDTO';
 
 export interface CartProduct {
   id: string;
   title: string;
   description: string;
-  image: string;
+  images: ProductImages;
   price: number;
   size: TShirtSize;
   quantity: number;
@@ -19,7 +19,7 @@ export const mapProductToCartProduct = (
   id: product.id,
   title: product.title,
   description: product.description,
-  image: product.image,
+  images: product.images,
   price: product.price,
   size: selectedSize,
   quantity: quantity

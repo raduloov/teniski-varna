@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { Color } from '../assets/constants';
-import { Button } from '../components/common/Button';
-import { Input } from '../components/common/Input';
-import { useAuth } from '../hooks/useAuth';
+import { Color } from '../../assets/constants';
+import { Button } from '../../components/common/Button';
+import { Input } from '../../components/common/Input';
+import { useAuth } from '../../hooks/useAuth';
 
 export const AdminPanelAuth = () => {
   const [email, setEmail] = useState<string>('');

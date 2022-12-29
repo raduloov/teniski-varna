@@ -7,7 +7,6 @@ import { Color } from '../../../assets/constants';
 import { Cart } from '../cart/Cart';
 import { useAppSelector } from '../../../hooks/useRedux';
 import { HeaderLinks } from './HeaderLinks';
-import { CartProduct } from '../../../domain/mappers/cartProductMapper';
 
 interface Props {
   topNavigationShow: boolean;

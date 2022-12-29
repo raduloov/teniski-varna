@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import { AdminPanelAuth } from '../containers/AdminPanelAuth';
-import { AdminPanelMenuContainer } from '../containers/AdminPanelMenuContainer';
+import { AdminPanelAuth } from '../containers/adminPanel/AdminPanelAuth';
+import { AdminPanelMenuContainer } from '../containers/adminPanel/AdminPanelMenuContainer';
 
 export const AdminPanelPage = () => {
   const [isAuth, setIsAuth] = useState<boolean>(false);
