@@ -40,12 +40,20 @@ export const DetailsContainer = ({
   const dispatch = useAppDispatch();
 
   const addToCartHandler = () => {
+    if (!selectedColor) {
+      return toast.error('Моля изберете цвят за вашата тениска.');
+    }
     if (!selectedSize) {
       return toast.error('Моля изберете размер за вашата тениска.');
     }
 
     dispatch(
-      cartActions.addToCart({ product, selectedQuantity, selectedSize })
+      cartActions.addToCart({
+        product,
+        selectedColor,
+        selectedQuantity,
+        selectedSize
+      })
     );
     toast.success(`🎉 ${product.title} беше успешно добавен в количката.`);
   };
