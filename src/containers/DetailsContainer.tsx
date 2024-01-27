@@ -99,8 +99,8 @@ export const DetailsContainer = ({
         <CtaWrapper>
           <Price>{product.price}лв</Price>
           <Button
-            label="Добави в количката"
-            size={ButtonSize.LARGE}
+            label="Добави в количка"
+            size={ButtonSize.MEDIUM}
             onClick={addToCartHandler}
           />
         </CtaWrapper>
@@ -164,7 +164,7 @@ const Title = styled.p`
 const BottomSheetContainer = styled.div`
   position: absolute;
   bottom: 0;
-  width: 100vw;
+  width: 100svw;
   border-top-left-radius: 45px;
   border-top-right-radius: 45px;
   background: ${Color.WHITE};
@@ -179,6 +179,7 @@ const ActionButtonsWrapper = styled.div`
 `;
 
 const Container = styled.div`
-  height: 100vh;
-  background: ${Color.GRAY};
+  height: 100svh;
+  width: 100svw;
+  flex-shrink: 1;
 `;

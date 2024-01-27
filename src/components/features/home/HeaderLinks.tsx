@@ -1,40 +1,66 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { Color } from '../../../assets/constants';
 import { icons } from '../../../assets/icons';
+import { keyframes } from 'styled-components';
 
-export const HeaderLinks = () => {
+interface Props {
+  height: number;
+}
+
+type THeaderRef = React.ForwardedRef<HTMLDivElement>;
+
+export const HeaderLinks = forwardRef(({ height }: Props, ref: THeaderRef) => {
   return (
-    <HeaderLinksContainer>
-      <Link to="/">
+    <HeaderLinksContainer ref={ref} height={height}>
+      <StyledLink to="/">
         <icons.FaHome />
         Home
-      </Link>
-      <Link to="/favorites">
+      </StyledLink>
+      <StyledLink to="/favorites">
         <icons.MdFavorite />
         Favorites
-      </Link>
-      <Link to="/contact">
+      </StyledLink>
+      <StyledLink to="/contact">
         <icons.MdPermContactCalendar />
         Contact
-      </Link>
-      <Link to="/about">
+      </StyledLink>
+      <StyledLink to="/about">
         <icons.RiInformationFill />
         About
-      </Link>
-      <Link to="/policies">
+      </StyledLink>
+      <StyledLink to="/policies">
         <icons.MdPolicy />
         Policies
-      </Link>
-      <Link to="/faq">
+      </StyledLink>
+      <StyledLink to="/faq">
         <icons.FaQuestionCircle />
         FAQ
-      </Link>
+      </StyledLink>
     </HeaderLinksContainer>
   );
-};
-const HeaderLinksContainer = styled.div`
+});
+
+HeaderLinks.displayName = 'HeaderLinks';
+
+const linkAnimation = keyframes`
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`;
+
+const StyledLink = styled(Link)`
+  animation: ${linkAnimation} 0.5s ease forwards;
+  opacity: 0;
+`;
+
+const HeaderLinksContainer = styled.div<{ height: number }>`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -48,14 +74,13 @@ const HeaderLinksContainer = styled.div`
   a {
     display: flex;
     text-decoration: none;
-    color: ${Color.GRAY};
-    background-color: ${Color.LIGHT_GRAY};
     width: 100%;
     padding: 0.5rem;
     border-radius: 10px;
     gap: 0.5rem;
     align-items: center;
-
+    color: ${Color.GRAY};
+    background: ${({ height }) => (height ? Color.LIGHT_GRAY : 'transparent')};
     svg {
       margin-left: 0.25rem;
       cursor: pointer;
