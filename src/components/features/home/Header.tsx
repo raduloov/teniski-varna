@@ -19,12 +19,14 @@ interface ChevronContainerProps {
 export const Header = ({ setTopNavigationShow, topNavigationShow }: Props) => {
   const [showModal, setShowModal] = useState<boolean>(false);
   const cartItems = useAppSelector((state) => state.cart);
-
-  let cartItemsQuantity = 0;
-  cartItems.forEach((item) => (cartItemsQuantity += item.quantity));
+  const [headerContainerHeight, setHeaderContainerHeight] = useState<number>(0);
+  const cartItemsQuantity = cartItems.reduce(
+    (total, item) => total + item.quantity,
+    0
+  );
 
   return (
-    <HeaderContainer>
+    <HeaderContainer height={headerContainerHeight}>
       <Cart
         cartItems={cartItems}
         setShowModal={setShowModal}
@@ -37,8 +39,13 @@ export const Header = ({ setTopNavigationShow, topNavigationShow }: Props) => {
           <CartItemTick>{cartItemsQuantity}</CartItemTick>
         </CartContainer>
       </LogoContainer>
-      {topNavigationShow && <HeaderLinks />}
       <Input value={''} icon={icons.FaSearch} />
+      {topNavigationShow && (
+        <HeaderLinks
+          height={headerContainerHeight}
+          setHeaderContainerHeight={setHeaderContainerHeight}
+        />
+      )}
       <ChevronContainer topNavigationShow={topNavigationShow}>
         <icons.BsChevronCompactDown
           color={Color.GRAY}
@@ -49,7 +56,7 @@ export const Header = ({ setTopNavigationShow, topNavigationShow }: Props) => {
   );
 };
 
-const HeaderContainer = styled.div`
+const HeaderContainer = styled.div<{ height: number }>`
   position: relative;
   padding: 1.5rem;
   display: flex;
@@ -58,6 +65,7 @@ const HeaderContainer = styled.div`
   border-bottom-left-radius: 2rem;
   border-bottom-right-radius: 2rem;
   box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.15);
+  height: ${({ height }) => (height ? height + 15 : 0) + 200}px;
   svg:last-child {
     padding: 0;
     cursor: pointer;

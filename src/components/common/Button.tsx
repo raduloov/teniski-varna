@@ -148,6 +148,7 @@ const ButtonUnselected = styled.button<ButtonContainerProps>`
   padding-bottom: 10px;
   padding-left: 20px;
   padding-right: 20px;
+  white-space: nowrap;
   font-weight: 500;
   &:active {
     filter: brightness(0.9);
@@ -168,6 +169,7 @@ const ButtonSecondary = styled.button<ButtonContainerProps>`
   padding-top: 10px;
   padding-bottom: 10px;
   padding-left: 20px;
+  white-space: nowrap;
   padding-right: 20px;
   font-weight: 500;
   &:active {
@@ -182,6 +184,7 @@ const ButtonSecondary = styled.button<ButtonContainerProps>`
 const ButtonPrimary = styled.button<ButtonContainerProps>`
   cursor: pointer;
   min-width: max-content;
+  white-space: nowrap;
   background: ${(props) => props.backgroundColor};
   border-radius: 10px;
   padding-top: 10px;

@@ -12,6 +12,7 @@ import { CartProductCard } from './CartProductCard';
 import { useProducts } from '../../../hooks/useProducts';
 import { getLocalItems } from '../../../store/utils';
 import { TShirtColor } from '../../../containers/adminPanel/utils';
+import { useNavigate } from 'react-router';
 
 interface Props {
   showModal: boolean;
@@ -22,6 +23,7 @@ interface Props {
 export const Cart = ({ setShowModal, showModal, cartItems }: Props) => {
   const { getProductById } = useProducts();
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const setItemsToCart = async () => {
     const localCartItems: LocalItem[] = getLocalItems();
@@ -93,7 +95,10 @@ export const Cart = ({ setShowModal, showModal, cartItems }: Props) => {
               <CartPriceContainer>
                 Общо: <p>{totalPrice.toFixed(2)}лв</p>
               </CartPriceContainer>
-              <Button label={'Купи'}></Button>
+              <Button
+                label={'Купи'}
+                onClick={() => navigate('checkout')}
+              ></Button>
             </CartFooter>
           </Teeest>
         </Modal>
