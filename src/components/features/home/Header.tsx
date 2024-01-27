@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Input } from '../../common/Input';
 import { ReactComponent as Logo } from '../../../assets/images/logo.svg';
@@ -19,18 +19,11 @@ interface ChevronContainerProps {
 export const Header = ({ setTopNavigationShow, topNavigationShow }: Props) => {
   const [showModal, setShowModal] = useState<boolean>(false);
   const cartItems = useAppSelector((state) => state.cart);
-  const headerLinksRef = useRef<HTMLDivElement>(null);
-  const [headerContainerHeight, setHeaderContainerHeight] = useState<number>(
-    headerLinksRef.current?.clientHeight || 0
-  );
+  const [headerContainerHeight, setHeaderContainerHeight] = useState<number>(0);
   const cartItemsQuantity = cartItems.reduce(
     (total, item) => total + item.quantity,
     0
   );
-
-  useEffect(() => {
-    setHeaderContainerHeight(headerLinksRef.current?.clientHeight || 0);
-  }, [topNavigationShow, headerLinksRef]);
 
   return (
     <HeaderContainer height={headerContainerHeight}>
@@ -48,7 +41,10 @@ export const Header = ({ setTopNavigationShow, topNavigationShow }: Props) => {
       </LogoContainer>
       <Input value={''} icon={icons.FaSearch} />
       {topNavigationShow && (
-        <HeaderLinks ref={headerLinksRef} height={headerContainerHeight} />
+        <HeaderLinks
+          height={headerContainerHeight}
+          setHeaderContainerHeight={setHeaderContainerHeight}
+        />
       )}
       <ChevronContainer topNavigationShow={topNavigationShow}>
         <icons.BsChevronCompactDown

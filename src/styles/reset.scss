@@ -9,11 +9,16 @@
   font-family: Roboto;
   overflow-wrap: break-word;
   word-wrap: break-word;
+  -ms-overflow-style: none;
+  scrollbar-width: none; 
   -webkit-hyphens: auto;
   -ms-hyphens: auto;
   -moz-hyphens: auto;
   hyphens: auto;
   transition: all 0.3s ease;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 
