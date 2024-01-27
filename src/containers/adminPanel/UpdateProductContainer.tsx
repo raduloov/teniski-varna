@@ -11,7 +11,14 @@ import { Input } from '../../components/common/Input';
 import { ImageInput } from '../../components/common/ImageInput';
 import { Checkbox } from '../../components/common/Checkbox';
 import { Button } from '../../components/common/Button';
-import { defaultSizesObj, SizesCheckbox, supportedImageTypes } from './utils';
+import {
+  ColorImages,
+  defaultImagesObj,
+  defaultSizesObj,
+  SizesCheckbox,
+  supportedImageTypes,
+  TShirtColor
+} from './utils';
 
 export const UpdateProductContainer = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -19,14 +26,31 @@ export const UpdateProductContainer = () => {
   const [title, setTitle] = useState<string>('');
   const [description, setDescription] = useState<string>('');
   const [price, setPrice] = useState<number | string>('');
-  const [image, setImage] = useState<File | null>(null);
+  const [images, setImages] = useState<ColorImages>(defaultImagesObj);
   const [sizes, setSizes] = useState<SizesCheckbox>(defaultSizesObj);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const { getAllProducts, getProductById } = useProducts();
 
+  const emptyProduct = {
+    id: '',
+    title: 'Select a product',
+    description: '',
+    price: 0,
+    images: {
+      white: '',
+      black: '',
+      red: '',
+      blue: ''
+    },
+    sizes: [],
+    colors: []
+  };
+
   const setProductsFromFirebase = async () => {
-    const products = await getAllProducts();
+    const fetchedProducts = await getAllProducts();
+
+    const products = [emptyProduct, ...fetchedProducts];
     setProducts(products);
     fillForm(products[0]);
   };
@@ -37,7 +61,7 @@ export const UpdateProductContainer = () => {
 
   const onSelectProduct = async (e: React.ChangeEvent<HTMLSelectElement>) => {
     const productId = e.target.value;
-    const product = await getProductById(productId);
+    const product = productId ? await getProductById(productId) : emptyProduct;
 
     if (product) {
       setSelectedProduct(product);
@@ -46,9 +70,11 @@ export const UpdateProductContainer = () => {
   };
 
   const fillForm = (product: Product) => {
-    setTitle(product.title);
+    const hasSelectedProduct = !!product.id;
+
+    setTitle(hasSelectedProduct ? product.title : '');
     setDescription(product.description);
-    setPrice(product.price);
+    setPrice(hasSelectedProduct ? product.price : '');
     setSizes(mapSizesToObject(product.sizes));
   };
 
@@ -88,16 +114,16 @@ export const UpdateProductContainer = () => {
     await updateDoc(doc(db, 'products', selectedProduct.id), product);
   };
 
-  const uploadImage = async () => {
-    if (!image) {
-      return;
+  const uploadImages = async () => {
+    for await (const [color, image] of Object.entries(images)) {
+      if (color && image) {
+        const storageRef = ref(storage, `images/${title}-${color}`);
+        await uploadBytes(storageRef, image);
+      }
     }
-
-    const storageRef = ref(storage, `images/${title}`);
-    await uploadBytes(storageRef, image);
   };
 
-  const addNewProduct = async () => {
+  const updateExistingProduct = async () => {
     if (!title) {
       return toast.error('💥 Please add a title for your product!');
     }
@@ -117,7 +143,7 @@ export const UpdateProductContainer = () => {
     setIsLoading(true);
     try {
       await updateProduct();
-      await uploadImage();
+      await uploadImages();
 
       return toast.success('🎉 Product updated successfully!');
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -128,6 +154,18 @@ export const UpdateProductContainer = () => {
     }
   };
 
+  const handleImageChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    color: TShirtColor
+  ) => {
+    e.target.files && setImages({ ...images, [color]: e.target.files[0] });
+  };
+
+  const handleSizeSelection = (size: TShirtSize) =>
+    setSizes((sizes) => ({ ...sizes, [size]: !sizes[size] }));
+
+  // TODO: Blur fields if product is not selected
+  // TODO: Blur fields and show spinner while loading product
   return (
     <Wrapper>
       <Title>Update an existing product</Title>
@@ -169,13 +207,41 @@ export const UpdateProductContainer = () => {
         />
       </InputContainer>
       <InputContainer>
-        <Text>Image</Text>
-        {/* {selectedProduct && <Image src={selectedProduct.image} />} */}
-        <ImageInput
-          fileName={image?.name}
-          supportedTypes={supportedImageTypes}
-          onChange={(e) => e.target.files && setImage(e.target.files[0])}
-        />
+        <Text>Images</Text>
+        <ImageInputContainer>
+          <ImageInputWrapper>
+            <SmallText>⬜️ White</SmallText>
+            <ImageInput
+              fileName={images?.white?.name}
+              supportedTypes={supportedImageTypes}
+              onChange={(e) => handleImageChange(e, TShirtColor.WHITE)}
+            />
+          </ImageInputWrapper>
+          <ImageInputWrapper>
+            <SmallText>⬛️ Black</SmallText>
+            <ImageInput
+              fileName={images?.black?.name}
+              supportedTypes={supportedImageTypes}
+              onChange={(e) => handleImageChange(e, TShirtColor.BLACK)}
+            />
+          </ImageInputWrapper>
+          <ImageInputWrapper>
+            <SmallText>🟥 Red</SmallText>
+            <ImageInput
+              fileName={images?.red?.name}
+              supportedTypes={supportedImageTypes}
+              onChange={(e) => handleImageChange(e, TShirtColor.RED)}
+            />
+          </ImageInputWrapper>
+          <ImageInputWrapper>
+            <SmallText>🟦 Blue</SmallText>
+            <ImageInput
+              fileName={images?.blue?.name}
+              supportedTypes={supportedImageTypes}
+              onChange={(e) => handleImageChange(e, TShirtColor.BLUE)}
+            />
+          </ImageInputWrapper>
+        </ImageInputContainer>
       </InputContainer>
       <InputContainer>
         <Text>T-Shirt Sizes</Text>
@@ -184,28 +250,28 @@ export const UpdateProductContainer = () => {
             <Checkbox
               label={TShirtSize.S}
               checked={sizes.S}
-              onClick={() => setSizes((sizes) => ({ ...sizes, S: !sizes.S }))}
+              onClick={() => handleSizeSelection(TShirtSize.S)}
             />
           </CheckboxContainer>
           <CheckboxContainer>
             <Checkbox
               label={TShirtSize.M}
               checked={sizes.M}
-              onClick={() => setSizes((sizes) => ({ ...sizes, M: !sizes.M }))}
+              onClick={() => handleSizeSelection(TShirtSize.M)}
             />
           </CheckboxContainer>
           <CheckboxContainer>
             <Checkbox
               label={TShirtSize.L}
               checked={sizes.L}
-              onClick={() => setSizes((sizes) => ({ ...sizes, L: !sizes.L }))}
+              onClick={() => handleSizeSelection(TShirtSize.L)}
             />
           </CheckboxContainer>
           <CheckboxContainer>
             <Checkbox
               label={TShirtSize.XL}
               checked={sizes.XL}
-              onClick={() => setSizes((sizes) => ({ ...sizes, XL: !sizes.XL }))}
+              onClick={() => handleSizeSelection(TShirtSize.XL)}
             />
           </CheckboxContainer>
         </SizesContainer>
@@ -214,15 +280,24 @@ export const UpdateProductContainer = () => {
         <Button
           label={'Update product'}
           loading={isLoading}
-          onClick={addNewProduct}
+          onClick={updateExistingProduct}
         />
       </ButtonContainer>
     </Wrapper>
   );
 };
 
-const Image = styled.img`
-  width: 50%;
+const ImageInputContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+`;
+
+const ImageInputWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
 `;
 
 const DropdownLabel = styled.label`
@@ -258,6 +333,10 @@ const Text = styled.p`
   font-size: 20px;
   font-weight: bold;
   margin-left: 10px;
+  color: ${Color.WHITE};
+`;
+
+const SmallText = styled.p`
   color: ${Color.WHITE};
 `;
 
