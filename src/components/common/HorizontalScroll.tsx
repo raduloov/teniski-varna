@@ -36,6 +36,7 @@ export const HorizontalScroll = ({
     </Wrapper>
   );
 };
+
 const Wrapper = styled.div`
   display: flex;
   flex-wrap: none;
