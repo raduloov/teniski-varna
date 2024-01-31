@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Button, ButtonType } from './Button';
+import { Button, ButtonSize, ButtonType } from './Button';
 
 // Example categories to be passed
 export const categories = ['Popular', 'Most Viewed', 'Recommended', 'New'];
@@ -28,6 +28,7 @@ export const HorizontalScroll = ({
               label={category}
               type={getButtonType(category)}
               onClick={() => onSelectCategory(category)}
+              size={ButtonSize.MEDIUM}
             />
           </ButtonContainer>
         );

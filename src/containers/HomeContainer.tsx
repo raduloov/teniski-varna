@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import { Color } from '../assets/constants';
 import { ActivityIndicator } from '../components/common/ActivityIndicator';
 import { Banner } from '../components/features/home/Banner';
-import { Header } from '../components/features/home/Header';
 import {
   categories,
   HorizontalScroll
@@ -20,14 +19,9 @@ export const HomeContainer = ({ products, isLoading }: Props) => {
   const [selectedCategory, setSelectedCategory] = useState<string>(
     categories[0]
   );
-  const [topNavigationShow, setTopNavigationShow] = useState<boolean>(false);
 
   return (
     <>
-      <Header
-        setTopNavigationShow={setTopNavigationShow}
-        topNavigationShow={topNavigationShow}
-      />
       <Banner />
       <HorizontalScroll
         categories={categories}
@@ -42,7 +36,7 @@ export const HomeContainer = ({ products, isLoading }: Props) => {
   );
 };
 
-const ProductListContainer = styled.div`
+export const ProductListContainer = styled.div`
   z-index: 10;
   background-color: transparent;
   margin-top: 10px;
