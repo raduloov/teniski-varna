@@ -13,6 +13,7 @@ import { useAppDispatch } from '../hooks/useRedux';
 import { toast } from 'react-toastify';
 import { ColorSelector } from '../components/features/details/ColorSelector';
 import { TShirtColor } from './adminPanel/utils';
+import { ActivityIndicator } from '../components/common/ActivityIndicator';
 
 interface Props {
   product: Product;
@@ -20,6 +21,8 @@ interface Props {
   onSelectSize: (size: TShirtSize) => void;
   selectedColor: TShirtColor | null;
   onSelectColor: (color: TShirtColor) => void;
+  imageHasLoaded: boolean;
+  onImageLoad: () => void;
   selectedQuantity: number;
   onGoBack: () => void;
   onIncreaseQuantity: () => void;
@@ -31,6 +34,8 @@ export const DetailsContainer = ({
   onSelectSize,
   selectedColor,
   onSelectColor,
+  imageHasLoaded,
+  onImageLoad,
   selectedQuantity,
   onGoBack,
   onIncreaseQuantity,
@@ -63,11 +68,18 @@ export const DetailsContainer = ({
       <ActionButtonsWrapper>
         <IconButton icon={icons.FaChevronLeft} onClick={onGoBack} />
       </ActionButtonsWrapper>
-      <Image
-        src={
-          selectedColor ? product.images[selectedColor] : product.images.white
-        }
-      />
+      <ImageWrapper>
+        {!imageHasLoaded && (
+          <ActivityIndicator size={100} color={Color.ACCENT} />
+        )}
+        <Image
+          src={
+            selectedColor ? product.images[selectedColor] : product.images.white
+          }
+          onLoad={() => onImageLoad()}
+          loaded={imageHasLoaded}
+        />
+      </ImageWrapper>
       <BottomSheetContainer>
         <HeaderWrapper>
           <TitleWrapper>
@@ -109,9 +121,17 @@ export const DetailsContainer = ({
   );
 };
 
-const Image = styled.img`
+const ImageWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 50%;
+`;
+
+const Image = styled.img<{ loaded: boolean }>`
   max-height: 100%;
   max-width: 100%;
+  ${({ loaded }) => !loaded && 'display: none;'}
 `;
 
 const SelectSizeTitle = styled.p`
@@ -127,6 +147,7 @@ const Price = styled.p`
 
 const CtaWrapper = styled.div`
   display: flex;
+  flex-direction: column;
   width: 100%;
   margin-top: 15px;
   gap: 15px;
