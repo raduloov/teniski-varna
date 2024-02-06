@@ -11,7 +11,9 @@ import { TShirtColor } from '../containers/adminPanel/utils';
 export const DetailsPage = () => {
   const [product, setProduct] = useState<Product>();
   const [selectedSize, setSelectedSize] = useState<TShirtSize | null>(null);
-  const [selectedColor, setSelectedColor] = useState<TShirtColor | null>(null);
+  const [selectedColor, setSelectedColor] = useState<TShirtColor>(
+    TShirtColor.WHITE
+  );
   const [selectedQuantity, setSelectedQuantity] = useState<number>(1);
   const [imageHasLoaded, setImageHasLoaded] = useState<boolean>(false);
   const { getProductById, isLoading } = useProducts();
@@ -39,7 +41,10 @@ export const DetailsPage = () => {
 
   const selectColor = (color: TShirtColor) => {
     setSelectedColor(color);
-    setImageHasLoaded(false);
+
+    if (selectedColor !== color) {
+      setImageHasLoaded(false);
+    }
   };
 
   if (isLoading) {
