@@ -6,55 +6,20 @@ import { Input } from '../../components/common/Input';
 import { Button } from '../../components/common/Button';
 import { IconButton } from '../../components/common/IconButton';
 import { icons } from '../../assets/icons';
-import {
-  addDoc,
-  collection,
-  deleteDoc,
-  doc,
-  getDocs
-} from '@firebase/firestore';
+import { addDoc, collection, deleteDoc, doc } from '@firebase/firestore';
 import { db } from '../../firebase/firebaseConfig';
 import { ActivityIndicator } from '../../components/common/ActivityIndicator';
-
-interface Label {
-  id: string;
-  name: string;
-  index: number;
-}
+import { Label, useLabels } from '../../hooks/useLabels';
 
 export const LabelsContainer = () => {
   const [labels, setLabels] = useState<Label[]>([]);
   const [newLabelName, setNewLabelName] = useState<string>('');
   const [newLabelIndex, setNewLabelIndex] = useState<number>(0);
   const [labelIdToEdit, setLabelIdToEdit] = useState<string | null>(null);
-  const [isFetchingLabels, setIsFetchingLabels] = useState<boolean>(false);
   const [isDeletingLabel, setIsDeletingLabel] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  // console.log('isLoading', isLoading);
-
-  const getLabels = async () => {
-    setIsFetchingLabels(true);
-
-    const labelsCollectionRef = collection(db, 'labels');
-
-    try {
-      const data = await getDocs(labelsCollectionRef);
-      const labels = data.docs.map((doc) => ({
-        ...doc.data(),
-        id: doc.id
-      })) as Label[];
-
-      labels.sort((a, b) => a.index - b.index); // sort by index
-      return labels;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (e: any) {
-      toast.error(`💥 ${e.message}`);
-      return [];
-    } finally {
-      setIsFetchingLabels(false);
-    }
-  };
+  const { getLabels, isFetchingLabels } = useLabels();
 
   const setLabelsFromFirebase = async () => {
     const fetchedLabels = await getLabels();
@@ -209,7 +174,7 @@ export const LabelsContainer = () => {
   return (
     <Wrapper>
       <Text>Labels</Text>
-      <LabelContainer>
+      <LabelsWrapper>
         {isFetchingLabels ? (
           <LabelsLoadingContainer>
             <ActivityIndicator color={Color.BLACK} size={25} />
@@ -217,18 +182,18 @@ export const LabelsContainer = () => {
           </LabelsLoadingContainer>
         ) : labels.length > 0 ? (
           labels.map((label) => (
-            <Label key={label.id}>
+            <LabelWrapper key={label.id}>
               <LabelText>{label.name}</LabelText>
               <IconButton
                 icon={icons.FaEdit}
                 onClick={() => handleStartEditingLabel(label)}
               />
-            </Label>
+            </LabelWrapper>
           ))
         ) : (
           <p>No labels available</p>
         )}
-      </LabelContainer>
+      </LabelsWrapper>
       <Text>Add label</Text>
       <InputContainer>
         <NewLabelNameInput>
@@ -280,7 +245,7 @@ const ButtonContainer = styled.div`
   padding-top: 20px;
 `;
 
-const LabelContainer = styled.div`
+const LabelsWrapper = styled.div`
   display: flex;
   align-items: center;
   padding: 10px;
@@ -305,7 +270,7 @@ const LabelsLoadingContainer = styled.div`
   width: 100%;
 `;
 
-const Label = styled.div`
+const LabelWrapper = styled.div`
   display: flex;
   align-items: center;
   background-color: ${Color.ACCENT};

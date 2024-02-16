@@ -2,9 +2,6 @@ import React from 'react';
 import styled from 'styled-components';
 import { Button, ButtonSize, ButtonType } from './Button';
 
-// Example categories to be passed
-export const categories = ['Popular', 'Most Viewed', 'Recommended', 'New'];
-
 interface Props {
   categories: Array<string>;
   selected: string;
