@@ -10,6 +10,8 @@ interface Props {
   placeholder?: string;
   icon?: IconType;
   type?: string;
+  min?: number;
+  max?: number;
 }
 
 export const Input = ({
@@ -17,7 +19,9 @@ export const Input = ({
   onChange,
   placeholder = 'Looking for fashion',
   icon,
-  type
+  type,
+  min,
+  max
 }: Props) => {
   return (
     <InputContainer>
@@ -27,6 +31,8 @@ export const Input = ({
         placeholder={placeholder}
         onChange={onChange}
         type={type}
+        min={min}
+        max={max}
       />
     </InputContainer>
   );
