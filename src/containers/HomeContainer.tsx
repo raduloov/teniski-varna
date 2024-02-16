@@ -1,14 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Color } from '../assets/constants';
 import { ActivityIndicator } from '../components/common/ActivityIndicator';
 import { Banner } from '../components/features/home/Banner';
-import {
-  categories,
-  HorizontalScroll
-} from '../components/common/HorizontalScroll';
+import { HorizontalScroll } from '../components/common/HorizontalScroll';
 import { ProductList } from '../components/features/home/ProductList';
 import { Product } from '../domain/models/ProductDTO';
+import { useLabels } from '../hooks/useLabels';
 
 interface Props {
   products: Array<Product>;
@@ -16,9 +14,21 @@ interface Props {
 }
 
 export const HomeContainer = ({ products, isLoading }: Props) => {
+  const [categories, setCategories] = useState<string[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>(
     categories[0]
   );
+  const { getLabels } = useLabels();
+
+  const setCategoriesFromFirebase = async () => {
+    const fetchedCategories = await getLabels();
+    const categories = fetchedCategories.map((label) => label.name);
+    setCategories(categories);
+  };
+
+  useEffect(() => {
+    setCategoriesFromFirebase();
+  }, []);
 
   return (
     <>
