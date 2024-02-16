@@ -1,20 +1,34 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ref, uploadBytes } from 'firebase/storage';
 import { toast } from 'react-toastify';
 import styled from 'styled-components';
 import { Color } from '../../assets/constants';
 import { Button } from '../../components/common/Button';
 import { ImageInput } from '../../components/common/ImageInput';
-import { storage } from '../../firebase/firebaseConfig';
+import { db, storage } from '../../firebase/firebaseConfig';
 import { supportedImageTypes } from './utils';
+import { Input } from '../../components/common/Input';
+import { collection, doc, getDocs, updateDoc } from '@firebase/firestore';
 
 export const UpdateBannerImageContainer = () => {
   const [image, setImage] = useState<File | null>(null);
+  const [bannerLink, setBannerLink] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const getBannerLink = async () => {
+    const bannerLinkRef = collection(db, 'bannerLink');
+    const bannerLink = await getDocs(bannerLinkRef);
+
+    setBannerLink(bannerLink.docs[0].data().bannerLink);
+  };
+
+  useEffect(() => {
+    getBannerLink();
+  }, []);
 
   const updateBannerImage = async () => {
     if (!image) {
-      return toast.error('💥 Please add a banner image to update.');
+      return;
     }
 
     setIsLoading(true);
@@ -22,15 +36,37 @@ export const UpdateBannerImageContainer = () => {
     const storageRef = ref(storage, `bannerImage.jpeg`);
     try {
       await uploadBytes(storageRef, image);
-
       setImage(null);
-      return toast.success('🎉 Banner image updated successfully!');
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       return toast.error(`💥 ${e.message}`);
     } finally {
       setIsLoading(false);
+      toast.success('🎉 Banner image updated successfully!');
     }
+  };
+
+  const updateBannerLink = async () => {
+    if (!bannerLink) {
+      return toast.error('💥 Please add a banner link to update.');
+    }
+
+    setIsLoading(true);
+
+    try {
+      await updateDoc(doc(db, 'bannerLink', '1'), { bannerLink });
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (e: any) {
+      return toast.error(`💥 ${e.message}`);
+    } finally {
+      setIsLoading(false);
+      toast.success('🎉 Banner link updated successfully!');
+    }
+  };
+
+  const updateBanner = () => {
+    updateBannerImage();
+    updateBannerLink();
   };
 
   return (
@@ -43,15 +79,20 @@ export const UpdateBannerImageContainer = () => {
           supportedTypes={supportedImageTypes}
           onChange={(e) => {
             e.target.files && setImage(e.target.files[0]);
-            console.log('a');
           }}
+        />
+        <Text>Banner link</Text>
+        <Input
+          value={bannerLink}
+          placeholder={'Banner link...'}
+          onChange={(e) => setBannerLink(e.target.value)}
         />
       </InputContainer>
       <ButtonContainer>
         <Button
-          label={'Update banner image'}
+          label={'Update banner'}
           loading={isLoading}
-          onClick={updateBannerImage}
+          onClick={updateBanner}
         />
       </ButtonContainer>
     </Wrapper>

@@ -10,6 +10,7 @@ interface Props {
   type?: ButtonType;
   size?: ButtonSize;
   loading?: boolean;
+  disabled?: boolean;
 }
 
 interface ButtonContainerProps {
@@ -36,9 +37,18 @@ export const Button = ({
   type = ButtonType.PRIMARY,
   size = ButtonSize.MEDIUM,
   loading,
-  onClick
+  onClick,
+  disabled
 }: Props) =>
-  ButtonContainer({ label, backgroundColor, type, size, loading, onClick });
+  ButtonContainer({
+    label,
+    backgroundColor,
+    type,
+    size,
+    loading,
+    onClick,
+    disabled
+  });
 
 const ButtonContainer = ({
   label,
@@ -46,7 +56,8 @@ const ButtonContainer = ({
   type = ButtonType.PRIMARY,
   size = ButtonSize.MEDIUM,
   loading,
-  onClick
+  onClick,
+  disabled
 }: Props) => {
   const buttonSize = getButtonSize(size);
 
@@ -57,6 +68,7 @@ const ButtonContainer = ({
           backgroundColor={backgroundColor}
           size={buttonSize}
           onClick={onClick}
+          disabled={disabled}
         >
           {loading ? (
             <ActivityIndicator
@@ -74,6 +86,7 @@ const ButtonContainer = ({
           backgroundColor={backgroundColor}
           size={buttonSize}
           onClick={onClick}
+          disabled={disabled}
         >
           {label}
         </ButtonSecondary>
@@ -84,6 +97,7 @@ const ButtonContainer = ({
           backgroundColor={backgroundColor}
           size={buttonSize}
           onClick={onClick}
+          disabled={disabled}
         >
           {label}
         </ButtonUnselected>
@@ -139,7 +153,7 @@ const getButtonSize = (size: ButtonSize) => {
 };
 
 const ButtonUnselected = styled.button<ButtonContainerProps>`
-  cursor: pointer;
+  cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
   min-width: max-content;
   background: ${Color.LIGHT_GRAY};
   color: ${Color.MEDIUM_GRAY};
@@ -150,17 +164,22 @@ const ButtonUnselected = styled.button<ButtonContainerProps>`
   padding-right: 20px;
   white-space: nowrap;
   font-weight: 500;
-  &:active {
-    filter: brightness(0.9);
-  }
-  &:hover {
-    filter: brightness(0.9);
-  }
+  ${(props) =>
+    !props.disabled &&
+    `
+    &:active {
+      filter: brightness(0.9);
+    }
+    &:hover {
+      filter: brightness(0.9);
+    }
+  `}
+  ${(props) => props.disabled && `opacity: 0.7;`}
   ${(props) => props.size}
 `;
 
 const ButtonSecondary = styled.button<ButtonContainerProps>`
-  cursor: pointer;
+  cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
   min-width: max-content;
   background: transparent;
   border: 2px solid ${(props) => props.backgroundColor};
@@ -172,17 +191,22 @@ const ButtonSecondary = styled.button<ButtonContainerProps>`
   white-space: nowrap;
   padding-right: 20px;
   font-weight: 500;
-  &:active {
-    filter: brightness(0.9);
-  }
-  &:hover {
-    filter: brightness(0.9);
-  }
+  ${(props) =>
+    !props.disabled &&
+    `
+    &:active {
+      filter: brightness(0.9);
+    }
+    &:hover {
+      filter: brightness(0.9);
+    }
+  `}
+  ${(props) => props.disabled && `opacity: 0.7;`}
   ${(props) => props.size}
 `;
 
 const ButtonPrimary = styled.button<ButtonContainerProps>`
-  cursor: pointer;
+  cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
   min-width: max-content;
   white-space: nowrap;
   background: ${(props) => props.backgroundColor};
@@ -192,11 +216,16 @@ const ButtonPrimary = styled.button<ButtonContainerProps>`
   padding-left: 20px;
   padding-right: 20px;
   font-weight: 500;
-  &:active {
-    filter: brightness(0.9);
-  }
-  &:hover {
-    filter: brightness(0.9);
-  }
+  ${(props) =>
+    !props.disabled &&
+    `
+    &:active {
+      filter: brightness(0.9);
+    }
+    &:hover {
+      filter: brightness(0.9);
+    }
+  `}
+  ${(props) => props.disabled && `opacity: 0.7;`}
   ${(props) => props.size}
 `;

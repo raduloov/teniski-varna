@@ -7,12 +7,14 @@ import { useAuth } from '../../hooks/useAuth';
 import { NewProductContainer } from './NewProductContainer';
 import { UpdateBannerImageContainer } from './UpdateBannerImageContainer';
 import { UpdateProductContainer } from './UpdateProductContainer';
+import { LabelsContainer } from './LabelsContainer';
 
 export const AdminPanelMenuContainer = () => {
   const [showAddNewProduct, setShowAddNewProduct] = useState<boolean>(false);
   const [showUpdateBannerImage, setShowUpdateBannerImage] =
     useState<boolean>(false);
   const [showUpdateProduct, setShowUpdateProduct] = useState<boolean>(false);
+  const [showLabels, setShowLabels] = useState<boolean>(false);
   const { signOut } = useAuth();
 
   return (
@@ -34,29 +36,38 @@ export const AdminPanelMenuContainer = () => {
         {showAddNewProduct && <NewProductContainer />}
         {showUpdateProduct && <UpdateProductContainer />}
         {showUpdateBannerImage && <UpdateBannerImageContainer />}
-        {!showAddNewProduct && !showUpdateBannerImage && !showUpdateProduct && (
-          <ButtonContainer>
-            <Button
-              label={'Add new product'}
-              onClick={() => setShowAddNewProduct(true)}
-            />
-            <Button
-              label={'Update existing product'}
-              onClick={() => setShowUpdateProduct(true)}
-            />
-            <Button
-              label={'Update banner image'}
-              onClick={() => setShowUpdateBannerImage(true)}
-            />
-          </ButtonContainer>
-        )}
+        {showLabels && <LabelsContainer />}
+        {!showAddNewProduct &&
+          !showUpdateBannerImage &&
+          !showUpdateProduct &&
+          !showLabels && (
+            <ButtonContainer>
+              <Button
+                label={'Add new product'}
+                onClick={() => setShowAddNewProduct(true)}
+              />
+              <Button
+                label={'Update existing product'}
+                onClick={() => setShowUpdateProduct(true)}
+              />
+              <Button label={'Labels'} onClick={() => setShowLabels(true)} />
+              <Button
+                label={'Update banner image'}
+                onClick={() => setShowUpdateBannerImage(true)}
+              />
+            </ButtonContainer>
+          )}
       </PanelContainer>
-      {(showAddNewProduct || showUpdateProduct || showUpdateBannerImage) && (
+      {(showAddNewProduct ||
+        showUpdateProduct ||
+        showUpdateBannerImage ||
+        showLabels) && (
         <BackToMenuText
           onClick={() => {
             setShowAddNewProduct(false);
             setShowUpdateProduct(false);
             setShowUpdateBannerImage(false);
+            setShowLabels(false);
           }}
         >
           <p>Back to Menu</p>
@@ -70,6 +81,7 @@ export const AdminPanelMenuContainer = () => {
 };
 
 const BackToMenuText = styled.a`
+  cursor: pointer;
   text-decoration: none;
   color: ${Color.BLACK};
   padding-top: 20px;
