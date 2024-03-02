@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import styled from 'styled-components';
+import { LabelsContainer as LabelsWrapper } from '../../components/features/labels/LabelsContainer';
 import { Color } from '../../assets/constants';
 import { Input } from '../../components/common/Input';
 import { Button } from '../../components/common/Button';
-import { IconButton } from '../../components/common/IconButton';
-import { icons } from '../../assets/icons';
 import { addDoc, collection, deleteDoc, doc } from '@firebase/firestore';
 import { db } from '../../firebase/firebaseConfig';
-import { ActivityIndicator } from '../../components/common/ActivityIndicator';
 import { Label, useLabels } from '../../hooks/useLabels';
 
 export const LabelsContainer = () => {
@@ -174,26 +172,11 @@ export const LabelsContainer = () => {
   return (
     <Wrapper>
       <Text>Labels</Text>
-      <LabelsWrapper>
-        {isFetchingLabels ? (
-          <LabelsLoadingContainer>
-            <ActivityIndicator color={Color.BLACK} size={25} />
-            <p>Fetching labels...</p>
-          </LabelsLoadingContainer>
-        ) : labels.length > 0 ? (
-          labels.map((label) => (
-            <LabelWrapper key={label.id}>
-              <LabelText>{label.name}</LabelText>
-              <IconButton
-                icon={icons.FaEdit}
-                onClick={() => handleStartEditingLabel(label)}
-              />
-            </LabelWrapper>
-          ))
-        ) : (
-          <p>No labels available</p>
-        )}
-      </LabelsWrapper>
+      <LabelsWrapper
+        labels={labels}
+        isFetchingLabels={isFetchingLabels}
+        handleStartEditingLabel={handleStartEditingLabel}
+      />
       <Text>Add label</Text>
       <InputContainer>
         <NewLabelNameInput>
@@ -243,41 +226,6 @@ const ButtonContainer = styled.div`
   flex-direction: column;
   gap: 10px;
   padding-top: 20px;
-`;
-
-const LabelsWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  padding: 10px;
-  background-color: rgb(247, 247, 247, 0.5);
-  border-radius: 5px;
-  margin: 10px 0 10px 0;
-  flex-wrap: wrap;
-`;
-
-const LabelText = styled.p`
-  font-size: 20px;
-  font-weight: bold;
-  margin: 0 10px;
-  color: ${Color.WHITE};
-`;
-
-const LabelsLoadingContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 15px;
-  width: 100%;
-`;
-
-const LabelWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  background-color: ${Color.ACCENT};
-  padding: 5px 15px 5px 5px;
-  border: 2px dotted ${Color.WHITE};
-  border-radius: 10px;
-  margin: 5px 10px;
 `;
 
 const Text = styled.p`
