@@ -10,10 +10,13 @@ import {
   setDoc,
   collection,
   deleteDoc,
-  doc
+  doc,
+  updateDoc,
+  arrayRemove
 } from '@firebase/firestore';
 import { db } from '../../firebase/firebaseConfig';
 import { Label, useLabels } from '../../hooks/useLabels';
+import { useDiscounts } from '../../hooks/useDiscounts';
 
 export const LabelsContainer = () => {
   const [labels, setLabels] = useState<Label[]>([]);
@@ -24,6 +27,7 @@ export const LabelsContainer = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const { getLabels, isFetchingLabels } = useLabels();
+  const { getDiscounts } = useDiscounts();
 
   const setLabelsFromFirebase = async () => {
     const fetchedLabels = await getLabels();
@@ -148,7 +152,20 @@ export const LabelsContainer = () => {
     setIsDeletingLabel(true);
 
     try {
+      const discounts = await getDiscounts();
+      const discountsWithLabel = discounts.filter((discount) =>
+        discount.labelIds.includes(labelId)
+      );
       await deleteDoc(doc(db, 'labels', labelId));
+
+      // Remove label from discounts that have it assigned
+      for (const discount of discountsWithLabel) {
+        if (discount.labelIds.includes(labelId)) {
+          await updateDoc(doc(db, 'discounts', discount.id), {
+            labelIds: arrayRemove(labelId)
+          });
+        }
+      }
       toast.success('🎉 Label deleted successfully!');
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
@@ -188,7 +205,7 @@ export const LabelsContainer = () => {
         isFetchingLabels={isFetchingLabels}
         handleStartEditingLabel={handleStartEditingLabel}
       />
-      <Text>Add label</Text>
+      <Text>{actionButtonLabel}</Text>
       <InputContainer>
         <NewLabelNameInput>
           <Input

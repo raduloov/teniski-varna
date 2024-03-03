@@ -8,7 +8,7 @@ import { NewProductContainer } from './NewProductContainer';
 import { UpdateBannerImageContainer } from './UpdateBannerImageContainer';
 import { UpdateProductContainer } from './UpdateProductContainer';
 import { LabelsContainer } from './LabelsContainer';
-import { DiscountsContainer } from './DiscountsContainer';
+import { DiscountsMenuContainer } from './DiscountsContainer';
 
 export const AdminPanelMenuContainer = () => {
   const [showAddNewProduct, setShowAddNewProduct] = useState<boolean>(false);
@@ -39,7 +39,7 @@ export const AdminPanelMenuContainer = () => {
         {showUpdateProduct && <UpdateProductContainer />}
         {showUpdateBannerImage && <UpdateBannerImageContainer />}
         {showLabels && <LabelsContainer />}
-        {showDiscounts && <DiscountsContainer />}
+        {showDiscounts && <DiscountsMenuContainer />}
         {!showAddNewProduct &&
           !showUpdateProduct &&
           !showLabels &&
