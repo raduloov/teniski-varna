@@ -8,6 +8,7 @@ import { NewProductContainer } from './NewProductContainer';
 import { UpdateBannerImageContainer } from './UpdateBannerImageContainer';
 import { UpdateProductContainer } from './UpdateProductContainer';
 import { LabelsContainer } from './LabelsContainer';
+import { DiscountsMenuContainer } from './DiscountsContainer';
 
 export const AdminPanelMenuContainer = () => {
   const [showAddNewProduct, setShowAddNewProduct] = useState<boolean>(false);
@@ -15,6 +16,7 @@ export const AdminPanelMenuContainer = () => {
     useState<boolean>(false);
   const [showUpdateProduct, setShowUpdateProduct] = useState<boolean>(false);
   const [showLabels, setShowLabels] = useState<boolean>(false);
+  const [showDiscounts, setShowDiscounts] = useState<boolean>(false);
   const { signOut } = useAuth();
 
   return (
@@ -37,10 +39,12 @@ export const AdminPanelMenuContainer = () => {
         {showUpdateProduct && <UpdateProductContainer />}
         {showUpdateBannerImage && <UpdateBannerImageContainer />}
         {showLabels && <LabelsContainer />}
+        {showDiscounts && <DiscountsMenuContainer />}
         {!showAddNewProduct &&
-          !showUpdateBannerImage &&
           !showUpdateProduct &&
-          !showLabels && (
+          !showLabels &&
+          !showDiscounts &&
+          !showUpdateBannerImage && (
             <ButtonContainer>
               <Button
                 label={'Add new product'}
@@ -50,7 +54,14 @@ export const AdminPanelMenuContainer = () => {
                 label={'Update existing product'}
                 onClick={() => setShowUpdateProduct(true)}
               />
-              <Button label={'Labels'} onClick={() => setShowLabels(true)} />
+              <Button
+                label={'Labels / Categories'}
+                onClick={() => setShowLabels(true)}
+              />
+              <Button
+                label={'Discounts'}
+                onClick={() => setShowDiscounts(true)}
+              />
               <Button
                 label={'Update banner image'}
                 onClick={() => setShowUpdateBannerImage(true)}
@@ -60,14 +71,16 @@ export const AdminPanelMenuContainer = () => {
       </PanelContainer>
       {(showAddNewProduct ||
         showUpdateProduct ||
-        showUpdateBannerImage ||
-        showLabels) && (
+        showLabels ||
+        showDiscounts ||
+        showUpdateBannerImage) && (
         <BackToMenuText
           onClick={() => {
             setShowAddNewProduct(false);
             setShowUpdateProduct(false);
             setShowUpdateBannerImage(false);
             setShowLabels(false);
+            setShowDiscounts(false);
           }}
         >
           <p>Back to Menu</p>

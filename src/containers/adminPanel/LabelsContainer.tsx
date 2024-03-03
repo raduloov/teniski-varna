@@ -1,15 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import styled from 'styled-components';
+import { LabelsContainer as LabelsWrapper } from '../../components/features/labels/LabelsContainer';
 import { Color } from '../../assets/constants';
 import { Input } from '../../components/common/Input';
 import { Button } from '../../components/common/Button';
-import { IconButton } from '../../components/common/IconButton';
-import { icons } from '../../assets/icons';
-import { addDoc, collection, deleteDoc, doc } from '@firebase/firestore';
+import {
+  addDoc,
+  setDoc,
+  collection,
+  deleteDoc,
+  doc,
+  updateDoc,
+  arrayRemove
+} from '@firebase/firestore';
 import { db } from '../../firebase/firebaseConfig';
-import { ActivityIndicator } from '../../components/common/ActivityIndicator';
 import { Label, useLabels } from '../../hooks/useLabels';
+import { useDiscounts } from '../../hooks/useDiscounts';
 
 export const LabelsContainer = () => {
   const [labels, setLabels] = useState<Label[]>([]);
@@ -20,6 +27,7 @@ export const LabelsContainer = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const { getLabels, isFetchingLabels } = useLabels();
+  const { getDiscounts } = useDiscounts();
 
   const setLabelsFromFirebase = async () => {
     const fetchedLabels = await getLabels();
@@ -43,7 +51,12 @@ export const LabelsContainer = () => {
         await deleteDoc(doc(db, 'labels', label.id));
       }
       for await (const label of newLabels) {
-        await addDoc(collection(db, 'labels'), label);
+        // Keep the same ID if label already exists
+        if (label.id) {
+          await setDoc(doc(db, 'labels', label.id), label);
+        } else {
+          await addDoc(collection(db, 'labels'), label);
+        }
       }
 
       toast.success('🎉 Labels updated successfully!');
@@ -139,7 +152,20 @@ export const LabelsContainer = () => {
     setIsDeletingLabel(true);
 
     try {
+      const discounts = await getDiscounts();
+      const discountsWithLabel = discounts.filter((discount) =>
+        discount.labelIds.includes(labelId)
+      );
       await deleteDoc(doc(db, 'labels', labelId));
+
+      // Remove label from discounts that have it assigned
+      for (const discount of discountsWithLabel) {
+        if (discount.labelIds.includes(labelId)) {
+          await updateDoc(doc(db, 'discounts', discount.id), {
+            labelIds: arrayRemove(labelId)
+          });
+        }
+      }
       toast.success('🎉 Label deleted successfully!');
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
@@ -174,27 +200,12 @@ export const LabelsContainer = () => {
   return (
     <Wrapper>
       <Text>Labels</Text>
-      <LabelsWrapper>
-        {isFetchingLabels ? (
-          <LabelsLoadingContainer>
-            <ActivityIndicator color={Color.BLACK} size={25} />
-            <p>Fetching labels...</p>
-          </LabelsLoadingContainer>
-        ) : labels.length > 0 ? (
-          labels.map((label) => (
-            <LabelWrapper key={label.id}>
-              <LabelText>{label.name}</LabelText>
-              <IconButton
-                icon={icons.FaEdit}
-                onClick={() => handleStartEditingLabel(label)}
-              />
-            </LabelWrapper>
-          ))
-        ) : (
-          <p>No labels available</p>
-        )}
-      </LabelsWrapper>
-      <Text>Add label</Text>
+      <LabelsWrapper
+        labels={labels}
+        isFetchingLabels={isFetchingLabels}
+        handleStartEditingLabel={handleStartEditingLabel}
+      />
+      <Text>{actionButtonLabel}</Text>
       <InputContainer>
         <NewLabelNameInput>
           <Input
@@ -243,41 +254,6 @@ const ButtonContainer = styled.div`
   flex-direction: column;
   gap: 10px;
   padding-top: 20px;
-`;
-
-const LabelsWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  padding: 10px;
-  background-color: rgb(247, 247, 247, 0.5);
-  border-radius: 5px;
-  margin: 10px 0 10px 0;
-  flex-wrap: wrap;
-`;
-
-const LabelText = styled.p`
-  font-size: 20px;
-  font-weight: bold;
-  margin: 0 10px;
-  color: ${Color.WHITE};
-`;
-
-const LabelsLoadingContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 15px;
-  width: 100%;
-`;
-
-const LabelWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  background-color: ${Color.ACCENT};
-  padding: 5px 15px 5px 5px;
-  border: 2px dotted ${Color.WHITE};
-  border-radius: 10px;
-  margin: 5px 10px;
 `;
 
 const Text = styled.p`

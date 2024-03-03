@@ -7,7 +7,8 @@ export enum Color {
   GRAY = '#9B9B9B',
   LIGHT_GRAY = '#F7F7F7',
   MEDIUM_GRAY = '#9E9E9E',
-  RED = '#FF0000'
+  RED = '#FF0000',
+  GREEN_CHECK = '#0ABD04'
 }
 
 export const DEFAULT_TSHIRT_COLOR = TShirtColor.WHITE;
