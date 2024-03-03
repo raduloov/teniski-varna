@@ -12,7 +12,8 @@ import {
   FaSearch,
   FaRegHeart,
   FaSignOutAlt,
-  FaEdit
+  FaEdit,
+  FaCheck
 } from 'react-icons/fa';
 import { RiCloseFill, RiInformationFill } from 'react-icons/ri';
 import {
@@ -42,5 +43,6 @@ export const icons = {
   FaQuestionCircle,
   BsChevronCompactDown,
   MdPermContactCalendar,
-  FaEdit
+  FaEdit,
+  FaCheck
 };

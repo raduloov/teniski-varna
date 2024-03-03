@@ -80,6 +80,7 @@ export const AdminPanelMenuContainer = () => {
             setShowUpdateProduct(false);
             setShowUpdateBannerImage(false);
             setShowLabels(false);
+            setShowDiscounts(false);
           }}
         >
           <p>Back to Menu</p>

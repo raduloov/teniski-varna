@@ -5,7 +5,13 @@ import { LabelsContainer as LabelsWrapper } from '../../components/features/labe
 import { Color } from '../../assets/constants';
 import { Input } from '../../components/common/Input';
 import { Button } from '../../components/common/Button';
-import { addDoc, collection, deleteDoc, doc } from '@firebase/firestore';
+import {
+  addDoc,
+  setDoc,
+  collection,
+  deleteDoc,
+  doc
+} from '@firebase/firestore';
 import { db } from '../../firebase/firebaseConfig';
 import { Label, useLabels } from '../../hooks/useLabels';
 
@@ -41,7 +47,12 @@ export const LabelsContainer = () => {
         await deleteDoc(doc(db, 'labels', label.id));
       }
       for await (const label of newLabels) {
-        await addDoc(collection(db, 'labels'), label);
+        // Keep the same ID if label already exists
+        if (label.id) {
+          await setDoc(doc(db, 'labels', label.id), label);
+        } else {
+          await addDoc(collection(db, 'labels'), label);
+        }
       }
 
       toast.success('🎉 Labels updated successfully!');

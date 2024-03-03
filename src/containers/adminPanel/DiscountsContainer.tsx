@@ -6,26 +6,38 @@ import { Input } from '../../components/common/Input';
 import { Button } from '../../components/common/Button';
 import { IconButton } from '../../components/common/IconButton';
 import { icons } from '../../assets/icons';
-import { addDoc, collection, deleteDoc, doc } from '@firebase/firestore';
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  updateDoc
+} from '@firebase/firestore';
 import { db } from '../../firebase/firebaseConfig';
 import { ActivityIndicator } from '../../components/common/ActivityIndicator';
 import { Label, useLabels } from '../../hooks/useLabels';
 import { LabelsContainer } from '../../components/features/labels/LabelsContainer';
-
-type DiscountType = 'globalDiscount' | 'standardDiscount';
+import { Discount, DiscountType, useDiscounts } from '../../hooks/useDiscounts';
 
 export const DiscountsContainer = () => {
-  const [globalDiscounts, setGlobalDiscounts] = useState<Label[]>([]);
+  const [discounts, setDiscounts] = useState<Discount[]>([]);
   8;
   const [labels, setLabels] = useState<Label[]>([]);
-  const [newLabelName, setNewLabelName] = useState<string>('');
-  const [newLabelIndex, setNewLabelIndex] = useState<number>(0);
-  const [selectedOption, setSelectedOption] =
-    useState<DiscountType>('globalDiscount');
+  const [newDiscountName, setNewDiscountName] = useState<string>('');
+  const [newDiscountPercentage, setNewDiscountPercentage] = useState<number>(0);
+  const [selectedOption, setSelectedOption] = useState<DiscountType>(
+    DiscountType.GLOBAL
+  );
   const [selectedLabelIds, setSelectedLabelIds] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
+  const { getDiscounts, isFetchingDiscounts } = useDiscounts();
   const { getLabels, isFetchingLabels } = useLabels();
+
+  const setDiscountsFromFirebase = async () => {
+    const fetchedDiscounts = await getDiscounts();
+    setDiscounts(fetchedDiscounts);
+  };
 
   const setLabelsFromFirebase = async () => {
     const fetchedLabels = await getLabels();
@@ -33,31 +45,111 @@ export const DiscountsContainer = () => {
   };
 
   useEffect(() => {
-    if (selectedOption === 'standardDiscount') {
+    if (selectedOption === DiscountType.STANDARD) {
       setLabelsFromFirebase();
     }
   }, [selectedOption]);
+
+  useEffect(() => {
+    setDiscountsFromFirebase();
+  }, []);
+
+  const globalDiscounts = discounts.filter(
+    (discount) => discount.type === DiscountType.GLOBAL
+  );
+
+  const standardDiscounts = discounts.filter(
+    (discount) => discount.type === DiscountType.STANDARD
+  );
 
   const handleOptionChange = (
     event: React.ChangeEvent<HTMLInputElement> | DiscountType
   ) => {
     if (typeof event === 'string') {
-      if (event === 'globalDiscount') {
-        setSelectedOption('globalDiscount');
+      if (event === DiscountType.GLOBAL) {
+        setSelectedOption(DiscountType.GLOBAL);
       }
-      if (event === 'standardDiscount') {
-        setSelectedOption('standardDiscount');
+      if (event === DiscountType.STANDARD) {
+        setSelectedOption(DiscountType.STANDARD);
       }
     } else {
       setSelectedOption(event.target.value as DiscountType);
     }
   };
 
+  const handleAddNewDiscount = async () => {
+    if (newDiscountName === '') {
+      return;
+    }
+
+    if (
+      discounts.some(
+        (discount) =>
+          discount.name === newDiscountName && discount.type === selectedOption
+      )
+    ) {
+      toast.error('Discount with that name already exists');
+      return;
+    }
+
+    setIsLoading(true);
+
+    const newDiscount = {
+      name: newDiscountName,
+      percentage: newDiscountPercentage,
+      type: selectedOption,
+      labelIds: selectedLabelIds,
+      active: false
+    };
+
+    try {
+      await addDoc(collection(db, 'discounts'), newDiscount);
+      toast.success('🎉 Discount added successfully!');
+      setDiscountsFromFirebase();
+      resetForm();
+      setIsLoading(false);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (e: any) {
+      setIsLoading(false);
+      return toast.error(`💥 ${e.message}`);
+    }
+  };
+
+  const handleActivateDiscount = async (discount: Discount) => {
+    setIsLoading(true);
+
+    const updatedDiscount = {
+      ...discount,
+      active: !discount.active
+    };
+
+    try {
+      await updateDoc(doc(db, 'discounts', discount.id), updatedDiscount);
+      toast.success('🎉 Discount updated successfully!');
+      setDiscounts((prevDiscounts) =>
+        prevDiscounts.map((prevDiscount) =>
+          prevDiscount.id === discount.id ? updatedDiscount : prevDiscount
+        )
+      );
+      setIsLoading(false);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (e: any) {
+      setIsLoading(false);
+      return toast.error(`💥 ${e.message}`);
+    }
+  };
+
+  const resetForm = () => {
+    setNewDiscountName('');
+    setNewDiscountPercentage(0);
+    setSelectedLabelIds([]);
+  };
+
   return (
     <Wrapper>
       <Text>Global discounts</Text>
       <DiscountsWrapper>
-        {isFetchingLabels ? (
+        {isFetchingDiscounts ? (
           <DiscountsLoadingContainer>
             <ActivityIndicator color={Color.BLACK} size={25} />
             <p>Fetching discounts...</p>
@@ -66,10 +158,18 @@ export const DiscountsContainer = () => {
           globalDiscounts.map((label) => (
             <DiscountWrapper key={label.id}>
               <DiscountText>{label.name}</DiscountText>
-              <IconButton
-                icon={icons.FaEdit}
-                // onClick={() => handleStartEditingLabel(label)}
-              />
+              <IconButtonsWrapper>
+                <IconButton
+                  icon={icons.FaEdit}
+                  // onClick={() => handleStartEditingLabel(label)}
+                />
+                <IconButton
+                  icon={icons.FaCheck}
+                  containerColor={label.active ? Color.GREEN_CHECK : undefined}
+                  iconColor={label.active ? Color.WHITE : undefined}
+                  // onClick={() => handleStartEditingLabel(label)}
+                />
+              </IconButtonsWrapper>
             </DiscountWrapper>
           ))
         ) : (
@@ -79,19 +179,32 @@ export const DiscountsContainer = () => {
 
       <Text>Other discounts</Text>
       <DiscountsWrapper>
-        {isFetchingLabels ? (
+        {isFetchingDiscounts ? (
           <DiscountsLoadingContainer>
             <ActivityIndicator color={Color.BLACK} size={25} />
             <p>Fetching discounts...</p>
           </DiscountsLoadingContainer>
-        ) : globalDiscounts.length > 0 ? (
-          globalDiscounts.map((label) => (
-            <DiscountWrapper key={label.id}>
-              <DiscountText>{label.name}</DiscountText>
-              <IconButton
-                icon={icons.FaEdit}
-                // onClick={() => handleStartEditingLabel(label)}
-              />
+        ) : standardDiscounts.length > 0 ? (
+          standardDiscounts.map((discount) => (
+            <DiscountWrapper key={discount.id}>
+              <DiscountText>{discount.name}</DiscountText>
+              <IconButtonsWrapper>
+                <PercentageWrapper>
+                  <p>{discount.percentage}%</p>
+                </PercentageWrapper>
+                <IconButton
+                  icon={icons.FaEdit}
+                  // onClick={() => handleStartEditingLabel(label)}
+                />
+                <IconButton
+                  icon={icons.FaCheck}
+                  containerColor={
+                    discount.active ? Color.GREEN_CHECK : undefined
+                  }
+                  iconColor={discount.active ? Color.WHITE : undefined}
+                  onClick={() => handleActivateDiscount(discount)}
+                />
+              </IconButtonsWrapper>
             </DiscountWrapper>
           ))
         ) : (
@@ -101,57 +214,57 @@ export const DiscountsContainer = () => {
 
       <Text>Add discount</Text>
       <InputContainer>
-        <NewLabelNameInput>
+        <NewDiscountNameInput>
           <Input
-            value={newLabelName}
+            value={newDiscountName}
             placeholder={'Discount name...'}
             type={'text'}
-            onChange={(e) => setNewLabelName(e.target.value)}
+            onChange={(e) => setNewDiscountName(e.target.value)}
           />
-        </NewLabelNameInput>
-        <NewLabelIndexInput>
+        </NewDiscountNameInput>
+        <NewDiscountPercentageInput>
           <Input
-            value={newLabelIndex}
-            placeholder={'Index...'}
+            value={newDiscountPercentage}
+            placeholder={'Percentage...'}
             type={'number'}
             min={0}
             onChange={(e) => {
               // TODO: Currently working but should be able to delete the initial 0, making it possible to write 1 instead of 01
-              setNewLabelIndex(Number(e.target.value));
+              setNewDiscountPercentage(Number(e.target.value));
             }}
           />
-        </NewLabelIndexInput>
+        </NewDiscountPercentageInput>
         <Text>%</Text>
       </InputContainer>
 
       <RadioButtonsContainer>
         <RadioButtonContainer
-          onClick={() => handleOptionChange('globalDiscount')}
+          onClick={() => handleOptionChange(DiscountType.GLOBAL)}
         >
           <RadioButton
             type="radio"
             id="globalDiscount"
             value="globalDiscount"
-            checked={selectedOption === 'globalDiscount'}
+            checked={selectedOption === DiscountType.GLOBAL}
             onChange={handleOptionChange}
           />
           <SmallText>Global discount</SmallText>
         </RadioButtonContainer>
         <RadioButtonContainer
-          onClick={() => handleOptionChange('standardDiscount')}
+          onClick={() => handleOptionChange(DiscountType.STANDARD)}
         >
           <RadioButton
             type="radio"
             id="standardDiscount"
             value="standardDiscount"
-            checked={selectedOption === 'standardDiscount'}
+            checked={selectedOption === DiscountType.STANDARD}
             onChange={handleOptionChange}
           />
           <SmallText>Standard discount</SmallText>
         </RadioButtonContainer>
       </RadioButtonsContainer>
 
-      {selectedOption === 'standardDiscount' && (
+      {selectedOption === DiscountType.STANDARD && (
         <LabelsWrapper>
           <SmallText>Choose labels</SmallText>
           <LabelsContainer
@@ -175,9 +288,9 @@ export const DiscountsContainer = () => {
       <ButtonContainer>
         <Button
           label={'Add new discount'}
-          disabled={newLabelName === ''}
+          disabled={newDiscountName === ''}
           loading={isLoading}
-          // onClick={handleActionButtonFunction}
+          onClick={handleAddNewDiscount}
         />
       </ButtonContainer>
     </Wrapper>
@@ -246,6 +359,32 @@ const DiscountWrapper = styled.div`
   margin: 5px 10px;
 `;
 
+const IconButtonsWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+`;
+
+const PercentageWrapper = styled.div`
+  margin-top: auto;
+  margin-bottom: auto;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+  border-radius: 50%;
+  border-style: dashed;
+  border-width: 1px;
+  border-color: ${Color.GRAY};
+  background-color: ${Color.WHITE};
+  filter: drop-shadow(1px 2px 2px rgba(0, 0, 0, 0.1));
+  p {
+    color: ${Color.GRAY};
+  }
+`;
+
 const Text = styled.p`
   font-size: 24px;
   color: ${Color.WHITE};
@@ -262,11 +401,11 @@ const InputContainer = styled.div`
   margin: 10px 0 10px 0;
 `;
 
-const NewLabelNameInput = styled.div`
+const NewDiscountNameInput = styled.div`
   flex: 3;
 `;
 
-const NewLabelIndexInput = styled.div`
+const NewDiscountPercentageInput = styled.div`
   flex: 1;
 `;
 
