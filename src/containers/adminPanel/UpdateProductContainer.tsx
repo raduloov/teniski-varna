@@ -15,11 +15,14 @@ import {
   ColorImages,
   defaultImagesObj,
   defaultSizesObj,
+  selectLabelIds,
   SizesCheckbox,
   supportedImageTypes,
   TShirtColor
 } from './utils';
 import { ActivityIndicator } from '../../components/common/ActivityIndicator';
+import { LabelsContainer } from '../../components/features/labels/LabelsContainer';
+import { Label, useLabels } from '../../hooks/useLabels';
 
 interface Props {
   productId: string;
@@ -35,27 +38,40 @@ export const UpdateProductContainer = ({
   const [price, setPrice] = useState<number | string>('');
   const [images, setImages] = useState<ColorImages>(defaultImagesObj);
   const [sizes, setSizes] = useState<SizesCheckbox>(defaultSizesObj);
+  const [labels, setLabels] = useState<Label[]>([]);
+  const [selectedLabelIds, setSelectedLabelIds] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isFetchingLabels, setIsFetchingLabels] = useState<boolean>(false);
   const [isFetchingProduct, setIsFetchingProduct] = useState<boolean>(false);
 
   const { getProductById } = useProducts();
+  const { getLabels } = useLabels();
+
+  const setLabelsFromFirebase = async () => {
+    const fetchedLabels = await getLabels();
+    setLabels(fetchedLabels);
+  };
 
   useEffect(() => {
     const getProductAndFillForm = async () => {
       setIsFetchingProduct(true);
+      setIsFetchingLabels(true);
 
       const product = await getProductById(productId);
 
       if (!product) {
         setIsFetchingProduct(false);
+        setIsFetchingLabels(false);
         return toast.error('💥 Product not found!');
       }
 
       if (product) {
+        setLabelsFromFirebase();
         fillForm(product);
       }
 
       setIsFetchingProduct(false);
+      setIsFetchingLabels(false);
     };
 
     getProductAndFillForm();
@@ -68,6 +84,7 @@ export const UpdateProductContainer = ({
     setDescription(product.description);
     setPrice(hasSelectedProduct ? product.price : '');
     setSizes(mapSizesToObject(product.sizes));
+    setSelectedLabelIds(product.labels);
   };
 
   const mapSizesToObject = (sizes: TShirtSize[]): SizesCheckbox => {
@@ -96,7 +113,8 @@ export const UpdateProductContainer = ({
       price,
       image: title,
       sizes: sizesArray,
-      colors: []
+      colors: [],
+      labels: selectedLabelIds
     };
 
     await updateDoc(doc(db, 'products', productId), updatedProduct);
@@ -255,6 +273,18 @@ export const UpdateProductContainer = ({
                 />
               </CheckboxContainer>
             </SizesContainer>
+          </InputContainer>
+          <InputContainer>
+            <Text>Labels</Text>
+            <LabelsContainer
+              labels={labels}
+              selectedLabelIds={selectedLabelIds}
+              handleSelectLabel={(labelId) =>
+                selectLabelIds(labelId, selectedLabelIds, setSelectedLabelIds)
+              }
+              selective
+              isFetchingLabels={isFetchingLabels}
+            />
           </InputContainer>
           <ButtonContainer>
             <Button

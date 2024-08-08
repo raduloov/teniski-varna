@@ -6,7 +6,7 @@ import { Banner } from '../components/features/home/Banner';
 import { HorizontalScroll } from '../components/common/HorizontalScroll';
 import { ProductList } from '../components/features/home/ProductList';
 import { Product } from '../domain/models/ProductDTO';
-import { useLabels } from '../hooks/useLabels';
+import { Label, useLabels } from '../hooks/useLabels';
 
 interface Props {
   products: Array<Product>;
@@ -14,33 +14,32 @@ interface Props {
 }
 
 export const HomeContainer = ({ products, isLoading }: Props) => {
-  const [categories, setCategories] = useState<string[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string>(
-    categories[0]
-  );
+  const [labels, setLabels] = useState<Label[]>([]);
+  const [selectedLabel, setSelectedLabel] = useState<Label>(labels[0]);
   const { getLabels } = useLabels();
 
-  const setCategoriesFromFirebase = async () => {
-    const fetchedCategories = await getLabels();
-    const categories = fetchedCategories.map((label) => label.name);
-    setCategories(categories);
+  const setLabelsFromFirebase = async () => {
+    const fetchedLabels = await getLabels();
+    setLabels(fetchedLabels);
   };
 
   useEffect(() => {
-    setCategoriesFromFirebase();
+    setLabelsFromFirebase();
   }, []);
 
   return (
     <>
       <Banner />
       <HorizontalScroll
-        categories={categories}
-        selected={selectedCategory}
-        onSelectCategory={(category) => setSelectedCategory(category)}
+        labels={labels}
+        selected={selectedLabel}
+        onSelectLabel={(label: Label) => setSelectedLabel(label)}
       />
       <ProductListContainer>
         {isLoading && <ActivityIndicator size={75} color={Color.ACCENT} />}
-        {products.length > 0 && <ProductList products={products} />}
+        {products.length > 0 && (
+          <ProductList products={products} selectedLabel={selectedLabel} />
+        )}
       </ProductListContainer>
     </>
   );

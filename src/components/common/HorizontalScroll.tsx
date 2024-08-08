@@ -1,30 +1,38 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Button, ButtonSize, ButtonType } from './Button';
+import { Label } from '../../hooks/useLabels';
 
 interface Props {
-  categories: Array<string>;
-  selected: string;
-  onSelectCategory: (category: string) => void;
+  labels: Array<Label>;
+  selected: Label;
+  onSelectLabel: (label: Label) => void;
 }
 
 export const HorizontalScroll = ({
-  categories,
+  labels,
   selected,
-  onSelectCategory
+  onSelectLabel
 }: Props) => {
-  const getButtonType = (category: string): ButtonType =>
-    category === selected ? ButtonType.PRIMARY : ButtonType.UNSELECTED;
+  const getButtonType = (label: Label): ButtonType => {
+    if (!selected) {
+      return ButtonType.UNSELECTED;
+    }
+
+    return label.id === selected.id
+      ? ButtonType.PRIMARY
+      : ButtonType.UNSELECTED;
+  };
 
   return (
     <Wrapper>
-      {categories.map((category, index) => {
+      {labels.map((label, index) => {
         return (
-          <ButtonContainer key={`category-${index}`}>
+          <ButtonContainer key={`label-${index}`}>
             <Button
-              label={category}
-              type={getButtonType(category)}
-              onClick={() => onSelectCategory(category)}
+              label={label.name}
+              type={getButtonType(label)}
+              onClick={() => onSelectLabel(label)}
               size={ButtonSize.MEDIUM}
             />
           </ButtonContainer>
