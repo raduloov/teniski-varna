@@ -19,55 +19,47 @@ import {
   supportedImageTypes,
   TShirtColor
 } from './utils';
+import { ActivityIndicator } from '../../components/common/ActivityIndicator';
 
-export const UpdateProductContainer = () => {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [selectedProduct, setSelectedProduct] = useState<Product>();
+interface Props {
+  productId: string;
+  handleBackToAllProducts: () => void;
+}
+
+export const UpdateProductContainer = ({
+  productId,
+  handleBackToAllProducts
+}: Props) => {
   const [title, setTitle] = useState<string>('');
   const [description, setDescription] = useState<string>('');
   const [price, setPrice] = useState<number | string>('');
   const [images, setImages] = useState<ColorImages>(defaultImagesObj);
   const [sizes, setSizes] = useState<SizesCheckbox>(defaultSizesObj);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isFetchingProduct, setIsFetchingProduct] = useState<boolean>(false);
 
-  const { getAllProducts, getProductById } = useProducts();
-
-  const emptyProduct = {
-    id: '',
-    title: 'Select a product',
-    description: '',
-    price: 0,
-    images: {
-      white: '',
-      black: '',
-      red: '',
-      blue: ''
-    },
-    sizes: [],
-    colors: []
-  };
-
-  const setProductsFromFirebase = async () => {
-    const fetchedProducts = await getAllProducts();
-
-    const products = [emptyProduct, ...fetchedProducts];
-    setProducts(products);
-    fillForm(products[0]);
-  };
+  const { getProductById } = useProducts();
 
   useEffect(() => {
-    setProductsFromFirebase();
+    const getProductAndFillForm = async () => {
+      setIsFetchingProduct(true);
+
+      const product = await getProductById(productId);
+
+      if (!product) {
+        setIsFetchingProduct(false);
+        return toast.error('💥 Product not found!');
+      }
+
+      if (product) {
+        fillForm(product);
+      }
+
+      setIsFetchingProduct(false);
+    };
+
+    getProductAndFillForm();
   }, []);
-
-  const onSelectProduct = async (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const productId = e.target.value;
-    const product = productId ? await getProductById(productId) : emptyProduct;
-
-    if (product) {
-      setSelectedProduct(product);
-      fillForm(product);
-    }
-  };
 
   const fillForm = (product: Product) => {
     const hasSelectedProduct = !!product.id;
@@ -91,10 +83,6 @@ export const UpdateProductContainer = () => {
   };
 
   const updateProduct = async () => {
-    if (!selectedProduct) {
-      return;
-    }
-
     const sizesArray: TShirtSize[] = [];
     for (const [size, selected] of Object.entries(sizes)) {
       if (selected) {
@@ -102,7 +90,7 @@ export const UpdateProductContainer = () => {
       }
     }
 
-    const product = {
+    const updatedProduct = {
       title,
       description,
       price,
@@ -111,7 +99,7 @@ export const UpdateProductContainer = () => {
       colors: []
     };
 
-    await updateDoc(doc(db, 'products', selectedProduct.id), product);
+    await updateDoc(doc(db, 'products', productId), updatedProduct);
   };
 
   const uploadImages = async () => {
@@ -144,6 +132,7 @@ export const UpdateProductContainer = () => {
     try {
       await updateProduct();
       await uploadImages();
+      handleBackToAllProducts();
 
       return toast.success('🎉 Product updated successfully!');
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -164,128 +153,128 @@ export const UpdateProductContainer = () => {
   const handleSizeSelection = (size: TShirtSize) =>
     setSizes((sizes) => ({ ...sizes, [size]: !sizes[size] }));
 
-  // TODO: Blur fields if product is not selected
-  // TODO: Blur fields and show spinner while loading product
   return (
     <Wrapper>
-      <Title>Update an existing product</Title>
-
-      <DropdownWrapper>
-        <DropdownLabel htmlFor={'dropdown'}>Select a product</DropdownLabel>
-        <select onChange={onSelectProduct}>
-          {products.map((product) => (
-            <option value={product.id} key={product.id}>
-              {product.title}
-            </option>
-          ))}
-        </select>
-      </DropdownWrapper>
-
-      <InputContainer>
-        <Text>Title</Text>
-        <Input
-          value={title}
-          placeholder={'Title...'}
-          onChange={(e) => setTitle(e.target.value)}
-        />
-      </InputContainer>
-      <InputContainer>
-        <Text>Description</Text>
-        <Input
-          value={description}
-          placeholder={'Description...'}
-          onChange={(e) => setDescription(e.target.value)}
-        />
-      </InputContainer>
-      <InputContainer>
-        <Text>Price</Text>
-        <Input
-          value={price}
-          placeholder={'Price...'}
-          type={'number'}
-          onChange={(e) => setPrice(e.target.value)}
-        />
-      </InputContainer>
-      <InputContainer>
-        <Text>Images</Text>
-        <ImageInputContainer>
-          <ImageInputWrapper>
-            <SmallText>⬜️ White</SmallText>
-            <ImageInput
-              fileName={images?.white?.name}
-              supportedTypes={supportedImageTypes}
-              onChange={(e) => handleImageChange(e, TShirtColor.WHITE)}
+      {isFetchingProduct ? (
+        <ActivityIndicatorWrapper>
+          <ActivityIndicator size={100} color={Color.ACCENT} />
+        </ActivityIndicatorWrapper>
+      ) : (
+        <>
+          <InputContainer>
+            <Text>Title</Text>
+            <Input
+              value={title}
+              placeholder={'Title...'}
+              onChange={(e) => setTitle(e.target.value)}
             />
-          </ImageInputWrapper>
-          <ImageInputWrapper>
-            <SmallText>⬛️ Black</SmallText>
-            <ImageInput
-              fileName={images?.black?.name}
-              supportedTypes={supportedImageTypes}
-              onChange={(e) => handleImageChange(e, TShirtColor.BLACK)}
+          </InputContainer>
+          <InputContainer>
+            <Text>Description</Text>
+            <Input
+              value={description}
+              placeholder={'Description...'}
+              onChange={(e) => setDescription(e.target.value)}
             />
-          </ImageInputWrapper>
-          <ImageInputWrapper>
-            <SmallText>🟥 Red</SmallText>
-            <ImageInput
-              fileName={images?.red?.name}
-              supportedTypes={supportedImageTypes}
-              onChange={(e) => handleImageChange(e, TShirtColor.RED)}
+          </InputContainer>
+          <InputContainer>
+            <Text>Price</Text>
+            <Input
+              value={price}
+              placeholder={'Price...'}
+              type={'number'}
+              onChange={(e) => setPrice(e.target.value)}
             />
-          </ImageInputWrapper>
-          <ImageInputWrapper>
-            <SmallText>🟦 Blue</SmallText>
-            <ImageInput
-              fileName={images?.blue?.name}
-              supportedTypes={supportedImageTypes}
-              onChange={(e) => handleImageChange(e, TShirtColor.BLUE)}
+          </InputContainer>
+          <InputContainer>
+            <Text>Images</Text>
+            <ImageInputContainer>
+              <ImageInputWrapper>
+                <SmallText>⬜️ White</SmallText>
+                <ImageInput
+                  fileName={images?.white?.name}
+                  supportedTypes={supportedImageTypes}
+                  onChange={(e) => handleImageChange(e, TShirtColor.WHITE)}
+                />
+              </ImageInputWrapper>
+              <ImageInputWrapper>
+                <SmallText>⬛️ Black</SmallText>
+                <ImageInput
+                  fileName={images?.black?.name}
+                  supportedTypes={supportedImageTypes}
+                  onChange={(e) => handleImageChange(e, TShirtColor.BLACK)}
+                />
+              </ImageInputWrapper>
+              <ImageInputWrapper>
+                <SmallText>🟥 Red</SmallText>
+                <ImageInput
+                  fileName={images?.red?.name}
+                  supportedTypes={supportedImageTypes}
+                  onChange={(e) => handleImageChange(e, TShirtColor.RED)}
+                />
+              </ImageInputWrapper>
+              <ImageInputWrapper>
+                <SmallText>🟦 Blue</SmallText>
+                <ImageInput
+                  fileName={images?.blue?.name}
+                  supportedTypes={supportedImageTypes}
+                  onChange={(e) => handleImageChange(e, TShirtColor.BLUE)}
+                />
+              </ImageInputWrapper>
+            </ImageInputContainer>
+          </InputContainer>
+          <InputContainer>
+            <Text>T-Shirt Sizes</Text>
+            <SizesContainer>
+              <CheckboxContainer>
+                <Checkbox
+                  label={TShirtSize.S}
+                  checked={sizes.S}
+                  onClick={() => handleSizeSelection(TShirtSize.S)}
+                />
+              </CheckboxContainer>
+              <CheckboxContainer>
+                <Checkbox
+                  label={TShirtSize.M}
+                  checked={sizes.M}
+                  onClick={() => handleSizeSelection(TShirtSize.M)}
+                />
+              </CheckboxContainer>
+              <CheckboxContainer>
+                <Checkbox
+                  label={TShirtSize.L}
+                  checked={sizes.L}
+                  onClick={() => handleSizeSelection(TShirtSize.L)}
+                />
+              </CheckboxContainer>
+              <CheckboxContainer>
+                <Checkbox
+                  label={TShirtSize.XL}
+                  checked={sizes.XL}
+                  onClick={() => handleSizeSelection(TShirtSize.XL)}
+                />
+              </CheckboxContainer>
+            </SizesContainer>
+          </InputContainer>
+          <ButtonContainer>
+            <Button
+              label={'Update product'}
+              loading={isLoading}
+              onClick={updateExistingProduct}
             />
-          </ImageInputWrapper>
-        </ImageInputContainer>
-      </InputContainer>
-      <InputContainer>
-        <Text>T-Shirt Sizes</Text>
-        <SizesContainer>
-          <CheckboxContainer>
-            <Checkbox
-              label={TShirtSize.S}
-              checked={sizes.S}
-              onClick={() => handleSizeSelection(TShirtSize.S)}
-            />
-          </CheckboxContainer>
-          <CheckboxContainer>
-            <Checkbox
-              label={TShirtSize.M}
-              checked={sizes.M}
-              onClick={() => handleSizeSelection(TShirtSize.M)}
-            />
-          </CheckboxContainer>
-          <CheckboxContainer>
-            <Checkbox
-              label={TShirtSize.L}
-              checked={sizes.L}
-              onClick={() => handleSizeSelection(TShirtSize.L)}
-            />
-          </CheckboxContainer>
-          <CheckboxContainer>
-            <Checkbox
-              label={TShirtSize.XL}
-              checked={sizes.XL}
-              onClick={() => handleSizeSelection(TShirtSize.XL)}
-            />
-          </CheckboxContainer>
-        </SizesContainer>
-      </InputContainer>
-      <ButtonContainer>
-        <Button
-          label={'Update product'}
-          loading={isLoading}
-          onClick={updateExistingProduct}
-        />
-      </ButtonContainer>
+          </ButtonContainer>
+        </>
+      )}
     </Wrapper>
   );
 };
+
+const ActivityIndicatorWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 500px;
+`;
 
 const ImageInputContainer = styled.div`
   display: flex;
@@ -298,16 +287,6 @@ const ImageInputWrapper = styled.div`
   justify-content: center;
   align-items: center;
   gap: 10px;
-`;
-
-const DropdownLabel = styled.label`
-  color: ${Color.WHITE};
-  margin-right: 10px;
-`;
-
-const DropdownWrapper = styled.div`
-  display: flex;
-  margin-top: 10px;
 `;
 
 const ButtonContainer = styled.div`
@@ -345,11 +324,6 @@ const InputContainer = styled.div`
   flex-direction: column;
   gap: 5px;
   margin: 10px 0 10px 0;
-`;
-
-const Title = styled.p`
-  font-size: 24px;
-  color: ${Color.WHITE};
 `;
 
 const Wrapper = styled.div`
