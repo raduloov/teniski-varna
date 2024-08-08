@@ -21,4 +21,5 @@ export interface Product {
   price: number;
   colors: Array<TShirtColor>;
   sizes: Array<TShirtSize>;
+  labels: Array<string>;
 }

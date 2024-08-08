@@ -18,6 +18,7 @@ import { ActivityIndicator } from '../../components/common/ActivityIndicator';
 import { Label, useLabels } from '../../hooks/useLabels';
 import { LabelsContainer } from '../../components/features/labels/LabelsContainer';
 import { Discount, DiscountType, useDiscounts } from '../../hooks/useDiscounts';
+import { selectLabelIds } from './utils';
 
 interface Props {
   discounts: Discount[];
@@ -357,15 +358,9 @@ export const DiscountsMenuContainer = () => {
             isFetchingLabels={isFetchingLabels}
             selective={true}
             selectedLabelIds={selectedLabelIds}
-            handleSelectLabel={(labelId) => {
-              if (selectedLabelIds.includes(labelId)) {
-                setSelectedLabelIds((prev) =>
-                  prev.filter((id) => id !== labelId)
-                );
-              } else {
-                setSelectedLabelIds((prev) => [...prev, labelId]);
-              }
-            }}
+            handleSelectLabel={(labelId) =>
+              selectLabelIds(labelId, selectedLabelIds, setSelectedLabelIds)
+            }
           />
         </LabelsWrapper>
       )}

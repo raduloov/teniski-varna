@@ -41,3 +41,19 @@ export const availableTShirtColors = [
   TShirtColor.RED,
   TShirtColor.BLUE
 ];
+
+export const selectLabelIds = (
+  labelId: string,
+  selectedLabelIds: string[],
+  /**
+   * Set the selected labels. This should be a React setState function.
+   * @param value - The new value to set
+   */
+  selectLabel: (value: React.SetStateAction<string[]>) => void
+) => {
+  if (selectedLabelIds.includes(labelId)) {
+    selectLabel((prev) => prev.filter((id) => id !== labelId));
+  } else {
+    selectLabel((prev) => [...prev, labelId]);
+  }
+};
