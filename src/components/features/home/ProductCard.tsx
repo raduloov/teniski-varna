@@ -8,9 +8,10 @@ import { IconButton } from '../../common/IconButton';
 
 interface Props {
   product: Product;
+  onSelectProductToEdit?: (productId: string) => void;
 }
 
-export const ProductCard = ({ product }: Props) => {
+export const ProductCard = ({ product, onSelectProductToEdit }: Props) => {
   const navigate = useNavigate();
   const [favorites, setFavorites] = useState(
     JSON.parse(localStorage.getItem('Favorites') || '[]')
@@ -44,15 +45,23 @@ export const ProductCard = ({ product }: Props) => {
   const isFavorite = favorites.find((item: Product) => item.id === product.id);
 
   return (
-    <Card onClick={() => navigateToDetails(product.id)}>
+    <Card
+      onClick={() =>
+        onSelectProductToEdit
+          ? onSelectProductToEdit(product.id)
+          : navigateToDetails(product.id)
+      }
+    >
       <img src={product.images.white} />
       <h1>{product.title}</h1>
       <p>{product.description}</p>
       <FavoriteButton>
         <h1>{product.price}лв</h1>
-        {isFavorite ? (
+        {onSelectProductToEdit && <IconButton icon={icons.FaEdit} />}
+        {!onSelectProductToEdit && isFavorite && (
           <IconButton icon={icons.FcLike} onClick={addToFavorites} />
-        ) : (
+        )}
+        {!onSelectProductToEdit && !isFavorite && (
           <IconButton icon={icons.FaRegHeart} onClick={addToFavorites} />
         )}
       </FavoriteButton>

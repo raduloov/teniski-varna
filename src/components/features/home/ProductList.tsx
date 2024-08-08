@@ -5,13 +5,20 @@ import { ProductCard } from './ProductCard';
 
 interface Props {
   products: Array<Product>;
+  onSelectProductToEdit?: (productId: string) => void;
 }
 
-export const ProductList = ({ products }: Props) => {
+export const ProductList = ({ products, onSelectProductToEdit }: Props) => {
   return (
     <ProductsContainer>
       {products.map((product) => {
-        return <ProductCard product={product} key={product.id} />;
+        return (
+          <ProductCard
+            product={product}
+            onSelectProductToEdit={onSelectProductToEdit}
+            key={product.id}
+          />
+        );
       })}
     </ProductsContainer>
   );
