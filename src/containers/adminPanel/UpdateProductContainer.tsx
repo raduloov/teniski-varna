@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { doc, updateDoc } from 'firebase/firestore';
+import { deleteDoc, doc, updateDoc } from 'firebase/firestore';
 import { ref, uploadBytes } from 'firebase/storage';
 import { toast } from 'react-toastify';
 import styled from 'styled-components';
@@ -41,11 +41,10 @@ export const UpdateProductContainer = ({
   const [labels, setLabels] = useState<Label[]>([]);
   const [selectedLabelIds, setSelectedLabelIds] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isFetchingLabels, setIsFetchingLabels] = useState<boolean>(false);
-  const [isFetchingProduct, setIsFetchingProduct] = useState<boolean>(false);
+  const [isDeletingProduct, setIsDeletingProduct] = useState<boolean>(false);
 
-  const { getProductById } = useProducts();
-  const { getLabels } = useLabels();
+  const { getProductById, isLoading: isFetchingProduct } = useProducts();
+  const { getLabels, isFetchingLabels } = useLabels();
 
   const setLabelsFromFirebase = async () => {
     const fetchedLabels = await getLabels();
@@ -54,14 +53,9 @@ export const UpdateProductContainer = ({
 
   useEffect(() => {
     const getProductAndFillForm = async () => {
-      setIsFetchingProduct(true);
-      setIsFetchingLabels(true);
-
       const product = await getProductById(productId);
 
       if (!product) {
-        setIsFetchingProduct(false);
-        setIsFetchingLabels(false);
         return toast.error('💥 Product not found!');
       }
 
@@ -69,9 +63,6 @@ export const UpdateProductContainer = ({
         setLabelsFromFirebase();
         fillForm(product);
       }
-
-      setIsFetchingProduct(false);
-      setIsFetchingLabels(false);
     };
 
     getProductAndFillForm();
@@ -170,6 +161,24 @@ export const UpdateProductContainer = ({
 
   const handleSizeSelection = (size: TShirtSize) =>
     setSizes((sizes) => ({ ...sizes, [size]: !sizes[size] }));
+
+  const handleDeleteProduct = async (productId: string) => {
+    setIsDeletingProduct(true);
+
+    try {
+      await deleteDoc(doc(db, 'products', productId));
+
+      toast.success('🎉 Product deleted successfully!');
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (e: any) {
+      setIsDeletingProduct(false);
+      return toast.error(`💥 ${e.message}`);
+    } finally {
+      setLabelsFromFirebase();
+      setIsDeletingProduct(false);
+      handleBackToAllProducts();
+    }
+  };
 
   return (
     <Wrapper>
@@ -291,6 +300,12 @@ export const UpdateProductContainer = ({
               label={'Update product'}
               loading={isLoading}
               onClick={updateExistingProduct}
+            />
+            <Button
+              label={'Delete product'}
+              backgroundColor={Color.RED}
+              loading={isDeletingProduct}
+              onClick={() => handleDeleteProduct(productId)}
             />
           </ButtonContainer>
         </>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { addDoc, collection } from 'firebase/firestore';
 import { ref, uploadBytes } from 'firebase/storage';
 import { toast } from 'react-toastify';
@@ -14,9 +14,12 @@ import {
   ColorImages,
   defaultImagesObj,
   defaultSizesObj,
+  selectLabelIds,
   SizesCheckbox,
   supportedImageTypes
 } from './utils';
+import { Label, useLabels } from '../../hooks/useLabels';
+import { LabelsContainer } from '../../components/features/labels/LabelsContainer';
 
 export const NewProductContainer = () => {
   const [title, setTitle] = useState<string>('');
@@ -24,7 +27,20 @@ export const NewProductContainer = () => {
   const [price, setPrice] = useState<number | string>('');
   const [images, setImages] = useState<ColorImages>(defaultImagesObj);
   const [sizes, setSizes] = useState<SizesCheckbox>(defaultSizesObj);
+  const [labels, setLabels] = useState<Label[]>([]);
+  const [selectedLabelIds, setSelectedLabelIds] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const { getLabels, isFetchingLabels } = useLabels();
+
+  const setLabelsFromFirebase = async () => {
+    const fetchedLabels = await getLabels();
+    setLabels(fetchedLabels);
+  };
+
+  useEffect(() => {
+    setLabelsFromFirebase();
+  }, []);
 
   const imagesAreNotSelected = Object.values(images).includes(null);
 
@@ -50,7 +66,8 @@ export const NewProductContainer = () => {
       price,
       image: title,
       sizes: sizesArray,
-      colors: []
+      colors: [],
+      labels: selectedLabelIds
     };
 
     await addDoc(collection(db, 'products'), product);
@@ -213,6 +230,18 @@ export const NewProductContainer = () => {
             />
           </CheckboxContainer>
         </SizesContainer>
+      </InputContainer>
+      <InputContainer>
+        <Text>Labels</Text>
+        <LabelsContainer
+          labels={labels}
+          selectedLabelIds={selectedLabelIds}
+          handleSelectLabel={(labelId) =>
+            selectLabelIds(labelId, selectedLabelIds, setSelectedLabelIds)
+          }
+          selective
+          isFetchingLabels={isFetchingLabels}
+        />
       </InputContainer>
       <ButtonContainer>
         <Button
