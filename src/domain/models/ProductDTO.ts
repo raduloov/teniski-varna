@@ -1,10 +1,32 @@
 import { TShirtColor } from '../../containers/adminPanel/utils';
 
+export enum TShirtSizeType {
+  MEN = 'men',
+  WOMEN = 'women',
+  KIDS = 'kids'
+}
+
+export interface TShirtSizes {
+  men: Array<TShirtSize>;
+  women: Array<TShirtSize>;
+  kids: Array<TShirtSize>;
+}
+
 export enum TShirtSize {
+  XS = 'XS',
   S = 'S',
   M = 'M',
   L = 'L',
-  XL = 'XL'
+  XL = 'XL',
+  XXL = 'XXL',
+  XXXL = 'XXXL',
+  K98 = '98',
+  K110 = '110',
+  K122 = '122',
+  K132 = '132',
+  K144 = '144',
+  K156 = '156',
+  K168 = '168'
 }
 
 export interface ProductImages {
@@ -20,6 +42,6 @@ export interface Product {
   images: ProductImages;
   price: number;
   colors: Array<TShirtColor>;
-  sizes: Array<TShirtSize>;
+  sizes: TShirtSizes;
   labels: Array<string>;
 }

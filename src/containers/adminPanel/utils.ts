@@ -9,10 +9,30 @@ export enum TShirtColor {
 }
 
 export interface SizesCheckbox {
-  S: boolean;
-  M: boolean;
-  L: boolean;
-  XL: boolean;
+  men: {
+    S: boolean;
+    M: boolean;
+    L: boolean;
+    XL: boolean;
+    XXL: boolean;
+    XXXL: boolean;
+  };
+  women: {
+    XS: boolean;
+    S: boolean;
+    M: boolean;
+    L: boolean;
+    XL: boolean;
+  };
+  kids: {
+    K98: boolean;
+    K110: boolean;
+    K122: boolean;
+    K132: boolean;
+    K144: boolean;
+    K156: boolean;
+    K168: boolean;
+  };
 }
 
 export interface ColorImages {
@@ -23,10 +43,30 @@ export interface ColorImages {
 }
 
 export const defaultSizesObj: SizesCheckbox = {
-  S: false,
-  M: false,
-  L: false,
-  XL: false
+  men: {
+    S: true,
+    M: true,
+    L: true,
+    XL: true,
+    XXL: true,
+    XXXL: true
+  },
+  women: {
+    XS: true,
+    S: true,
+    M: true,
+    L: true,
+    XL: true
+  },
+  kids: {
+    K98: true,
+    K110: true,
+    K122: true,
+    K132: true,
+    K144: true,
+    K156: true,
+    K168: true
+  }
 };
 
 export const defaultImagesObj: ColorImages = {
