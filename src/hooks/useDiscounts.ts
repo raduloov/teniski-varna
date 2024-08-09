@@ -18,11 +18,10 @@ export interface Discount {
 }
 
 export const useDiscounts = () => {
-  const [isFetchingDiscounts, setIsFetchingDiscounts] =
-    useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const getDiscounts = async () => {
-    setIsFetchingDiscounts(true);
+    setIsLoading(true);
 
     const discountsCollectionRef = collection(db, 'discounts');
 
@@ -39,9 +38,9 @@ export const useDiscounts = () => {
       toast.error(`💥 ${e.message}`);
       return [];
     } finally {
-      setIsFetchingDiscounts(false);
+      setIsLoading(false);
     }
   };
 
-  return { getDiscounts, isFetchingDiscounts };
+  return { getDiscounts, isLoading };
 };

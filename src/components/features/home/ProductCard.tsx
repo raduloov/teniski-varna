@@ -5,13 +5,19 @@ import { Color } from '../../../assets/constants';
 import { icons } from '../../../assets/icons';
 import { Product } from '../../../domain/models/ProductDTO';
 import { IconButton } from '../../common/IconButton';
+import { getDiscountedPrice } from '../../../containers/adminPanel/utils';
 
 interface Props {
   product: Product;
+  discount?: number;
   onSelectProductToEdit?: (productId: string) => void;
 }
 
-export const ProductCard = ({ product, onSelectProductToEdit }: Props) => {
+export const ProductCard = ({
+  product,
+  discount,
+  onSelectProductToEdit
+}: Props) => {
   const navigate = useNavigate();
   const [favorites, setFavorites] = useState(
     JSON.parse(localStorage.getItem('Favorites') || '[]')
@@ -56,7 +62,16 @@ export const ProductCard = ({ product, onSelectProductToEdit }: Props) => {
       <h1>{product.title}</h1>
       <p>{product.description}</p>
       <FavoriteButton>
-        <h1>{product.price}лв</h1>
+        <PriceWrapper>
+          <OriginalPrice discounted={!!discount}>
+            {product.price}лв
+          </OriginalPrice>
+          {discount && (
+            <DiscountedPrice>
+              {getDiscountedPrice(product.price, discount)}лв
+            </DiscountedPrice>
+          )}
+        </PriceWrapper>
         {onSelectProductToEdit && <IconButton icon={icons.FaEdit} />}
         {!onSelectProductToEdit && isFavorite && (
           <IconButton icon={icons.FcLike} onClick={addToFavorites} />
@@ -68,6 +83,25 @@ export const ProductCard = ({ product, onSelectProductToEdit }: Props) => {
     </Card>
   );
 };
+
+const PriceWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const OriginalPrice = styled.h1<{ discounted?: boolean }>`
+  ${({ discounted }) =>
+    discounted &&
+    `
+    font-size: 14px;
+    text-decoration: line-through;
+  `}
+`;
+
+const DiscountedPrice = styled.h1`
+  color: ${Color.RED};
+  font-size: 18px;
+`;
 
 const Card = styled.div`
   cursor: pointer;
@@ -95,7 +129,6 @@ const Card = styled.div`
   }
   h1 {
     font-weight: 600;
-    font-size: 1.1rem;
     display: flex;
     justify-content: space-between;
   }

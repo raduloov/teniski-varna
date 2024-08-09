@@ -89,7 +89,7 @@ export const DiscountsMenuContainer = () => {
     useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const { getDiscounts, isFetchingDiscounts } = useDiscounts();
+  const { getDiscounts, isLoading: isFetchingDiscounts } = useDiscounts();
   const { getLabels, isFetchingLabels } = useLabels();
 
   const setDiscountsFromFirebase = async () => {

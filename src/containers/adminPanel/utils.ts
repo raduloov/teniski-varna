@@ -1,3 +1,6 @@
+import { Product } from '../../domain/models/ProductDTO';
+import { Discount } from '../../hooks/useDiscounts';
+
 export enum TShirtColor {
   WHITE = 'white',
   BLACK = 'black',
@@ -56,4 +59,29 @@ export const selectLabelIds = (
   } else {
     selectLabel((prev) => [...prev, labelId]);
   }
+};
+
+export const getDiscountedPrice = (price: number, discount: number) =>
+  (price - (price * discount) / 100).toFixed(2);
+
+export const getDiscountForProduct = (
+  product: Product,
+  activeDiscounts: Array<Discount>
+): number | undefined => {
+  const discounts: Array<number> = [];
+
+  for (const discount of activeDiscounts) {
+    for (const label of discount.labelIds) {
+      if (
+        product.labels.includes(label) &&
+        !discounts.includes(discount.percentage)
+      ) {
+        discounts.push(discount.percentage);
+      }
+    }
+  }
+
+  const discount = discounts.length ? Math.max(...discounts) : undefined;
+
+  return discount;
 };
