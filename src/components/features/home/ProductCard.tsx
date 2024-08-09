@@ -23,9 +23,11 @@ export const ProductCard = ({
     JSON.parse(localStorage.getItem('Favorites') || '[]')
   );
 
+  const discountedPrice = getDiscountedPrice(product.price, discount);
+
   const navigateToDetails = (productId: string) => {
     navigate(`/products/${productId}`, {
-      state: { productId }
+      state: { discountedPrice }
     });
   };
 
@@ -63,14 +65,8 @@ export const ProductCard = ({
       <p>{product.description}</p>
       <FavoriteButton>
         <PriceWrapper>
-          <OriginalPrice discounted={!!discount}>
-            {product.price}лв
-          </OriginalPrice>
-          {discount && (
-            <DiscountedPrice>
-              {getDiscountedPrice(product.price, discount)}лв
-            </DiscountedPrice>
-          )}
+          <Price discounted={!!discount}>{product.price}лв</Price>
+          {discount && <DiscountedPrice>{discountedPrice}лв</DiscountedPrice>}
         </PriceWrapper>
         {onSelectProductToEdit && <IconButton icon={icons.FaEdit} />}
         {!onSelectProductToEdit && isFavorite && (
@@ -89,7 +85,7 @@ const PriceWrapper = styled.div`
   flex-direction: column;
 `;
 
-const OriginalPrice = styled.h1<{ discounted?: boolean }>`
+const Price = styled.h1<{ discounted?: boolean }>`
   ${({ discounted }) =>
     discounted &&
     `

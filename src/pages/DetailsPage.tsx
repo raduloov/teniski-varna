@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router';
+import { useLocation, useNavigate, useParams } from 'react-router';
 import { DetailsContainer } from '../containers/DetailsContainer';
 import { useProducts } from '../hooks/useProducts';
 import { Product, TShirtSize } from '../domain/models/ProductDTO';
@@ -18,6 +18,7 @@ export const DetailsPage = () => {
   const [imageHasLoaded, setImageHasLoaded] = useState<boolean>(false);
   const { getProductById, isLoading } = useProducts();
   const { productId } = useParams();
+  const { state } = useLocation();
   const navigate = useNavigate();
 
   const setProductFromFirebase = async () => {
@@ -47,6 +48,8 @@ export const DetailsPage = () => {
     }
   };
 
+  const { discountedPrice } = state;
+
   if (isLoading) {
     return (
       <ActivityIndicatorWrapper>
@@ -70,6 +73,7 @@ export const DetailsPage = () => {
           onIncreaseQuantity={increaseQuantity}
           onDecreaseQuantity={decreaseQuantity}
           product={product}
+          discountedPrice={discountedPrice}
         />
       )}
     </>

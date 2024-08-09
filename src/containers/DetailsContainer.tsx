@@ -17,6 +17,7 @@ import { ActivityIndicator } from '../components/common/ActivityIndicator';
 
 interface Props {
   product: Product;
+  discountedPrice?: number;
   selectedSize: TShirtSize | null;
   onSelectSize: (size: TShirtSize) => void;
   selectedColor: TShirtColor | null;
@@ -40,7 +41,8 @@ export const DetailsContainer = ({
   onGoBack,
   onIncreaseQuantity,
   onDecreaseQuantity,
-  product
+  product,
+  discountedPrice
 }: Props) => {
   const dispatch = useAppDispatch();
 
@@ -109,7 +111,10 @@ export const DetailsContainer = ({
           />
         </SizeAndQuantityWrapper>
         <CtaWrapper>
-          <Price>{product.price}лв</Price>
+          <Price discounted={!!discountedPrice}>{product.price}лв</Price>
+          {discountedPrice && (
+            <DiscountedPrice>{discountedPrice}лв</DiscountedPrice>
+          )}
           <Button
             label="Добави в количка"
             size={ButtonSize.MEDIUM}
@@ -140,9 +145,22 @@ const SelectSizeTitle = styled.p`
   margin-top: 15px;
 `;
 
-const Price = styled.p`
+const DiscountedPrice = styled.p`
   font-size: 35px;
   font-weight: 800;
+  color: ${Color.RED};
+`;
+
+const Price = styled.p<{ discounted?: boolean }>`
+  font-size: 35px;
+  font-weight: 800;
+  ${({ discounted }) =>
+    discounted &&
+    `
+    font-size: 24px;
+    color: ${Color.GRAY};
+    text-decoration: line-through;
+  `}
 `;
 
 const CtaWrapper = styled.div`

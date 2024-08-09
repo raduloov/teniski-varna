@@ -61,8 +61,8 @@ export const selectLabelIds = (
   }
 };
 
-export const getDiscountedPrice = (price: number, discount: number) =>
-  (price - (price * discount) / 100).toFixed(2);
+export const getDiscountedPrice = (price: number, discount?: number) =>
+  discount ? (price - (price * discount) / 100).toFixed(2) : undefined;
 
 export const getDiscountForProduct = (
   product: Product,
