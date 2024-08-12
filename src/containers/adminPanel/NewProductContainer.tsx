@@ -30,7 +30,7 @@ export const NewProductContainer = () => {
   const [description, setDescription] = useState<string>('');
   const [price, setPrice] = useState<number | string>('');
   const [images, setImages] = useState<ColorImages>(defaultImagesObj);
-  const [sizes, setSizes] = useState<SizesCheckbox>(defaultSizesObj);
+  const [sizes, setSizes] = useState<SizesCheckbox>(defaultSizesObj.all);
   const [labels, setLabels] = useState<Label[]>([]);
   const [selectedLabelIds, setSelectedLabelIds] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -53,7 +53,7 @@ export const NewProductContainer = () => {
     setDescription('');
     setPrice(0);
     setImages(defaultImagesObj);
-    setSizes(defaultSizesObj);
+    setSizes(defaultSizesObj.all);
   };
 
   const createProduct = async () => {

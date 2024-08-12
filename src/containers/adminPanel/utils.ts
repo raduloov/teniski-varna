@@ -42,31 +42,59 @@ export interface ColorImages {
   [TShirtColor.BLUE]: File | null;
 }
 
-export const defaultSizesObj: SizesCheckbox = {
-  men: {
-    S: true,
-    M: true,
-    L: true,
-    XL: true,
-    XXL: true,
-    XXXL: true
-  },
-  women: {
-    XS: true,
-    S: true,
-    M: true,
-    L: true,
-    XL: true
-  },
-  kids: {
-    K98: true,
-    K110: true,
-    K122: true,
-    K132: true,
-    K144: true,
-    K156: true,
-    K168: true
-  }
+export const defaultSizesObj = {
+  all: {
+    men: {
+      S: true,
+      M: true,
+      L: true,
+      XL: true,
+      XXL: true,
+      XXXL: true
+    },
+    women: {
+      XS: true,
+      S: true,
+      M: true,
+      L: true,
+      XL: true
+    },
+    kids: {
+      K98: true,
+      K110: true,
+      K122: true,
+      K132: true,
+      K144: true,
+      K156: true,
+      K168: true
+    }
+  } as SizesCheckbox,
+  none: {
+    men: {
+      S: false,
+      M: false,
+      L: false,
+      XL: false,
+      XXL: false,
+      XXXL: false
+    },
+    women: {
+      XS: false,
+      S: false,
+      M: false,
+      L: false,
+      XL: false
+    },
+    kids: {
+      K98: false,
+      K110: false,
+      K122: false,
+      K132: false,
+      K144: false,
+      K156: false,
+      K168: false
+    }
+  } as SizesCheckbox
 };
 
 export const defaultImagesObj: ColorImages = {

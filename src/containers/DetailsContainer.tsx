@@ -100,7 +100,17 @@ export const DetailsContainer = ({
         <SelectSizeTitle>Изберете размер</SelectSizeTitle>
         <SizeAndQuantityWrapper>
           <SizeSelector
-            availableSizes={product.sizes}
+            availableSizes={product.sizes.men}
+            selectedSize={selectedSize}
+            onSelectSize={(size) => onSelectSize(size)}
+          />
+          <SizeSelector
+            availableSizes={product.sizes.women}
+            selectedSize={selectedSize}
+            onSelectSize={(size) => onSelectSize(size)}
+          />
+          <SizeSelector
+            availableSizes={product.sizes.kids}
             selectedSize={selectedSize}
             onSelectSize={(size) => onSelectSize(size)}
           />
