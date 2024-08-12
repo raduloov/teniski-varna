@@ -3,7 +3,11 @@ import { addDoc, collection } from 'firebase/firestore';
 import { ref, uploadBytes } from 'firebase/storage';
 import { toast } from 'react-toastify';
 import styled from 'styled-components';
-import { TShirtSize } from '../../domain/models/ProductDTO';
+import {
+  TShirtSize,
+  TShirtSizes,
+  TShirtSizeType
+} from '../../domain/models/ProductDTO';
 import { db, storage } from '../../firebase/firebaseConfig';
 import { Color } from '../../assets/constants';
 import { ImageInput } from '../../components/common/ImageInput';
@@ -26,7 +30,7 @@ export const NewProductContainer = () => {
   const [description, setDescription] = useState<string>('');
   const [price, setPrice] = useState<number | string>('');
   const [images, setImages] = useState<ColorImages>(defaultImagesObj);
-  const [sizes, setSizes] = useState<SizesCheckbox>(defaultSizesObj);
+  const [sizes, setSizes] = useState<SizesCheckbox>(defaultSizesObj.all);
   const [labels, setLabels] = useState<Label[]>([]);
   const [selectedLabelIds, setSelectedLabelIds] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -49,14 +53,20 @@ export const NewProductContainer = () => {
     setDescription('');
     setPrice(0);
     setImages(defaultImagesObj);
-    setSizes(defaultSizesObj);
+    setSizes(defaultSizesObj.all);
   };
 
   const createProduct = async () => {
-    const sizesArray: TShirtSize[] = [];
-    for (const [size, selected] of Object.entries(sizes)) {
-      if (selected) {
-        sizesArray.push(size as TShirtSize);
+    const sizesObj: TShirtSizes = {
+      men: [],
+      women: [],
+      kids: []
+    };
+    for (const [sizeType, sizesArray] of Object.entries(sizes)) {
+      for (const [size, selected] of Object.entries(sizesArray)) {
+        if (selected) {
+          sizesObj[sizeType as TShirtSizeType].push(size as TShirtSize);
+        }
       }
     }
 
@@ -65,7 +75,7 @@ export const NewProductContainer = () => {
       description,
       price,
       image: title,
-      sizes: sizesArray,
+      sizes: sizesObj,
       colors: [],
       labels: selectedLabelIds
     };
@@ -198,39 +208,48 @@ export const NewProductContainer = () => {
           </ImageInputWrapper>
         </ImageInputContainer>
       </InputContainer>
-      <InputContainer>
-        <Text>T-Shirt Sizes</Text>
-        <SizesContainer>
-          <CheckboxContainer>
-            <Checkbox
-              label={TShirtSize.S}
-              checked={sizes.S}
-              onClick={() => setSizes((sizes) => ({ ...sizes, S: !sizes.S }))}
-            />
-          </CheckboxContainer>
-          <CheckboxContainer>
-            <Checkbox
-              label={TShirtSize.M}
-              checked={sizes.M}
-              onClick={() => setSizes((sizes) => ({ ...sizes, M: !sizes.M }))}
-            />
-          </CheckboxContainer>
-          <CheckboxContainer>
-            <Checkbox
-              label={TShirtSize.L}
-              checked={sizes.L}
-              onClick={() => setSizes((sizes) => ({ ...sizes, L: !sizes.L }))}
-            />
-          </CheckboxContainer>
-          <CheckboxContainer>
-            <Checkbox
-              label={TShirtSize.XL}
-              checked={sizes.XL}
-              onClick={() => setSizes((sizes) => ({ ...sizes, XL: !sizes.XL }))}
-            />
-          </CheckboxContainer>
-        </SizesContainer>
-      </InputContainer>
+      <Text>T-Shirt Sizes</Text>
+      <SizesWrapper>
+        {Object.keys(sizes).map((sizeType, index) => (
+          <>
+            <SmallText key={index}>{sizeType.toUpperCase()}:</SmallText>
+            <InputContainer key={index}>
+              <SizesContainer>
+                {Object.keys(sizes[sizeType as TShirtSizeType]).map(
+                  (size, index) => {
+                    const checked =
+                      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                      // @ts-ignore
+                      sizes[sizeType][size];
+
+                    return (
+                      <CheckboxContainer key={index}>
+                        <Checkbox
+                          label={size}
+                          checked={checked}
+                          onClick={() => {
+                            const newSizes = {
+                              ...sizes,
+                              [sizeType]: {
+                                ...sizes[sizeType as TShirtSizeType],
+                                [size]:
+                                  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                                  // @ts-ignore
+                                  !sizes[sizeType as TShirtSizeType][size]
+                              }
+                            };
+                            setSizes(newSizes);
+                          }}
+                        />
+                      </CheckboxContainer>
+                    );
+                  }
+                )}
+              </SizesContainer>
+            </InputContainer>
+          </>
+        ))}
+      </SizesWrapper>
       <InputContainer>
         <Text>Labels</Text>
         <LabelsContainer
@@ -253,6 +272,14 @@ export const NewProductContainer = () => {
     </Wrapper>
   );
 };
+
+const SizesWrapper = styled.div`
+  margin-top: 10px;
+  padding: 10px;
+  background-color: ${Color.DARK_GRAY};
+  border-radius: 10px;
+  overflow-y: scroll;
+`;
 
 const ButtonContainer = styled.div`
   display: flex;
