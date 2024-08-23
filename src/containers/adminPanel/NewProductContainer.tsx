@@ -18,9 +18,11 @@ import {
   ColorImages,
   defaultImagesObj,
   defaultSizesObj,
+  mapTShirtColorToHex,
   selectLabelIds,
   SizesCheckbox,
-  supportedImageTypes
+  supportedImageTypes,
+  TShirtColor
 } from './utils';
 import { Label, useLabels } from '../../hooks/useLabels';
 import { LabelsContainer } from '../../components/features/labels/LabelsContainer';
@@ -159,55 +161,41 @@ export const NewProductContainer = () => {
           onChange={(e) => setPrice(e.target.value)}
         />
       </InputContainer>
-      <InputContainer>
-        <Text>Images</Text>
-        <ImageInputContainer>
-          <ImageInputWrapper>
-            <SmallText>⬜️ White</SmallText>
-            <ImageInput
-              fileName={images?.white?.name}
-              supportedTypes={supportedImageTypes}
-              onChange={(e) =>
-                e.target.files &&
-                setImages({ ...images, white: e.target.files[0] })
-              }
-            />
-          </ImageInputWrapper>
-          <ImageInputWrapper>
-            <SmallText>⬛️ Black</SmallText>
-            <ImageInput
-              fileName={images?.black?.name}
-              supportedTypes={supportedImageTypes}
-              onChange={(e) =>
-                e.target.files &&
-                setImages({ ...images, black: e.target.files[0] })
-              }
-            />
-          </ImageInputWrapper>
-          <ImageInputWrapper>
-            <SmallText>🟥 Red</SmallText>
-            <ImageInput
-              fileName={images?.red?.name}
-              supportedTypes={supportedImageTypes}
-              onChange={(e) =>
-                e.target.files &&
-                setImages({ ...images, red: e.target.files[0] })
-              }
-            />
-          </ImageInputWrapper>
-          <ImageInputWrapper>
-            <SmallText>🟦 Blue</SmallText>
-            <ImageInput
-              fileName={images?.blue?.name}
-              supportedTypes={supportedImageTypes}
-              onChange={(e) =>
-                e.target.files &&
-                setImages({ ...images, blue: e.target.files[0] })
-              }
-            />
-          </ImageInputWrapper>
-        </ImageInputContainer>
-      </InputContainer>
+      <Text>Images</Text>
+      <SizesWrapper>
+        <ImageInputWrapper>
+          {Object.keys(images).map((colors, index) => (
+            <>
+              <SmallText key={index}>{colors.toUpperCase()}:</SmallText>
+              {Object.keys(images[colors as keyof ColorImages]).map(
+                (color, index) => (
+                  <ImageInputContainer key={index}>
+                    <ColorTile color={color} />
+                    <ImageInput
+                      fileName={
+                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                        // @ts-ignore
+                        images[colors as keyof ColorImages][color]?.name
+                      }
+                      supportedTypes={supportedImageTypes}
+                      onChange={(e) =>
+                        e.target.files &&
+                        setImages({
+                          ...images,
+                          [colors]: {
+                            ...images[colors as keyof ColorImages],
+                            [color]: e.target.files[0]
+                          }
+                        })
+                      }
+                    />
+                  </ImageInputContainer>
+                )
+              )}
+            </>
+          ))}
+        </ImageInputWrapper>
+      </SizesWrapper>
       <Text>T-Shirt Sizes</Text>
       <SizesWrapper>
         {Object.keys(sizes).map((sizeType, index) => (
@@ -273,6 +261,36 @@ export const NewProductContainer = () => {
   );
 };
 
+const ColorTile = ({ color }: { color: string }) => {
+  const hexColor = mapTShirtColorToHex(color as TShirtColor);
+  const textColor =
+    color === TShirtColor.BLACK ||
+    color === TShirtColor.BLUE ||
+    color === TShirtColor.DARK_BLUE
+      ? Color.WHITE
+      : Color.BLACK;
+
+  return (
+    <Tile color={hexColor} textColor={textColor}>
+      {color.replace('_', ' ').toUpperCase()}
+    </Tile>
+  );
+};
+
+const Tile = styled.div<{ color: string; textColor: string }>`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  text-align: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  font-size: 12px;
+  background-color: ${(props) => props.color};
+  color: ${(props) => props.textColor};
+`;
+
 const SizesWrapper = styled.div`
   margin-top: 10px;
   padding: 10px;
@@ -306,14 +324,14 @@ const SmallText = styled.p`
 
 const ImageInputContainer = styled.div`
   display: flex;
-  flex-wrap: wrap;
+  align-items: center;
   gap: 10px;
 `;
 
 const ImageInputWrapper = styled.div`
   display: flex;
-  justify-content: center;
-  align-items: center;
+  flex-direction: column;
+  justify-content: flex-start;
   gap: 10px;
 `;
 
