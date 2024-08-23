@@ -48,7 +48,10 @@ export const NewProductContainer = () => {
     setLabelsFromFirebase();
   }, []);
 
-  const imagesAreNotSelected = Object.values(images).includes(null);
+  const noImagesAreSelected =
+    Object.values(images.men).every((image) => image === null) &&
+    Object.values(images.women).every((image) => image === null) &&
+    Object.values(images.kids).every((image) => image === null);
 
   const resetForm = () => {
     setTitle('');
@@ -86,13 +89,20 @@ export const NewProductContainer = () => {
   };
 
   const uploadImages = async () => {
-    if (imagesAreNotSelected) {
+    if (noImagesAreSelected) {
       return;
     }
 
-    for await (const [color, image] of Object.entries(images)) {
-      const storageRef = ref(storage, `images/${title}-${color}`);
-      await uploadBytes(storageRef, image);
+    for (const [colorType, colors] of Object.entries(images)) {
+      for await (const [color, image] of Object.entries(colors)) {
+        if (image) {
+          const storageRef = ref(
+            storage,
+            `images/${title}-${colorType}-${color}`
+          );
+          await uploadBytes(storageRef, image as File);
+        }
+      }
     }
   };
 
@@ -106,10 +116,8 @@ export const NewProductContainer = () => {
     if (!price) {
       return toast.error('💥 Please add a price for your product.');
     }
-    if (imagesAreNotSelected) {
-      return toast.error(
-        '💥 Please add an image for each color of your product.'
-      );
+    if (noImagesAreSelected) {
+      return toast.error('💥 Please add at least one image for your product.');
     }
     const hasSize = Object.values(sizes).filter((selected) => selected).length;
     if (!hasSize) {
@@ -165,7 +173,7 @@ export const NewProductContainer = () => {
       <SizesWrapper>
         <ImageInputWrapper>
           {Object.keys(images).map((colors, index) => (
-            <>
+            <ColorTypeContainer key={index}>
               <SmallText key={index}>{colors.toUpperCase()}:</SmallText>
               {Object.keys(images[colors as keyof ColorImages]).map(
                 (color, index) => (
@@ -192,7 +200,7 @@ export const NewProductContainer = () => {
                   </ImageInputContainer>
                 )
               )}
-            </>
+            </ColorTypeContainer>
           ))}
         </ImageInputWrapper>
       </SizesWrapper>
@@ -289,6 +297,20 @@ const Tile = styled.div<{ color: string; textColor: string }>`
   font-size: 12px;
   background-color: ${(props) => props.color};
   color: ${(props) => props.textColor};
+`;
+
+const ColorTypeContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 15px;
+  border-bottom: 1px solid ${Color.GRAY};
+  padding-bottom: 10px;
+  &:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
 `;
 
 const SizesWrapper = styled.div`
