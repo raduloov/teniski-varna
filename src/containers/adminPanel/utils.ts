@@ -8,7 +8,7 @@ export enum TShirtColor {
   BLUE = 'blue',
   DARK_BLUE = 'darkBlue',
   LIGHT_BLUE = 'lightBlue',
-  DARK_GREEN = 'darkBreen',
+  DARK_GREEN = 'darkGreen',
   YELLOW = 'yellow',
   LIGHT_PINK = 'lightPink'
 }

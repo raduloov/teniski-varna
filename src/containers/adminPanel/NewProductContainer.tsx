@@ -50,6 +50,9 @@ export const NewProductContainer = () => {
     setLabelsFromFirebase();
   }, []);
 
+  const imageForTypeIsSelected = (type: TShirtType) =>
+    Object.values(images[type]).some((image) => image);
+
   const noImagesAreSelected =
     Object.values(images.men).every((image) => image === null) &&
     Object.values(images.women).every((image) => image === null) &&
@@ -95,6 +98,11 @@ export const NewProductContainer = () => {
       kids: []
     };
     for (const [sizeType, sizesArray] of Object.entries(sizes)) {
+      const imageSelected = imageForTypeIsSelected(sizeType as TShirtType);
+      if (!imageSelected) {
+        continue;
+      }
+
       for (const [size, selected] of Object.entries(sizesArray)) {
         if (selected) {
           sizesObj[sizeType as TShirtType].push(size as TShirtSize);
@@ -213,45 +221,51 @@ export const NewProductContainer = () => {
       </SizesWrapper>
       <Text>T-Shirt Sizes</Text>
       <SizesWrapper>
-        {Object.keys(sizes).map((sizeType, index) => (
-          <>
-            <SmallText key={index}>{sizeType.toUpperCase()}:</SmallText>
-            <InputContainer key={index}>
-              <SizesContainer>
-                {Object.keys(sizes[sizeType as TShirtType]).map(
-                  (size, index) => {
-                    const checked =
-                      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                      // @ts-ignore
-                      sizes[sizeType][size];
+        {Object.keys(sizes).map((sizeType, index) => {
+          const showSizesForType = imageForTypeIsSelected(
+            sizeType as TShirtType
+          );
 
-                    return (
-                      <CheckboxContainer key={index}>
-                        <Checkbox
-                          label={size}
-                          checked={checked}
-                          onClick={() => {
-                            const newSizes = {
-                              ...sizes,
-                              [sizeType]: {
-                                ...sizes[sizeType as TShirtType],
-                                [size]:
-                                  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                                  // @ts-ignore
-                                  !sizes[sizeType as TShirtType][size]
-                              }
-                            };
-                            setSizes(newSizes);
-                          }}
-                        />
-                      </CheckboxContainer>
-                    );
-                  }
-                )}
-              </SizesContainer>
-            </InputContainer>
-          </>
-        ))}
+          return (
+            <SizesRow disabled={!showSizesForType} key={index}>
+              <SmallText key={index}>{sizeType.toUpperCase()}:</SmallText>
+              <InputContainer key={index}>
+                <SizesContainer>
+                  {Object.keys(sizes[sizeType as TShirtType]).map(
+                    (size, index) => {
+                      const checked =
+                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                        // @ts-ignore
+                        sizes[sizeType][size];
+
+                      return (
+                        <CheckboxContainer key={index}>
+                          <Checkbox
+                            label={size}
+                            checked={checked}
+                            onClick={() => {
+                              const newSizes = {
+                                ...sizes,
+                                [sizeType]: {
+                                  ...sizes[sizeType as TShirtType],
+                                  [size]:
+                                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                                    // @ts-ignore
+                                    !sizes[sizeType as TShirtType][size]
+                                }
+                              };
+                              setSizes(newSizes);
+                            }}
+                          />
+                        </CheckboxContainer>
+                      );
+                    }
+                  )}
+                </SizesContainer>
+              </InputContainer>
+            </SizesRow>
+          );
+        })}
       </SizesWrapper>
       <InputContainer>
         <Text>Labels</Text>
@@ -291,6 +305,16 @@ const ColorTile = ({ color }: { color: string }) => {
     </Tile>
   );
 };
+
+const SizesRow = styled.div<{ disabled: boolean }>`
+  ${(props) =>
+    props.disabled &&
+    `
+      pointer-events: none;
+      opacity: 0.25;
+      filter: blur(2px);
+  `}
+`;
 
 const Tile = styled.div<{ color: string; textColor: string }>`
   display: flex;
