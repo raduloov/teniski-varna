@@ -62,8 +62,8 @@ export interface Product {
   id: string;
   title: string;
   description: string;
+  thumbnail: string;
   images: ProductImages;
-  mainImage: string;
   price: number;
   sizes: TShirtSizes;
   labels: Array<string>;

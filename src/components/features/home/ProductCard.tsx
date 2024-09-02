@@ -60,7 +60,7 @@ export const ProductCard = ({
           : navigateToDetails(product.id)
       }
     >
-      <img src={product.mainImage} />
+      <img src={product.thumbnail} />
       <h1>{product.title}</h1>
       <p>{product.description}</p>
       <FavoriteButton>

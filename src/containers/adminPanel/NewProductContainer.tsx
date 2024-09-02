@@ -33,6 +33,7 @@ export const NewProductContainer = () => {
   const [title, setTitle] = useState<string>('');
   const [description, setDescription] = useState<string>('');
   const [price, setPrice] = useState<number | string>('');
+  const [thumbnailImage, setThumbnailImage] = useState<string | null>(null);
   const [images, setImages] = useState<ColorImages>(defaultImagesObj);
   const [sizes, setSizes] = useState<SizesCheckbox>(defaultSizesObj.all);
   const [labels, setLabels] = useState<Label[]>([]);
@@ -67,11 +68,12 @@ export const NewProductContainer = () => {
   };
 
   const createProduct = async () => {
-    if (noImagesAreSelected) {
+    if (noImagesAreSelected || !thumbnailImage) {
       return;
     }
 
     let imageUrls = JSON.parse(JSON.stringify(defaultImageUrls));
+    let thumbnailImageUrl = null;
     for (const [colorType, colors] of Object.entries(images)) {
       for await (const [color, image] of Object.entries(colors)) {
         if (image) {
@@ -88,6 +90,12 @@ export const NewProductContainer = () => {
               [color]: imageUrl
             }
           };
+
+          const imageName = (image as File).name;
+
+          if (thumbnailImage === imageName) {
+            thumbnailImageUrl = imageUrl;
+          }
         }
       }
     }
@@ -114,6 +122,7 @@ export const NewProductContainer = () => {
       title,
       description,
       price,
+      thumbnail: thumbnailImageUrl,
       images: imageUrls,
       sizes: sizesObj,
       labels: selectedLabelIds
@@ -134,6 +143,9 @@ export const NewProductContainer = () => {
     }
     if (noImagesAreSelected) {
       return toast.error('💥 Please add at least one image for your product.');
+    }
+    if (!thumbnailImage) {
+      return toast.error('💥 Please add a thumbnail image for your product.');
     }
     const hasSize = Object.values(sizes).filter((selected) => selected).length;
     if (!hasSize) {
@@ -184,6 +196,15 @@ export const NewProductContainer = () => {
           onChange={(e) => setPrice(e.target.value)}
         />
       </InputContainer>
+      <Text>Thumbnail Image</Text>
+      <SizesWrapper>
+        <ImageInputContainer>
+          <SmallText>Thumbnail:</SmallText>
+          <Thumbnail thumbnail={thumbnailImage}>
+            {thumbnailImage ?? 'N/A'}
+          </Thumbnail>
+        </ImageInputContainer>
+      </SizesWrapper>
       <Text>Images</Text>
       <SizesWrapper>
         <ImageInputWrapper>
@@ -210,6 +231,15 @@ export const NewProductContainer = () => {
                             [color]: e.target.files[0]
                           }
                         })
+                      }
+                      onMakeThumbnail={(fileName) =>
+                        setThumbnailImage(fileName)
+                      }
+                      thumbnailSelected={
+                        thumbnailImage ===
+                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                        // @ts-ignore
+                        images[colors as keyof ColorImages][color]?.name
                       }
                     />
                   </ImageInputContainer>
@@ -306,6 +336,19 @@ const ColorTile = ({ color }: { color: string }) => {
   );
 };
 
+const Thumbnail = styled.div<{ thumbnail: string | null }>`
+  border: none;
+  padding: 8px 16px;
+  background-color: ${(props) =>
+    props.thumbnail ? Color.ACCENT : Color.LIGHT_GRAY};
+  border-radius: 2rem;
+  color: ${(props) => (props.thumbnail ? Color.BLACK : Color.GRAY)};
+  cursor: pointer;
+  &:hover {
+    filter: brightness(0.9);
+  }
+`;
+
 const SizesRow = styled.div<{ disabled: boolean }>`
   ${(props) =>
     props.disabled &&
@@ -345,7 +388,7 @@ const ColorTypeContainer = styled.div`
 `;
 
 const SizesWrapper = styled.div`
-  margin-top: 10px;
+  margin: 10px 0 10px 0;
   padding: 10px;
   background-color: ${Color.DARK_GRAY};
   border-radius: 10px;
