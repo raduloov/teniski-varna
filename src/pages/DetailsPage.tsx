@@ -2,7 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router';
 import { DetailsContainer } from '../containers/DetailsContainer';
 import { useProducts } from '../hooks/useProducts';
-import { Product, TShirtSize } from '../domain/models/ProductDTO';
+import {
+  ImagesKids,
+  ImagesMen,
+  ImagesWomen,
+  Product,
+  TShirtSize,
+  TShirtType
+} from '../domain/models/ProductDTO';
 import styled from 'styled-components';
 import { ActivityIndicator } from '../components/common/ActivityIndicator';
 import { Color } from '../assets/constants';
@@ -10,6 +17,8 @@ import { TShirtColor } from '../containers/adminPanel/utils';
 
 export const DetailsPage = () => {
   const [product, setProduct] = useState<Product>();
+  const [tShirtTypes, setTShirtTypes] = useState<TShirtType[]>([]);
+  const [selectedType, setSelectedType] = useState<TShirtType | null>(null);
   const [selectedSize, setSelectedSize] = useState<TShirtSize | null>(null);
   const [selectedColor, setSelectedColor] = useState<TShirtColor>(
     TShirtColor.WHITE
@@ -21,9 +30,37 @@ export const DetailsPage = () => {
   const { state } = useLocation();
   const navigate = useNavigate();
 
+  const getTShirtTypes = (product: Product) => {
+    const types = [];
+
+    // Use this implementation to retain the order of the types
+    if (Object.values(product.images.men).some((url) => url)) {
+      types.push(TShirtType.MEN);
+    }
+    if (Object.values(product.images.women).some((url) => url)) {
+      types.push(TShirtType.WOMEN);
+    }
+    if (Object.values(product.images.kids).some((url) => url)) {
+      types.push(TShirtType.KIDS);
+    }
+
+    return types;
+  };
+
   const setProductFromFirebase = async () => {
     const product = await getProductById(productId ?? '');
-    setProduct(product);
+
+    if (product) {
+      const tShirtTypes = getTShirtTypes(product);
+      const firstAvailableColor = getFirstAvailableColor(
+        product.images[tShirtTypes[0]]
+      );
+
+      setTShirtTypes(tShirtTypes as TShirtType[]);
+      setSelectedType(tShirtTypes[0] as TShirtType);
+      setSelectedColor(firstAvailableColor);
+      setProduct(product);
+    }
   };
 
   useEffect(() => {
@@ -48,6 +85,22 @@ export const DetailsPage = () => {
     }
   };
 
+  const selectType = (type: TShirtType) => {
+    setSelectedType(type);
+    setSelectedColor(getFirstAvailableColor(product!.images[type]));
+  };
+
+  const getFirstAvailableColor = (
+    images: ImagesMen | ImagesWomen | ImagesKids
+  ) => {
+    for (const [color, url] of Object.entries(images)) {
+      if (url) {
+        return color as TShirtColor;
+      }
+    }
+    return TShirtColor.WHITE;
+  };
+
   const { discountedPrice } = state;
 
   if (isLoading) {
@@ -62,6 +115,9 @@ export const DetailsPage = () => {
     <>
       {product && (
         <DetailsContainer
+          tShirtTypes={tShirtTypes}
+          selectedType={selectedType}
+          onSelectType={selectType}
           selectedSize={selectedSize}
           onSelectSize={setSelectedSize}
           selectedColor={selectedColor}

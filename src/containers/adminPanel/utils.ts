@@ -6,11 +6,11 @@ export enum TShirtColor {
   BLACK = 'black',
   RED = 'red',
   BLUE = 'blue',
-  DARK_BLUE = 'dark_blue',
-  LIGHT_BLUE = 'light_blue',
-  DARK_GREEN = 'dark_green',
+  DARK_BLUE = 'darkBlue',
+  LIGHT_BLUE = 'lightBlue',
+  DARK_GREEN = 'darkBreen',
   YELLOW = 'yellow',
-  LIGHT_PINK = 'light_pink'
+  LIGHT_PINK = 'lightPink'
 }
 
 export interface SizesCheckbox {
@@ -62,6 +62,31 @@ export interface ColorImages {
     [TShirtColor.BLUE]: File | null;
     [TShirtColor.YELLOW]: File | null;
     [TShirtColor.LIGHT_PINK]: File | null;
+  };
+}
+
+export interface ImageUrls {
+  men: {
+    [TShirtColor.WHITE]: string;
+    [TShirtColor.BLACK]: string;
+    [TShirtColor.RED]: string;
+    [TShirtColor.DARK_BLUE]: string;
+    [TShirtColor.LIGHT_BLUE]: string;
+    [TShirtColor.DARK_GREEN]: string;
+    [TShirtColor.YELLOW]: string;
+  };
+  women: {
+    [TShirtColor.WHITE]: string;
+    [TShirtColor.BLACK]: string;
+    [TShirtColor.LIGHT_PINK]: string;
+  };
+  kids: {
+    [TShirtColor.WHITE]: string;
+    [TShirtColor.BLACK]: string;
+    [TShirtColor.RED]: string;
+    [TShirtColor.BLUE]: string;
+    [TShirtColor.YELLOW]: string;
+    [TShirtColor.LIGHT_PINK]: string;
   };
 }
 
@@ -145,13 +170,43 @@ export const defaultImagesObj: ColorImages = {
   }
 };
 
+export const defaultImageUrls: ImageUrls = {
+  men: {
+    [TShirtColor.WHITE]: '',
+    [TShirtColor.BLACK]: '',
+    [TShirtColor.RED]: '',
+    [TShirtColor.DARK_BLUE]: '',
+    [TShirtColor.LIGHT_BLUE]: '',
+    [TShirtColor.DARK_GREEN]: '',
+    [TShirtColor.YELLOW]: ''
+  },
+  women: {
+    [TShirtColor.WHITE]: '',
+    [TShirtColor.BLACK]: '',
+    [TShirtColor.LIGHT_PINK]: ''
+  },
+  kids: {
+    [TShirtColor.WHITE]: '',
+    [TShirtColor.BLACK]: '',
+    [TShirtColor.RED]: '',
+    [TShirtColor.BLUE]: '',
+    [TShirtColor.YELLOW]: '',
+    [TShirtColor.LIGHT_PINK]: ''
+  }
+};
+
 export const supportedImageTypes = ['image/jpeg'];
 
 export const availableTShirtColors = [
   TShirtColor.WHITE,
   TShirtColor.BLACK,
   TShirtColor.RED,
-  TShirtColor.BLUE
+  TShirtColor.BLUE,
+  TShirtColor.DARK_BLUE,
+  TShirtColor.LIGHT_BLUE,
+  TShirtColor.DARK_GREEN,
+  TShirtColor.YELLOW,
+  TShirtColor.LIGHT_PINK
 ];
 
 export const selectLabelIds = (

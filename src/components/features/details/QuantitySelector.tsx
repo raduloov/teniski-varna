@@ -50,8 +50,8 @@ const Button = styled.button<ButtonProps>`
 const Wrapper = styled.div`
   display: flex;
   justify-content: center;
-  align-items: center;
+  width: 120px;
   border-radius: 15px;
   background: ${Color.LIGHT_GRAY};
-  padding-top: 10px 0 10px 0;
+  padding: 8px 0 8px 0;
 `;

@@ -61,5 +61,6 @@ const ButtonWrapper = styled.div<ButtonWrapperProps>`
 
 const SelectorWrapper = styled.div`
   display: flex;
+  flex-wrap: wrap;
   gap: 5px;
 `;

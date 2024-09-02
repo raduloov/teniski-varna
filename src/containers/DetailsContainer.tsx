@@ -8,16 +8,20 @@ import { QuantitySelector } from '../components/features/details/QuantitySelecto
 import { RatingStars } from '../components/features/details/RatingStars';
 import { SizeSelector } from '../components/features/details/SizeSelector';
 import { cartActions } from '../store/cartSlice';
-import { Product, TShirtSize } from '../domain/models/ProductDTO';
+import { Product, TShirtSize, TShirtType } from '../domain/models/ProductDTO';
 import { useAppDispatch } from '../hooks/useRedux';
 import { toast } from 'react-toastify';
 import { ColorSelector } from '../components/features/details/ColorSelector';
 import { TShirtColor } from './adminPanel/utils';
 import { ActivityIndicator } from '../components/common/ActivityIndicator';
+import { IconType } from 'react-icons';
 
 interface Props {
   product: Product;
+  tShirtTypes: TShirtType[];
   discountedPrice?: number;
+  selectedType: TShirtType | null;
+  onSelectType: (type: TShirtType) => void;
   selectedSize: TShirtSize | null;
   onSelectSize: (size: TShirtSize) => void;
   selectedColor: TShirtColor | null;
@@ -31,6 +35,9 @@ interface Props {
 }
 
 export const DetailsContainer = ({
+  tShirtTypes,
+  selectedType,
+  onSelectType,
   selectedSize,
   onSelectSize,
   selectedColor,
@@ -65,6 +72,17 @@ export const DetailsContainer = ({
     toast.success(`🎉 ${product.title} беше успешно добавен в количката.`);
   };
 
+  const determineTypeIcon = (type: TShirtType): IconType => {
+    switch (type) {
+      case TShirtType.MEN:
+        return icons.SlUser;
+      case TShirtType.WOMEN:
+        return icons.SlUserFemale;
+      case TShirtType.KIDS:
+        return icons.TbMoodKid;
+    }
+  };
+
   return (
     <Container>
       <ActionButtonsWrapper>
@@ -76,7 +94,11 @@ export const DetailsContainer = ({
         )}
         <Image
           src={
-            selectedColor ? product.images[selectedColor] : product.images.white
+            selectedColor
+              ? // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
+                product.images[selectedType][selectedColor]
+              : product.images.men['white']
           }
           onLoad={() => onImageLoad()}
           loaded={imageHasLoaded}
@@ -90,41 +112,69 @@ export const DetailsContainer = ({
           </TitleWrapper>
           <RatingStars />
         </HeaderWrapper>
+
+        <TypeSelector>
+          {tShirtTypes.map((type, index) => (
+            <IconButton
+              icon={determineTypeIcon(type)}
+              containerColor={
+                selectedType === type ? Color.ACCENT : Color.WHITE
+              }
+              iconColor={selectedType === type ? Color.BLACK : Color.GRAY}
+              onClick={() => onSelectType(type)}
+              key={index}
+            />
+          ))}
+        </TypeSelector>
+
         <SelectSizeTitle>Изберете цвят</SelectSizeTitle>
-        <SizeAndQuantityWrapper>
-          <ColorSelector
-            selectedColor={selectedColor}
-            onSelectColor={(color) => onSelectColor(color)}
-          />
-        </SizeAndQuantityWrapper>
+        <TilesWrapper>
+          {selectedType && (
+            <ColorSelector
+              colors={product.images[selectedType]}
+              selectedColor={selectedColor}
+              onSelectColor={(color) => onSelectColor(color)}
+            />
+          )}
+        </TilesWrapper>
         <SelectSizeTitle>Изберете размер</SelectSizeTitle>
-        <SizeAndQuantityWrapper>
-          <SizeSelector
-            availableSizes={product.sizes.men}
-            selectedSize={selectedSize}
-            onSelectSize={(size) => onSelectSize(size)}
-          />
-          <SizeSelector
-            availableSizes={product.sizes.women}
-            selectedSize={selectedSize}
-            onSelectSize={(size) => onSelectSize(size)}
-          />
-          <SizeSelector
-            availableSizes={product.sizes.kids}
-            selectedSize={selectedSize}
-            onSelectSize={(size) => onSelectSize(size)}
-          />
+        <TilesWrapper>
+          {selectedType === TShirtType.MEN && (
+            <SizeSelector
+              availableSizes={product.sizes.men}
+              selectedSize={selectedSize}
+              onSelectSize={(size) => onSelectSize(size)}
+            />
+          )}
+          {selectedType === TShirtType.WOMEN && (
+            <SizeSelector
+              availableSizes={product.sizes.women}
+              selectedSize={selectedSize}
+              onSelectSize={(size) => onSelectSize(size)}
+            />
+          )}
+          {selectedType === TShirtType.KIDS && (
+            <SizeSelector
+              availableSizes={product.sizes.kids}
+              selectedSize={selectedSize}
+              onSelectSize={(size) => onSelectSize(size)}
+            />
+          )}
+        </TilesWrapper>
+        <QuantityWrapper>
           <QuantitySelector
             quantity={selectedQuantity}
             onIncreaseQuantity={onIncreaseQuantity}
             onDecreaseQuantity={onDecreaseQuantity}
           />
-        </SizeAndQuantityWrapper>
+        </QuantityWrapper>
         <CtaWrapper>
-          <Price discounted={!!discountedPrice}>{product.price}лв</Price>
-          {discountedPrice && (
-            <DiscountedPrice>{discountedPrice}лв</DiscountedPrice>
-          )}
+          <PriceWrapper>
+            <Price discounted={!!discountedPrice}>{product.price}лв</Price>
+            {discountedPrice && (
+              <DiscountedPrice>{discountedPrice}лв</DiscountedPrice>
+            )}
+          </PriceWrapper>
           <Button
             label="Добави в количка"
             size={ButtonSize.MEDIUM}
@@ -135,6 +185,20 @@ export const DetailsContainer = ({
     </Container>
   );
 };
+
+const PriceWrapper = styled.div``;
+
+const QuantityWrapper = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-top: 10px;
+`;
+
+const TypeSelector = styled.div`
+  display: flex;
+  gap: 10px;
+`;
 
 const ImageWrapper = styled.div`
   display: flex;
@@ -175,7 +239,6 @@ const Price = styled.p<{ discounted?: boolean }>`
 
 const CtaWrapper = styled.div`
   display: flex;
-  flex-direction: column;
   width: 100%;
   margin-top: 15px;
   gap: 15px;
@@ -183,7 +246,7 @@ const CtaWrapper = styled.div`
   justify-content: space-between;
 `;
 
-const SizeAndQuantityWrapper = styled.div`
+const TilesWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   margin-top: 10px;

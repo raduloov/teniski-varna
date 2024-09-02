@@ -1,6 +1,4 @@
-import { TShirtColor } from '../../containers/adminPanel/utils';
-
-export enum TShirtSizeType {
+export enum TShirtType {
   MEN = 'men',
   WOMEN = 'women',
   KIDS = 'kids'
@@ -29,19 +27,44 @@ export enum TShirtSize {
   K168 = '168'
 }
 
-export interface ProductImages {
-  [TShirtColor.WHITE]: string;
-  [TShirtColor.BLACK]: string;
-  [TShirtColor.RED]: string;
-  [TShirtColor.BLUE]: string;
+export interface ImagesMen {
+  white: string;
+  black: string;
+  red: string;
+  darkBlue: string;
+  lightBlue: string;
+  darkGreen: string;
+  yellow: string;
 }
+
+export interface ImagesWomen {
+  white: string;
+  black: string;
+  lightPink: string;
+}
+
+export interface ImagesKids {
+  white: string;
+  black: string;
+  red: string;
+  blue: string;
+  yellow: string;
+  lightPink: string;
+}
+
+export interface ProductImages {
+  men: ImagesMen;
+  women: ImagesWomen;
+  kids: ImagesKids;
+}
+
 export interface Product {
   id: string;
   title: string;
   description: string;
   images: ProductImages;
+  mainImage: string;
   price: number;
-  colors: Array<TShirtColor>;
   sizes: TShirtSizes;
   labels: Array<string>;
 }

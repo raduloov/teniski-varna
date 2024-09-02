@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { addDoc, collection } from 'firebase/firestore';
-import { ref, uploadBytes } from 'firebase/storage';
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { toast } from 'react-toastify';
 import styled from 'styled-components';
 import {
   TShirtSize,
   TShirtSizes,
-  TShirtSizeType
+  TShirtType
 } from '../../domain/models/ProductDTO';
 import { db, storage } from '../../firebase/firebaseConfig';
 import { Color } from '../../assets/constants';
@@ -17,7 +17,9 @@ import { Input } from '../../components/common/Input';
 import {
   ColorImages,
   defaultImagesObj,
+  defaultImageUrls,
   defaultSizesObj,
+  ImageUrls,
   mapTShirtColorToHex,
   selectLabelIds,
   SizesCheckbox,
@@ -62,6 +64,31 @@ export const NewProductContainer = () => {
   };
 
   const createProduct = async () => {
+    if (noImagesAreSelected) {
+      return;
+    }
+
+    let imageUrls = JSON.parse(JSON.stringify(defaultImageUrls));
+    for (const [colorType, colors] of Object.entries(images)) {
+      for await (const [color, image] of Object.entries(colors)) {
+        if (image) {
+          const storageRef = ref(
+            storage,
+            `images/${title}-${colorType}-${color}`
+          );
+          const snapshot = await uploadBytes(storageRef, image as File);
+          const imageUrl = await getDownloadURL(snapshot.ref);
+          imageUrls = {
+            ...imageUrls,
+            [colorType as keyof ImageUrls]: {
+              ...imageUrls[colorType as keyof ImageUrls],
+              [color]: imageUrl
+            }
+          };
+        }
+      }
+    }
+
     const sizesObj: TShirtSizes = {
       men: [],
       women: [],
@@ -70,7 +97,7 @@ export const NewProductContainer = () => {
     for (const [sizeType, sizesArray] of Object.entries(sizes)) {
       for (const [size, selected] of Object.entries(sizesArray)) {
         if (selected) {
-          sizesObj[sizeType as TShirtSizeType].push(size as TShirtSize);
+          sizesObj[sizeType as TShirtType].push(size as TShirtSize);
         }
       }
     }
@@ -79,31 +106,12 @@ export const NewProductContainer = () => {
       title,
       description,
       price,
-      image: title,
+      images: imageUrls,
       sizes: sizesObj,
-      colors: [],
       labels: selectedLabelIds
     };
 
     await addDoc(collection(db, 'products'), product);
-  };
-
-  const uploadImages = async () => {
-    if (noImagesAreSelected) {
-      return;
-    }
-
-    for (const [colorType, colors] of Object.entries(images)) {
-      for await (const [color, image] of Object.entries(colors)) {
-        if (image) {
-          const storageRef = ref(
-            storage,
-            `images/${title}-${colorType}-${color}`
-          );
-          await uploadBytes(storageRef, image as File);
-        }
-      }
-    }
   };
 
   const addNewProduct = async () => {
@@ -129,7 +137,6 @@ export const NewProductContainer = () => {
     setIsLoading(true);
     try {
       await createProduct();
-      await uploadImages();
 
       resetForm();
       return toast.success('🎉 Product added successfully!');
@@ -211,7 +218,7 @@ export const NewProductContainer = () => {
             <SmallText key={index}>{sizeType.toUpperCase()}:</SmallText>
             <InputContainer key={index}>
               <SizesContainer>
-                {Object.keys(sizes[sizeType as TShirtSizeType]).map(
+                {Object.keys(sizes[sizeType as TShirtType]).map(
                   (size, index) => {
                     const checked =
                       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -227,11 +234,11 @@ export const NewProductContainer = () => {
                             const newSizes = {
                               ...sizes,
                               [sizeType]: {
-                                ...sizes[sizeType as TShirtSizeType],
+                                ...sizes[sizeType as TShirtType],
                                 [size]:
                                   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                                   // @ts-ignore
-                                  !sizes[sizeType as TShirtSizeType][size]
+                                  !sizes[sizeType as TShirtType][size]
                               }
                             };
                             setSizes(newSizes);
