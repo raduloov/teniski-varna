@@ -112,6 +112,35 @@ export const UpdateProductContainer = ({
     return productSizes;
   };
 
+  const handleSelectImage = (
+    files: FileList | null,
+    color: string,
+    colors: keyof ColorImages
+  ) => {
+    if (files) {
+      setImages({
+        ...images,
+        [colors]: {
+          ...images[colors],
+          [color]: files[0]
+        }
+      });
+    }
+  };
+
+  const handleSelectSize = (size: TShirtSize, sizeType: TShirtType) => {
+    const newSizes = {
+      ...sizes,
+      [sizeType]: {
+        ...sizes[sizeType],
+        [size]:
+          // @ts-ignore
+          !sizes[sizeType][size]
+      }
+    };
+    setSizes(newSizes);
+  };
+
   const updateProduct = async () => {
     let imageDetails: ImageDetails = JSON.parse(
       JSON.stringify(defaultImageDetails)
@@ -301,14 +330,11 @@ export const UpdateProductContainer = ({
                           }
                           supportedTypes={supportedImageTypes}
                           onChange={(e) =>
-                            e.target.files &&
-                            setImages({
-                              ...images,
-                              [colors]: {
-                                ...images[colors as keyof ColorImages],
-                                [color]: e.target.files[0]
-                              }
-                            })
+                            handleSelectImage(
+                              e.target.files,
+                              color,
+                              colors as keyof ColorImages
+                            )
                           }
                           onMakeThumbnail={(fileName) =>
                             setThumbnailImage(fileName)
@@ -350,18 +376,12 @@ export const UpdateProductContainer = ({
                               <Checkbox
                                 label={size}
                                 checked={checked}
-                                onClick={() => {
-                                  const newSizes = {
-                                    ...sizes,
-                                    [sizeType]: {
-                                      ...sizes[sizeType as TShirtType],
-                                      [size]:
-                                        // @ts-ignore
-                                        !sizes[sizeType as TShirtType][size]
-                                    }
-                                  };
-                                  setSizes(newSizes);
-                                }}
+                                onClick={() =>
+                                  handleSelectSize(
+                                    size as TShirtSize,
+                                    sizeType as TShirtType
+                                  )
+                                }
                               />
                             </CheckboxContainer>
                           );
