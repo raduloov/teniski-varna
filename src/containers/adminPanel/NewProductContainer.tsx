@@ -17,17 +17,16 @@ import { Input } from '../../components/common/Input';
 import {
   ColorImages,
   defaultImagesObj,
-  defaultImageUrls,
+  defaultImageDetails,
   defaultSizesObj,
-  ImageUrls,
-  mapTShirtColorToHex,
+  ImageDetails,
   selectLabelIds,
   SizesCheckbox,
-  supportedImageTypes,
-  TShirtColor
+  supportedImageTypes
 } from './utils';
 import { Label, useLabels } from '../../hooks/useLabels';
 import { LabelsContainer } from '../../components/features/labels/LabelsContainer';
+import { ColorTile } from '../../components/common/ColorTile';
 
 export const NewProductContainer = () => {
   const [title, setTitle] = useState<string>('');
@@ -72,8 +71,13 @@ export const NewProductContainer = () => {
       return;
     }
 
-    let imageUrls = JSON.parse(JSON.stringify(defaultImageUrls));
-    let thumbnailImageUrl = null;
+    let imageDetails: ImageDetails = JSON.parse(
+      JSON.stringify(defaultImageDetails)
+    );
+    const thumbnailImageDetails = {
+      name: '',
+      url: ''
+    };
     for (const [colorType, colors] of Object.entries(images)) {
       for await (const [color, image] of Object.entries(colors)) {
         if (image) {
@@ -83,18 +87,23 @@ export const NewProductContainer = () => {
           );
           const snapshot = await uploadBytes(storageRef, image as File);
           const imageUrl = await getDownloadURL(snapshot.ref);
-          imageUrls = {
-            ...imageUrls,
-            [colorType as keyof ImageUrls]: {
-              ...imageUrls[colorType as keyof ImageUrls],
-              [color]: imageUrl
-            }
-          };
 
           const imageName = (image as File).name;
 
+          imageDetails = {
+            ...imageDetails,
+            [colorType as keyof ImageDetails]: {
+              ...imageDetails[colorType as keyof ImageDetails],
+              [color]: {
+                name: imageName,
+                url: imageUrl
+              }
+            }
+          };
+
           if (thumbnailImage === imageName) {
-            thumbnailImageUrl = imageUrl;
+            thumbnailImageDetails.name = imageName;
+            thumbnailImageDetails.url = imageUrl;
           }
         }
       }
@@ -122,8 +131,8 @@ export const NewProductContainer = () => {
       title,
       description,
       price,
-      thumbnail: thumbnailImageUrl,
-      images: imageUrls,
+      thumbnail: thumbnailImageDetails,
+      images: imageDetails,
       sizes: sizesObj,
       labels: selectedLabelIds
     };
@@ -217,7 +226,6 @@ export const NewProductContainer = () => {
                     <ColorTile color={color} />
                     <ImageInput
                       fileName={
-                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                         // @ts-ignore
                         images[colors as keyof ColorImages][color]?.name
                       }
@@ -237,7 +245,6 @@ export const NewProductContainer = () => {
                       }
                       thumbnailSelected={
                         thumbnailImage ===
-                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                         // @ts-ignore
                         images[colors as keyof ColorImages][color]?.name
                       }
@@ -264,7 +271,6 @@ export const NewProductContainer = () => {
                   {Object.keys(sizes[sizeType as TShirtType]).map(
                     (size, index) => {
                       const checked =
-                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                         // @ts-ignore
                         sizes[sizeType][size];
 
@@ -279,7 +285,6 @@ export const NewProductContainer = () => {
                                 [sizeType]: {
                                   ...sizes[sizeType as TShirtType],
                                   [size]:
-                                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                                     // @ts-ignore
                                     !sizes[sizeType as TShirtType][size]
                                 }
@@ -320,22 +325,6 @@ export const NewProductContainer = () => {
   );
 };
 
-const ColorTile = ({ color }: { color: string }) => {
-  const hexColor = mapTShirtColorToHex(color as TShirtColor);
-  const textColor =
-    color === TShirtColor.BLACK ||
-    color === TShirtColor.BLUE ||
-    color === TShirtColor.DARK_BLUE
-      ? Color.WHITE
-      : Color.BLACK;
-
-  return (
-    <Tile color={hexColor} textColor={textColor}>
-      {color.replace('_', ' ').toUpperCase()}
-    </Tile>
-  );
-};
-
 const Thumbnail = styled.div<{ thumbnail: string | null }>`
   border: none;
   padding: 8px 16px;
@@ -357,20 +346,6 @@ const SizesRow = styled.div<{ disabled: boolean }>`
       opacity: 0.25;
       filter: blur(2px);
   `}
-`;
-
-const Tile = styled.div<{ color: string; textColor: string }>`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-shrink: 0;
-  text-align: center;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  font-size: 12px;
-  background-color: ${(props) => props.color};
-  color: ${(props) => props.textColor};
 `;
 
 const ColorTypeContainer = styled.div`

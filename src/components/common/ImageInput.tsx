@@ -1,7 +1,6 @@
 import React, { useRef } from 'react';
 import styled from 'styled-components';
 import { Color } from '../../assets/constants';
-import { Button } from './Button';
 import { IconButton } from './IconButton';
 import { icons } from '../../assets/icons';
 

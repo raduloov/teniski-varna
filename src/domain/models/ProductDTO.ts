@@ -1,3 +1,5 @@
+import { ImageDetails, ImageInfo } from '../../containers/adminPanel/utils';
+
 export enum TShirtType {
   MEN = 'men',
   WOMEN = 'women',
@@ -28,41 +30,41 @@ export enum TShirtSize {
 }
 
 export interface ImagesMen {
-  white: string;
-  black: string;
-  red: string;
-  darkBlue: string;
-  lightBlue: string;
-  darkGreen: string;
-  yellow: string;
+  white: ImageInfo;
+  black: ImageInfo;
+  red: ImageInfo;
+  darkBlue: ImageInfo;
+  lightBlue: ImageInfo;
+  darkGreen: ImageInfo;
+  yellow: ImageInfo;
 }
 
 export interface ImagesWomen {
-  white: string;
-  black: string;
-  lightPink: string;
+  white: ImageInfo;
+  black: ImageInfo;
+  lightPink: ImageInfo;
 }
 
 export interface ImagesKids {
-  white: string;
-  black: string;
-  red: string;
-  blue: string;
-  yellow: string;
-  lightPink: string;
+  white: ImageInfo;
+  black: ImageInfo;
+  red: ImageInfo;
+  blue: ImageInfo;
+  yellow: ImageInfo;
+  lightPink: ImageInfo;
 }
 
-export interface ProductImages {
-  men: ImagesMen;
-  women: ImagesWomen;
-  kids: ImagesKids;
-}
+export type ProductImages = ImageDetails;
+export type Thumbnail = {
+  name: string;
+  url: string;
+};
 
 export interface Product {
   id: string;
   title: string;
   description: string;
-  thumbnail: string;
+  thumbnail: Thumbnail;
   images: ProductImages;
   price: number;
   sizes: TShirtSizes;

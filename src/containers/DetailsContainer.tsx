@@ -95,10 +95,9 @@ export const DetailsContainer = ({
         <Image
           src={
             selectedColor
-              ? // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                // @ts-ignore
-                product.images[selectedType][selectedColor]
-              : product.images.men['white']
+              ? // @ts-ignore
+                product.images[selectedType][selectedColor].url
+              : ''
           }
           onLoad={() => onImageLoad()}
           loaded={imageHasLoaded}

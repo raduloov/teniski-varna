@@ -25,12 +25,14 @@ const Text = styled.p<CheckboxProps>`
 `;
 
 const CheckboxWrapper = styled.div<CheckboxProps>`
+  cursor: pointer;
+  width: 50px;
+  height: 50px;
+  background: ${(props) => (props.checked ? Color.ACCENT : Color.LIGHT_GRAY)};
+  border-radius: 15px;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 40px;
-  width: 40px;
-  background: ${(props) => (props.checked ? Color.ACCENT : Color.WHITE)};
-  border-radius: 50%;
-  cursor: pointer;
+  font-size: 20px;
+  color: ${(props) => (props.checked ? Color.BLACK : Color.GRAY)};
 `;

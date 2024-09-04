@@ -65,28 +65,36 @@ export interface ColorImages {
   };
 }
 
-export interface ImageUrls {
+export type ImageInfo = {
+  name: string;
+  url: string;
+} | null;
+
+export interface ImageDetails {
   men: {
-    [TShirtColor.WHITE]: string;
-    [TShirtColor.BLACK]: string;
-    [TShirtColor.RED]: string;
-    [TShirtColor.DARK_BLUE]: string;
-    [TShirtColor.LIGHT_BLUE]: string;
-    [TShirtColor.DARK_GREEN]: string;
-    [TShirtColor.YELLOW]: string;
+    [color in
+      | TShirtColor.WHITE
+      | TShirtColor.BLACK
+      | TShirtColor.RED
+      | TShirtColor.DARK_BLUE
+      | TShirtColor.LIGHT_BLUE
+      | TShirtColor.DARK_GREEN
+      | TShirtColor.YELLOW]: ImageInfo;
   };
   women: {
-    [TShirtColor.WHITE]: string;
-    [TShirtColor.BLACK]: string;
-    [TShirtColor.LIGHT_PINK]: string;
+    [color in
+      | TShirtColor.WHITE
+      | TShirtColor.BLACK
+      | TShirtColor.LIGHT_PINK]: ImageInfo;
   };
   kids: {
-    [TShirtColor.WHITE]: string;
-    [TShirtColor.BLACK]: string;
-    [TShirtColor.RED]: string;
-    [TShirtColor.BLUE]: string;
-    [TShirtColor.YELLOW]: string;
-    [TShirtColor.LIGHT_PINK]: string;
+    [color in
+      | TShirtColor.WHITE
+      | TShirtColor.BLACK
+      | TShirtColor.RED
+      | TShirtColor.BLUE
+      | TShirtColor.YELLOW
+      | TShirtColor.LIGHT_PINK]: ImageInfo;
   };
 }
 
@@ -170,28 +178,28 @@ export const defaultImagesObj: ColorImages = {
   }
 };
 
-export const defaultImageUrls: ImageUrls = {
+export const defaultImageDetails: ImageDetails = {
   men: {
-    [TShirtColor.WHITE]: '',
-    [TShirtColor.BLACK]: '',
-    [TShirtColor.RED]: '',
-    [TShirtColor.DARK_BLUE]: '',
-    [TShirtColor.LIGHT_BLUE]: '',
-    [TShirtColor.DARK_GREEN]: '',
-    [TShirtColor.YELLOW]: ''
+    [TShirtColor.WHITE]: null,
+    [TShirtColor.BLACK]: null,
+    [TShirtColor.RED]: null,
+    [TShirtColor.DARK_BLUE]: null,
+    [TShirtColor.LIGHT_BLUE]: null,
+    [TShirtColor.DARK_GREEN]: null,
+    [TShirtColor.YELLOW]: null
   },
   women: {
-    [TShirtColor.WHITE]: '',
-    [TShirtColor.BLACK]: '',
-    [TShirtColor.LIGHT_PINK]: ''
+    [TShirtColor.WHITE]: null,
+    [TShirtColor.BLACK]: null,
+    [TShirtColor.LIGHT_PINK]: null
   },
   kids: {
-    [TShirtColor.WHITE]: '',
-    [TShirtColor.BLACK]: '',
-    [TShirtColor.RED]: '',
-    [TShirtColor.BLUE]: '',
-    [TShirtColor.YELLOW]: '',
-    [TShirtColor.LIGHT_PINK]: ''
+    [TShirtColor.WHITE]: null,
+    [TShirtColor.BLACK]: null,
+    [TShirtColor.RED]: null,
+    [TShirtColor.BLUE]: null,
+    [TShirtColor.YELLOW]: null,
+    [TShirtColor.LIGHT_PINK]: null
   }
 };
 
