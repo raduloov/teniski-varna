@@ -43,6 +43,7 @@ export const Cart = ({ setShowModal, showModal, cartItems }: Props) => {
           const mappedProduct = mapProductToCartProduct(
             product,
             localCartItem.color as TShirtColor,
+            localCartItem.image,
             1,
             localCartItem.size
           );

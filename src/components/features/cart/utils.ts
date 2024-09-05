@@ -10,5 +10,15 @@ export const translateColorToBulgarian = (color: TShirtColor): string => {
       return 'Червен';
     case TShirtColor.BLUE:
       return 'Син';
+    case TShirtColor.DARK_BLUE:
+      return 'Тъмносин';
+    case TShirtColor.LIGHT_BLUE:
+      return 'Светлосин';
+    case TShirtColor.DARK_GREEN:
+      return 'Тъмнозелен';
+    case TShirtColor.YELLOW:
+      return 'Жълт';
+    case TShirtColor.LIGHT_PINK:
+      return 'Светлорозов';
   }
 };

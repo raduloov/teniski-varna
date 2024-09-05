@@ -53,6 +53,9 @@ export const DetailsContainer = ({
 }: Props) => {
   const dispatch = useAppDispatch();
 
+  // @ts-ignore
+  const image = product.images[selectedType][selectedColor].url;
+
   const addToCartHandler = () => {
     if (!selectedColor) {
       return toast.error('Моля изберете цвят за вашата тениска.');
@@ -65,6 +68,7 @@ export const DetailsContainer = ({
       cartActions.addToCart({
         product,
         selectedColor,
+        image,
         selectedQuantity,
         selectedSize
       })
@@ -93,12 +97,7 @@ export const DetailsContainer = ({
           <ActivityIndicator size={100} color={Color.ACCENT} />
         )}
         <Image
-          src={
-            selectedColor
-              ? // @ts-ignore
-                product.images[selectedType][selectedColor].url
-              : ''
-          }
+          src={image}
           onLoad={() => onImageLoad()}
           loaded={imageHasLoaded}
         />
