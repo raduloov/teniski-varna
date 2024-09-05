@@ -1,10 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Color } from '../../../assets/constants';
+import { TShirtColor } from '../../../containers/adminPanel/utils';
 import {
-  availableTShirtColors,
-  TShirtColor
-} from '../../../containers/adminPanel/utils';
+  ImagesKids,
+  ImagesMen,
+  ImagesWomen
+} from '../../../domain/models/ProductDTO';
 
 interface ButtonWrapperProps {
   color: TShirtColor;
@@ -18,6 +20,7 @@ interface ColorButtonProps {
 }
 
 interface ColorSelectorProps {
+  colors: ImagesMen | ImagesWomen | ImagesKids;
   selectedColor: TShirtColor | null;
   onSelectColor: (size: TShirtColor) => void;
 }
@@ -33,19 +36,24 @@ const ColorButton = ({ color, selected, onSelectColor }: ColorButtonProps) => {
 };
 
 export const ColorSelector = ({
+  colors,
   selectedColor,
   onSelectColor
 }: ColorSelectorProps) => {
   return (
     <SelectorWrapper>
-      {availableTShirtColors.map((color) => (
-        <ColorButton
-          color={color}
-          selected={selectedColor === color}
-          onSelectColor={(color) => onSelectColor(color)}
-          key={color}
-        />
-      ))}
+      {Object.entries(colors).map(([color, url]) => {
+        if (url) {
+          return (
+            <ColorButton
+              color={color as TShirtColor}
+              selected={selectedColor === color}
+              onSelectColor={(color) => onSelectColor(color)}
+              key={color}
+            />
+          );
+        }
+      })}
     </SelectorWrapper>
   );
 };
@@ -70,5 +78,6 @@ const ButtonWrapper = styled.div<ButtonWrapperProps>`
 
 const SelectorWrapper = styled.div`
   display: flex;
+  flex-wrap: wrap;
   gap: 5px;
 `;

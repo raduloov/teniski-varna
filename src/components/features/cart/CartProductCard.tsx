@@ -32,19 +32,19 @@ export const CartProductCard = ({ product }: Props) => {
 
   return (
     <Card onClick={() => navigateToDetails(product.id)}>
-      <img src={product.images[product.color]} />
+      <img src={product.image} />
       <ProductDetails>
         <h1>{product.title}</h1>
         <TextRow>
-          <p>Цвят:</p>
+          <Text>Цвят:</Text>
           <BoldText>{translateColorToBulgarian(product.color)}</BoldText>
         </TextRow>
         <TextRow>
-          <p>Размер:</p>
+          <Text>Размер:</Text>
           <BoldText>{product.size}</BoldText>
         </TextRow>
-        <h1>
-          {product.price}лв
+        <PriceAndQuantityWrapper>
+          <Price>{product.price}лв</Price>
           <QuantitySelector
             quantity={product.quantity}
             onIncreaseQuantity={(e?: React.MouseEvent) => {
@@ -56,11 +56,16 @@ export const CartProductCard = ({ product }: Props) => {
               decreaseQuantity();
             }}
           />
-        </h1>
+        </PriceAndQuantityWrapper>
       </ProductDetails>
     </Card>
   );
 };
+
+const Text = styled.p`
+  color: ${Color.GRAY};
+  font-size: 0.9rem;
+`;
 
 const TextRow = styled.div`
   display: flex;
@@ -69,6 +74,18 @@ const TextRow = styled.div`
 
 const BoldText = styled.p`
   font-weight: bold;
+  font-size: 0.9rem;
+`;
+
+const Price = styled.p`
+  font-weight: bold;
+  font-size: 1.25rem;
+`;
+
+const PriceAndQuantityWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 `;
 
 const Card = styled.div`
@@ -94,16 +111,6 @@ const Card = styled.div`
     object-fit: cover;
     border-radius: 10px;
   }
-  h1 {
-    font-weight: 600;
-    font-size: 1rem;
-    display: flex;
-    justify-content: space-between;
-  }
-  p {
-    color: ${Color.GRAY};
-    font-size: 0.8rem;
-  }
 `;
 
 const ProductDetails = styled.div`
@@ -113,15 +120,4 @@ const ProductDetails = styled.div`
   width: 100%;
   margin-left: 1rem;
   word-break: break-all;
-
-  h1:last-child {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.25rem;
-    margin-top: auto;
-    justify-items: space-between;
-  }
-  button {
-    padding: 0 8px 0 8px;
-  }
 `;

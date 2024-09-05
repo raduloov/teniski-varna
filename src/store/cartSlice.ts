@@ -9,6 +9,7 @@ import { getLocalItems, cartItemExists } from './utils';
 export type LocalItem = {
   id: string;
   color: string;
+  image: string;
   size: TShirtSize;
 };
 
@@ -31,6 +32,7 @@ export const cartSlice = createSlice({
         product = mapProductToCartProduct(
           payload.product,
           payload.selectedColor,
+          payload.image,
           payload.selectedQuantity,
           payload.selectedSize
         );
@@ -47,6 +49,7 @@ export const cartSlice = createSlice({
       const localItem: LocalItem = {
         id: product.id,
         color: product.color,
+        image: product.image,
         size: product.size
       };
 

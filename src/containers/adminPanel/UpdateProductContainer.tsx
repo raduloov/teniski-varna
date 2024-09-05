@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { deleteDoc, doc, updateDoc } from 'firebase/firestore';
-import { ref, uploadBytes } from 'firebase/storage';
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { toast } from 'react-toastify';
 import styled from 'styled-components';
 import { Color } from '../../assets/constants';
@@ -8,7 +8,7 @@ import {
   Product,
   TShirtSize,
   TShirtSizes,
-  TShirtSizeType
+  TShirtType
 } from '../../domain/models/ProductDTO';
 import { db, storage } from '../../firebase/firebaseConfig';
 import { useProducts } from '../../hooks/useProducts';
@@ -18,16 +18,18 @@ import { Checkbox } from '../../components/common/Checkbox';
 import { Button } from '../../components/common/Button';
 import {
   ColorImages,
+  defaultImageDetails,
   defaultImagesObj,
   defaultSizesObj,
+  ImageDetails,
   selectLabelIds,
   SizesCheckbox,
-  supportedImageTypes,
-  TShirtColor
+  supportedImageTypes
 } from './utils';
 import { ActivityIndicator } from '../../components/common/ActivityIndicator';
 import { LabelsContainer } from '../../components/features/labels/LabelsContainer';
 import { Label, useLabels } from '../../hooks/useLabels';
+import { ColorTile } from '../../components/common/ColorTile';
 
 interface Props {
   productId: string;
@@ -41,7 +43,10 @@ export const UpdateProductContainer = ({
   const [title, setTitle] = useState<string>('');
   const [description, setDescription] = useState<string>('');
   const [price, setPrice] = useState<number | string>('');
-  const [images, setImages] = useState<ColorImages>(defaultImagesObj);
+  const [images, setImages] = useState<ColorImages | ImageDetails>(
+    defaultImagesObj
+  );
+  const [thumbnailImage, setThumbnailImage] = useState<string | null>(null);
   const [sizes, setSizes] = useState<SizesCheckbox>(defaultSizesObj.none);
   const [labels, setLabels] = useState<Label[]>([]);
   const [selectedLabelIds, setSelectedLabelIds] = useState<string[]>([]);
@@ -73,12 +78,17 @@ export const UpdateProductContainer = ({
     getProductAndFillForm();
   }, []);
 
+  const imageForTypeIsSelected = (type: TShirtType) =>
+    Object.values(images[type]).some((image) => image);
+
   const fillForm = (product: Product) => {
     const hasSelectedProduct = !!product.id;
 
     setTitle(hasSelectedProduct ? product.title : '');
     setDescription(product.description);
     setPrice(hasSelectedProduct ? product.price : '');
+    setImages(product.images);
+    setThumbnailImage(product.thumbnail.name);
     setSizes(mapSizesToObject(product.sizes));
     setSelectedLabelIds(product.labels);
   };
@@ -90,11 +100,10 @@ export const UpdateProductContainer = ({
 
     for (const [sizeType, sizesArray] of Object.entries(productSizes)) {
       for (const [size] of Object.entries(sizesArray)) {
-        for (const productSize of sizes[sizeType as TShirtSizeType]) {
+        for (const productSize of sizes[sizeType as TShirtType]) {
           if (productSize === size) {
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
-            productSizes[sizeType as TShirtSizeType][productSize] = true;
+            productSizes[sizeType as TShirtType][productSize] = true;
           }
         }
       }
@@ -103,16 +112,99 @@ export const UpdateProductContainer = ({
     return productSizes;
   };
 
+  const handleSelectImage = (
+    files: FileList | null,
+    color: string,
+    colors: keyof ColorImages
+  ) => {
+    if (files) {
+      setImages({
+        ...images,
+        [colors]: {
+          ...images[colors],
+          [color]: files[0]
+        }
+      });
+    }
+  };
+
+  const handleSelectSize = (size: TShirtSize, sizeType: TShirtType) => {
+    const newSizes = {
+      ...sizes,
+      [sizeType]: {
+        ...sizes[sizeType],
+        [size]:
+          // @ts-ignore
+          !sizes[sizeType][size]
+      }
+    };
+    setSizes(newSizes);
+  };
+
   const updateProduct = async () => {
+    let imageDetails: ImageDetails = JSON.parse(
+      JSON.stringify(defaultImageDetails)
+    );
+    const thumbnailImageDetails = {
+      name: '',
+      url: ''
+    };
+    for (const [colorType, colors] of Object.entries(images)) {
+      for await (const [color, image] of Object.entries(colors)) {
+        let imageName = '';
+        let imageUrl = '';
+
+        if (image) {
+          // @ts-ignore
+          if (image.name && image.url) {
+            // @ts-ignore
+            imageName = image.name;
+            // @ts-ignore
+            imageUrl = image.url;
+          } else {
+            const storageRef = ref(
+              storage,
+              `images/${title}-${colorType}-${color}`
+            );
+            const snapshot = await uploadBytes(storageRef, image as File);
+            imageUrl = await getDownloadURL(snapshot.ref);
+
+            imageName = (image as File).name;
+          }
+
+          imageDetails = {
+            ...imageDetails,
+            [colorType as keyof ImageDetails]: {
+              ...imageDetails[colorType as keyof ImageDetails],
+              [color]: {
+                name: imageName,
+                url: imageUrl
+              }
+            }
+          };
+        }
+
+        if (thumbnailImage === imageName) {
+          thumbnailImageDetails.name = imageName;
+          thumbnailImageDetails.url = imageUrl;
+        }
+      }
+    }
+
     const sizesObj: TShirtSizes = {
       men: [],
       women: [],
       kids: []
     };
     for (const [sizeType, sizesArray] of Object.entries(sizes)) {
+      const imageSelected = imageForTypeIsSelected(sizeType as TShirtType);
+      if (!imageSelected) {
+        continue;
+      }
+
       for (const [size, selected] of Object.entries(sizesArray)) {
         if (selected) {
-          sizesObj[sizeType as TShirtSizeType].push(size as TShirtSize);
+          sizesObj[sizeType as TShirtType].push(size as TShirtSize);
         }
       }
     }
@@ -121,22 +213,13 @@ export const UpdateProductContainer = ({
       title,
       description,
       price,
-      image: title,
+      thumbnail: thumbnailImageDetails,
+      images: imageDetails,
       sizes: sizesObj,
-      colors: [],
       labels: selectedLabelIds
     };
 
     await updateDoc(doc(db, 'products', productId), updatedProduct);
-  };
-
-  const uploadImages = async () => {
-    for await (const [color, image] of Object.entries(images)) {
-      if (color && image) {
-        const storageRef = ref(storage, `images/${title}-${color}`);
-        await uploadBytes(storageRef, image);
-      }
-    }
   };
 
   const updateExistingProduct = async () => {
@@ -159,7 +242,6 @@ export const UpdateProductContainer = ({
     setIsLoading(true);
     try {
       await updateProduct();
-      await uploadImages();
       handleBackToAllProducts();
 
       return toast.success('🎉 Product updated successfully!');
@@ -169,28 +251,6 @@ export const UpdateProductContainer = ({
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const handleImageChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    color: TShirtColor
-  ) => {
-    e.target.files && setImages({ ...images, [color]: e.target.files[0] });
-  };
-
-  const handleSelectSize = (size: TShirtSize, sizeType: TShirtSizeType) => {
-    const newSizes = {
-      ...sizes,
-      [sizeType]: {
-        ...sizes[sizeType as TShirtSizeType],
-        [size]:
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          !sizes[sizeType as TShirtSizeType][size]
-      }
-    };
-
-    setSizes(newSizes);
   };
 
   const handleDeleteProduct = async (productId: string) => {
@@ -244,55 +304,70 @@ export const UpdateProductContainer = ({
               onChange={(e) => setPrice(e.target.value)}
             />
           </InputContainer>
-          <InputContainer>
-            <Text>Images</Text>
+          <Text>Thumbnail Image</Text>
+          <SizesWrapper>
             <ImageInputContainer>
-              <ImageInputWrapper>
-                <SmallText>⬜️ White</SmallText>
-                <ImageInput
-                  fileName={images?.white?.name}
-                  supportedTypes={supportedImageTypes}
-                  onChange={(e) => handleImageChange(e, TShirtColor.WHITE)}
-                />
-              </ImageInputWrapper>
-              <ImageInputWrapper>
-                <SmallText>⬛️ Black</SmallText>
-                <ImageInput
-                  fileName={images?.black?.name}
-                  supportedTypes={supportedImageTypes}
-                  onChange={(e) => handleImageChange(e, TShirtColor.BLACK)}
-                />
-              </ImageInputWrapper>
-              <ImageInputWrapper>
-                <SmallText>🟥 Red</SmallText>
-                <ImageInput
-                  fileName={images?.red?.name}
-                  supportedTypes={supportedImageTypes}
-                  onChange={(e) => handleImageChange(e, TShirtColor.RED)}
-                />
-              </ImageInputWrapper>
-              <ImageInputWrapper>
-                <SmallText>🟦 Blue</SmallText>
-                <ImageInput
-                  fileName={images?.blue?.name}
-                  supportedTypes={supportedImageTypes}
-                  onChange={(e) => handleImageChange(e, TShirtColor.BLUE)}
-                />
-              </ImageInputWrapper>
+              <SmallText>Thumbnail:</SmallText>
+              <Thumbnail thumbnail={thumbnailImage}>
+                {thumbnailImage ?? 'N/A'}
+              </Thumbnail>
             </ImageInputContainer>
-          </InputContainer>
-          <InputContainer>
-            <Text>T-Shirt Sizes</Text>
-            <SizesWrapper>
-              {Object.keys(sizes).map((sizeType, index) => (
-                <>
+          </SizesWrapper>
+          <Text>Images</Text>
+          <SizesWrapper>
+            <ImageInputWrapper>
+              {Object.keys(images).map((colors, index) => (
+                <ColorTypeContainer key={index}>
+                  <SmallText key={index}>{colors.toUpperCase()}:</SmallText>
+                  {Object.keys(images[colors as keyof ColorImages]).map(
+                    (color, index) => (
+                      <ImageInputContainer key={index}>
+                        <ColorTile color={color} />
+                        <ImageInput
+                          fileName={
+                            // @ts-ignore
+                            images[colors as keyof ColorImages][color]?.name
+                          }
+                          supportedTypes={supportedImageTypes}
+                          onChange={(e) =>
+                            handleSelectImage(
+                              e.target.files,
+                              color,
+                              colors as keyof ColorImages
+                            )
+                          }
+                          onMakeThumbnail={(fileName) =>
+                            setThumbnailImage(fileName)
+                          }
+                          thumbnailSelected={
+                            thumbnailImage ===
+                            // @ts-ignore
+                            images[colors as keyof ColorImages][color]?.name
+                          }
+                        />
+                      </ImageInputContainer>
+                    )
+                  )}
+                </ColorTypeContainer>
+              ))}
+            </ImageInputWrapper>
+          </SizesWrapper>
+
+          <Text>T-Shirt Sizes</Text>
+          <SizesWrapper>
+            {Object.keys(sizes).map((sizeType, index) => {
+              const showSizesForType = imageForTypeIsSelected(
+                sizeType as TShirtType
+              );
+
+              return (
+                <SizesRow disabled={!showSizesForType} key={index}>
                   <SmallText key={index}>{sizeType.toUpperCase()}:</SmallText>
                   <InputContainer key={index}>
                     <SizesContainer>
-                      {Object.keys(sizes[sizeType as TShirtSizeType]).map(
+                      {Object.keys(sizes[sizeType as TShirtType]).map(
                         (size, index) => {
                           const checked =
-                            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                             // @ts-ignore
                             sizes[sizeType][size];
 
@@ -304,7 +379,7 @@ export const UpdateProductContainer = ({
                                 onClick={() =>
                                   handleSelectSize(
                                     size as TShirtSize,
-                                    sizeType as TShirtSizeType
+                                    sizeType as TShirtType
                                   )
                                 }
                               />
@@ -314,10 +389,10 @@ export const UpdateProductContainer = ({
                       )}
                     </SizesContainer>
                   </InputContainer>
-                </>
-              ))}
-            </SizesWrapper>
-          </InputContainer>
+                </SizesRow>
+              );
+            })}
+          </SizesWrapper>
           <InputContainer>
             <Text>Labels</Text>
             <LabelsContainer
@@ -349,14 +424,6 @@ export const UpdateProductContainer = ({
   );
 };
 
-const SizesWrapper = styled.div`
-  margin-top: 10px;
-  padding: 10px;
-  background-color: ${Color.DARK_GRAY};
-  border-radius: 10px;
-  overflow-y: scroll;
-`;
-
 const ActivityIndicatorWrapper = styled.div`
   display: flex;
   justify-content: center;
@@ -364,17 +431,49 @@ const ActivityIndicatorWrapper = styled.div`
   height: 500px;
 `;
 
-const ImageInputContainer = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
+const Thumbnail = styled.div<{ thumbnail: string | null }>`
+  border: none;
+  padding: 8px 16px;
+  background-color: ${(props) =>
+    props.thumbnail ? Color.ACCENT : Color.LIGHT_GRAY};
+  border-radius: 2rem;
+  color: ${(props) => (props.thumbnail ? Color.BLACK : Color.GRAY)};
+  cursor: pointer;
+  &:hover {
+    filter: brightness(0.9);
+  }
 `;
 
-const ImageInputWrapper = styled.div`
+const SizesRow = styled.div<{ disabled: boolean }>`
+  ${(props) =>
+    props.disabled &&
+    `
+      pointer-events: none;
+      opacity: 0.25;
+      filter: blur(2px);
+  `}
+`;
+
+const ColorTypeContainer = styled.div`
   display: flex;
-  justify-content: center;
-  align-items: center;
+  flex-direction: column;
   gap: 10px;
+  margin-bottom: 15px;
+  border-bottom: 1px solid ${Color.GRAY};
+  padding-bottom: 10px;
+  &:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+`;
+
+const SizesWrapper = styled.div`
+  margin: 10px 0 10px 0;
+  padding: 10px;
+  background-color: ${Color.DARK_GRAY};
+  border-radius: 10px;
+  overflow-y: scroll;
 `;
 
 const ButtonContainer = styled.div`
@@ -396,14 +495,27 @@ const SizesContainer = styled.div`
   gap: 10px;
 `;
 
+const SmallText = styled.p`
+  color: ${Color.WHITE};
+`;
+
+const ImageInputContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+`;
+
+const ImageInputWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 10px;
+`;
+
 const Text = styled.p`
   font-size: 20px;
   font-weight: bold;
   margin-left: 10px;
-  color: ${Color.WHITE};
-`;
-
-const SmallText = styled.p`
   color: ${Color.WHITE};
 `;
 

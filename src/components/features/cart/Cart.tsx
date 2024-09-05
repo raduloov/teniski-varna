@@ -43,6 +43,7 @@ export const Cart = ({ setShowModal, showModal, cartItems }: Props) => {
           const mappedProduct = mapProductToCartProduct(
             product,
             localCartItem.color as TShirtColor,
+            localCartItem.image,
             1,
             localCartItem.size
           );
@@ -73,7 +74,7 @@ export const Cart = ({ setShowModal, showModal, cartItems }: Props) => {
     <>
       {showModal && (
         <Modal onClose={() => setShowModal(false)}>
-          <Teeest>
+          <Container>
             <CartHeader>Количка</CartHeader>
 
             <CartContainer>
@@ -100,14 +101,14 @@ export const Cart = ({ setShowModal, showModal, cartItems }: Props) => {
                 onClick={() => navigate('checkout')}
               ></Button>
             </CartFooter>
-          </Teeest>
+          </Container>
         </Modal>
       )}
     </>
   );
 };
 
-const Teeest = styled.div`
+const Container = styled.div`
   display: flex;
   flex-direction: column;
   height: 92vh;
