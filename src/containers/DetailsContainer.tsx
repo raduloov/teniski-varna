@@ -70,7 +70,8 @@ export const DetailsContainer = ({
         selectedColor,
         image,
         selectedQuantity,
-        selectedSize
+        selectedSize,
+        discountedPrice
       })
     );
     toast.success(`🎉 ${product.title} беше успешно добавен в количката.`);

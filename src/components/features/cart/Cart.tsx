@@ -6,12 +6,16 @@ import {
   CartProduct,
   mapProductToCartProduct
 } from '../../../domain/mappers/cartProductMapper';
-import { useAppDispatch } from '../../../hooks/useRedux';
+import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux';
 import { cartActions, LocalItem } from '../../../store/cartSlice';
 import { CartProductCard } from './CartProductCard';
 import { useProducts } from '../../../hooks/useProducts';
 import { getLocalItems } from '../../../store/utils';
-import { TShirtColor } from '../../../containers/adminPanel/utils';
+import {
+  getDiscountedPrice,
+  getDiscountForProduct,
+  TShirtColor
+} from '../../../containers/adminPanel/utils';
 import { useNavigate } from 'react-router';
 
 interface Props {
@@ -24,6 +28,9 @@ export const Cart = ({ setShowModal, showModal, cartItems }: Props) => {
   const { getProductById } = useProducts();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const activeDiscounts = useAppSelector(
+    (state) => state.discounts.activeDiscounts
+  );
 
   const setItemsToCart = async () => {
     const localCartItems: LocalItem[] = getLocalItems();
@@ -40,12 +47,16 @@ export const Cart = ({ setShowModal, showModal, cartItems }: Props) => {
         );
 
         if (!existingItem) {
+          const discount = getDiscountForProduct(product, activeDiscounts);
+          const discountedPrice = getDiscountedPrice(product.price, discount);
+
           const mappedProduct = mapProductToCartProduct(
             product,
             localCartItem.color as TShirtColor,
             localCartItem.image,
             1,
-            localCartItem.size
+            localCartItem.size,
+            discountedPrice
           );
           cartItems.push(mappedProduct);
         } else {

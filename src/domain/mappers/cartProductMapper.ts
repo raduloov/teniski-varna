@@ -18,13 +18,14 @@ export const mapProductToCartProduct = (
   color: TShirtColor,
   image: string,
   quantity: number,
-  selectedSize: TShirtSize
+  selectedSize: TShirtSize,
+  discountedPrice?: number
 ): CartProduct => ({
   id: product.id,
   title: product.title,
   description: product.description,
   image,
-  price: product.price,
+  price: discountedPrice ?? product.price,
   color,
   size: selectedSize,
   quantity
