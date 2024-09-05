@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { deleteDoc, doc, updateDoc } from 'firebase/firestore';
-import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+import {
+  getDownloadURL,
+  ref,
+  uploadBytes,
+  listAll,
+  deleteObject
+} from 'firebase/storage';
 import { toast } from 'react-toastify';
 import styled from 'styled-components';
 import { Color } from '../../assets/constants';
@@ -164,7 +170,7 @@ export const UpdateProductContainer = ({
           } else {
             const storageRef = ref(
               storage,
-              `images/${title}-${colorType}-${color}`
+              `images/${productId}/${title}-${colorType}-${color}`
             );
             const snapshot = await uploadBytes(storageRef, image as File);
             imageUrl = await getDownloadURL(snapshot.ref);
@@ -258,6 +264,12 @@ export const UpdateProductContainer = ({
 
     try {
       await deleteDoc(doc(db, 'products', productId));
+
+      const imagesRef = ref(storage, `images/${productId}`);
+      const images = await listAll(imagesRef);
+      images.items.forEach(async (image) => {
+        await deleteObject(image);
+      });
 
       toast.success('🎉 Product deleted successfully!');
       // eslint-disable-next-line @typescript-eslint/no-explicit-any

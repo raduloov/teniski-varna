@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { addDoc, collection } from 'firebase/firestore';
+import { doc, setDoc } from 'firebase/firestore';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { toast } from 'react-toastify';
 import styled from 'styled-components';
@@ -100,6 +100,8 @@ export const NewProductContainer = () => {
       return;
     }
 
+    const productId = Date.now().toString();
+
     let imageDetails: ImageDetails = JSON.parse(
       JSON.stringify(defaultImageDetails)
     );
@@ -112,7 +114,7 @@ export const NewProductContainer = () => {
         if (image) {
           const storageRef = ref(
             storage,
-            `images/${title}-${colorType}-${color}`
+            `images/${productId}/${title}-${colorType}-${color}`
           );
           const snapshot = await uploadBytes(storageRef, image as File);
           const imageUrl = await getDownloadURL(snapshot.ref);
@@ -166,7 +168,7 @@ export const NewProductContainer = () => {
       labels: selectedLabelIds
     };
 
-    await addDoc(collection(db, 'products'), product);
+    await setDoc(doc(db, 'products', productId), product);
   };
 
   const addNewProduct = async () => {

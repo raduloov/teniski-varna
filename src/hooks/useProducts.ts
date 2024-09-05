@@ -1,7 +1,6 @@
 import { useState } from 'react';
-import { getDownloadURL, ref } from 'firebase/storage';
 import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
-import { db, storage } from '../firebase/firebaseConfig';
+import { db } from '../firebase/firebaseConfig';
 import { Product } from '../domain/models/ProductDTO';
 
 export const useProducts = () => {
@@ -18,16 +17,8 @@ export const useProducts = () => {
       id: doc.id
     })) as Product[];
 
-    const mappedProducts = [];
-    for (const product of products) {
-      const imageRef = ref(storage, `images/${product.title}-men-white`);
-      const imageUrl = await getDownloadURL(imageRef);
-
-      mappedProducts.push({ ...product, mainImage: imageUrl });
-    }
-
     setIsLoading(false);
-    return mappedProducts;
+    return products;
   };
 
   const getProductById = async (id: string): Promise<Product | undefined> => {
