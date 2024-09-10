@@ -1,16 +1,29 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { Color } from '../../assets/constants';
 import { Button } from '../../components/common/Button';
 import { Input } from '../../components/common/Input';
 import { useAuth } from '../../hooks/useAuth';
+import { toast } from 'react-toastify';
 
 export const AdminPanelAuth = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
 
-  const { signIn, isLoading } = useAuth();
+  const { signIn, isLoading, error } = useAuth();
+
+  useEffect(() => {
+    if (error) {
+      const errorMessage = error.includes('invalid-email')
+        ? 'Invalid email.'
+        : error.includes('wrong-password')
+        ? 'Wrong password.'
+        : "Couldn't sign in";
+
+      toast.error(errorMessage);
+    }
+  }, [error]);
 
   return (
     <Container>

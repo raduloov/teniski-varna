@@ -11,7 +11,9 @@ import {
   FaHome,
   FaSearch,
   FaRegHeart,
-  FaSignOutAlt
+  FaSignOutAlt,
+  FaEdit,
+  FaCheck
 } from 'react-icons/fa';
 import { RiCloseFill, RiInformationFill } from 'react-icons/ri';
 import {
@@ -21,6 +23,8 @@ import {
   BsChevronCompactDown
 } from 'react-icons/bs';
 import { FcLike } from 'react-icons/fc';
+import { SlUser, SlUserFemale } from 'react-icons/sl';
+import { TbMoodKid } from 'react-icons/tb';
 
 export const icons = {
   MdPolicy,
@@ -40,5 +44,10 @@ export const icons = {
   FaHome,
   FaQuestionCircle,
   BsChevronCompactDown,
-  MdPermContactCalendar
+  MdPermContactCalendar,
+  FaEdit,
+  FaCheck,
+  SlUser,
+  SlUserFemale,
+  TbMoodKid
 };

@@ -6,14 +6,25 @@ import { Button, ButtonSize, ButtonType } from '../../components/common/Button';
 import { useAuth } from '../../hooks/useAuth';
 import { NewProductContainer } from './NewProductContainer';
 import { UpdateBannerImageContainer } from './UpdateBannerImageContainer';
-import { UpdateProductContainer } from './UpdateProductContainer';
+import { LabelsContainer } from './LabelsContainer';
+import { DiscountsMenuContainer } from './DiscountsContainer';
+import { ManageProductsContainer } from './ManageProductsContainer';
 
 export const AdminPanelMenuContainer = () => {
   const [showAddNewProduct, setShowAddNewProduct] = useState<boolean>(false);
+  const [showManageProducts, setShowManageProducts] = useState<boolean>(false);
   const [showUpdateBannerImage, setShowUpdateBannerImage] =
     useState<boolean>(false);
-  const [showUpdateProduct, setShowUpdateProduct] = useState<boolean>(false);
+  const [showLabels, setShowLabels] = useState<boolean>(false);
+  const [showDiscounts, setShowDiscounts] = useState<boolean>(false);
   const { signOut } = useAuth();
+
+  const isPageSelected =
+    showAddNewProduct ||
+    showManageProducts ||
+    showLabels ||
+    showDiscounts ||
+    showUpdateBannerImage;
 
   return (
     <Container>
@@ -32,17 +43,27 @@ export const AdminPanelMenuContainer = () => {
           />
         </Header>
         {showAddNewProduct && <NewProductContainer />}
-        {showUpdateProduct && <UpdateProductContainer />}
+        {showManageProducts && <ManageProductsContainer />}
         {showUpdateBannerImage && <UpdateBannerImageContainer />}
-        {!showAddNewProduct && !showUpdateBannerImage && !showUpdateProduct && (
+        {showLabels && <LabelsContainer />}
+        {showDiscounts && <DiscountsMenuContainer />}
+        {!isPageSelected && (
           <ButtonContainer>
             <Button
               label={'Add new product'}
               onClick={() => setShowAddNewProduct(true)}
             />
             <Button
-              label={'Update existing product'}
-              onClick={() => setShowUpdateProduct(true)}
+              label={'Manage products'}
+              onClick={() => setShowManageProducts(true)}
+            />
+            <Button
+              label={'Labels / Categories'}
+              onClick={() => setShowLabels(true)}
+            />
+            <Button
+              label={'Discounts'}
+              onClick={() => setShowDiscounts(true)}
             />
             <Button
               label={'Update banner image'}
@@ -51,12 +72,14 @@ export const AdminPanelMenuContainer = () => {
           </ButtonContainer>
         )}
       </PanelContainer>
-      {(showAddNewProduct || showUpdateProduct || showUpdateBannerImage) && (
+      {isPageSelected && (
         <BackToMenuText
           onClick={() => {
             setShowAddNewProduct(false);
-            setShowUpdateProduct(false);
+            setShowManageProducts(false);
             setShowUpdateBannerImage(false);
+            setShowLabels(false);
+            setShowDiscounts(false);
           }}
         >
           <p>Back to Menu</p>
@@ -70,6 +93,7 @@ export const AdminPanelMenuContainer = () => {
 };
 
 const BackToMenuText = styled.a`
+  cursor: pointer;
   text-decoration: none;
   color: ${Color.BLACK};
   padding-top: 20px;

@@ -1,12 +1,12 @@
 import { TShirtColor } from './../../containers/adminPanel/utils';
-import { ProductImages, TShirtSize } from './../models/ProductDTO';
+import { TShirtSize } from './../models/ProductDTO';
 import { Product } from '../models/ProductDTO';
 
 export interface CartProduct {
   id: string;
   title: string;
   description: string;
-  images: ProductImages;
+  image: string;
   price: number;
   color: TShirtColor;
   size: TShirtSize;
@@ -16,15 +16,17 @@ export interface CartProduct {
 export const mapProductToCartProduct = (
   product: Product,
   color: TShirtColor,
+  image: string,
   quantity: number,
-  selectedSize: TShirtSize
+  selectedSize: TShirtSize,
+  discountedPrice?: number
 ): CartProduct => ({
   id: product.id,
   title: product.title,
   description: product.description,
-  images: product.images,
-  price: product.price,
-  color: color,
+  image,
+  price: discountedPrice ?? product.price,
+  color,
   size: selectedSize,
-  quantity: quantity
+  quantity
 });

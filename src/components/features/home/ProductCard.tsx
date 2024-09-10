@@ -5,20 +5,29 @@ import { Color } from '../../../assets/constants';
 import { icons } from '../../../assets/icons';
 import { Product } from '../../../domain/models/ProductDTO';
 import { IconButton } from '../../common/IconButton';
+import { getDiscountedPrice } from '../../../containers/adminPanel/utils';
 
 interface Props {
   product: Product;
+  discount?: number;
+  onSelectProductToEdit?: (productId: string) => void;
 }
 
-export const ProductCard = ({ product }: Props) => {
+export const ProductCard = ({
+  product,
+  discount,
+  onSelectProductToEdit
+}: Props) => {
   const navigate = useNavigate();
   const [favorites, setFavorites] = useState(
     JSON.parse(localStorage.getItem('Favorites') || '[]')
   );
 
+  const discountedPrice = getDiscountedPrice(product.price, discount);
+
   const navigateToDetails = (productId: string) => {
     navigate(`/products/${productId}`, {
-      state: { productId }
+      state: { discountedPrice }
     });
   };
 
@@ -44,21 +53,51 @@ export const ProductCard = ({ product }: Props) => {
   const isFavorite = favorites.find((item: Product) => item.id === product.id);
 
   return (
-    <Card onClick={() => navigateToDetails(product.id)}>
-      <img src={product.images.white} />
+    <Card
+      onClick={() =>
+        onSelectProductToEdit
+          ? onSelectProductToEdit(product.id)
+          : navigateToDetails(product.id)
+      }
+    >
+      <img src={product.thumbnail.url} />
       <h1>{product.title}</h1>
       <p>{product.description}</p>
       <FavoriteButton>
-        <h1>{product.price}лв</h1>
-        {isFavorite ? (
+        <PriceWrapper>
+          <Price discounted={!!discount}>{product.price}лв</Price>
+          {discount && <DiscountedPrice>{discountedPrice}лв</DiscountedPrice>}
+        </PriceWrapper>
+        {onSelectProductToEdit && <IconButton icon={icons.FaEdit} />}
+        {!onSelectProductToEdit && isFavorite && (
           <IconButton icon={icons.FcLike} onClick={addToFavorites} />
-        ) : (
+        )}
+        {!onSelectProductToEdit && !isFavorite && (
           <IconButton icon={icons.FaRegHeart} onClick={addToFavorites} />
         )}
       </FavoriteButton>
     </Card>
   );
 };
+
+const PriceWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const Price = styled.h1<{ discounted?: boolean }>`
+  ${({ discounted }) =>
+    discounted &&
+    `
+    font-size: 14px;
+    text-decoration: line-through;
+  `}
+`;
+
+const DiscountedPrice = styled.h1`
+  color: ${Color.RED};
+  font-size: 18px;
+`;
 
 const Card = styled.div`
   cursor: pointer;
@@ -86,7 +125,6 @@ const Card = styled.div`
   }
   h1 {
     font-weight: 600;
-    font-size: 1.1rem;
     display: flex;
     justify-content: space-between;
   }

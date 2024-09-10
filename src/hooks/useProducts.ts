@@ -1,9 +1,7 @@
-import { availableTShirtColors } from './../containers/adminPanel/utils';
 import { useState } from 'react';
-import { getDownloadURL, ref } from 'firebase/storage';
 import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
-import { db, storage } from '../firebase/firebaseConfig';
-import { Product, ProductImages } from '../domain/models/ProductDTO';
+import { db } from '../firebase/firebaseConfig';
+import { Product } from '../domain/models/ProductDTO';
 
 export const useProducts = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -19,26 +17,8 @@ export const useProducts = () => {
       id: doc.id
     })) as Product[];
 
-    const mappedProducts = [];
-    for (const product of products) {
-      const imageUrls: ProductImages = {
-        white: '',
-        black: '',
-        red: '',
-        blue: ''
-      };
-
-      for (const color of availableTShirtColors) {
-        const imageRef = ref(storage, `images/${product.title}-${color}`);
-        const imageUrl = await getDownloadURL(imageRef);
-        imageUrls[color] = imageUrl;
-      }
-
-      mappedProducts.push({ ...product, images: imageUrls });
-    }
-
     setIsLoading(false);
-    return mappedProducts;
+    return products;
   };
 
   const getProductById = async (id: string): Promise<Product | undefined> => {
@@ -50,23 +30,8 @@ export const useProducts = () => {
     if (productDoc) {
       const product = { ...productDoc.data(), id: productDoc.id } as Product;
 
-      const imageUrls: ProductImages = {
-        white: '',
-        black: '',
-        red: '',
-        blue: ''
-      };
-
-      for (const color of availableTShirtColors) {
-        const imageRef = ref(storage, `images/${product.title}-${color}`);
-        const imageUrl = await getDownloadURL(imageRef);
-        imageUrls[color] = imageUrl;
-      }
-
-      const mappedProduct = { ...product, images: imageUrls };
-
       setIsLoading(false);
-      return mappedProduct;
+      return product;
     }
   };
 

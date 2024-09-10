@@ -7,6 +7,7 @@ import { Color } from '../../../assets/constants';
 import { Cart } from '../cart/Cart';
 import { useAppSelector } from '../../../hooks/useRedux';
 import { HeaderLinks } from './HeaderLinks';
+import { useNavigate } from 'react-router';
 
 interface Props {
   topNavigationShow: boolean;
@@ -18,8 +19,10 @@ interface ChevronContainerProps {
 
 export const Header = ({ setTopNavigationShow, topNavigationShow }: Props) => {
   const [showModal, setShowModal] = useState<boolean>(false);
-  const cartItems = useAppSelector((state) => state.cart);
   const [headerContainerHeight, setHeaderContainerHeight] = useState<number>(0);
+  const cartItems = useAppSelector((state) => state.cart);
+  const navigate = useNavigate();
+
   const cartItemsQuantity = cartItems.reduce(
     (total, item) => total + item.quantity,
     0
@@ -33,7 +36,9 @@ export const Header = ({ setTopNavigationShow, topNavigationShow }: Props) => {
         showModal={showModal}
       />
       <LogoContainer>
-        <Logo />
+        <LogoButton onClick={() => navigate('/')}>
+          <Logo />
+        </LogoButton>
         <CartContainer onClick={() => setShowModal(true)}>
           <icons.MdOutlineShoppingBag />
           <CartItemTick>{cartItemsQuantity}</CartItemTick>
@@ -55,6 +60,10 @@ export const Header = ({ setTopNavigationShow, topNavigationShow }: Props) => {
     </HeaderContainer>
   );
 };
+
+const LogoButton = styled.div`
+  cursor: pointer;
+`;
 
 const HeaderContainer = styled.div<{ height: number }>`
   position: relative;
