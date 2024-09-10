@@ -7129,10 +7129,10 @@ multicast-dns@^7.2.5:
     dns-packet "^5.2.2"
     thunky "^1.0.2"
 
-mypos-embedded-checkout@^1.4.3:
-  version "1.4.3"
-  resolved "https://registry.yarnpkg.com/mypos-embedded-checkout/-/mypos-embedded-checkout-1.4.3.tgz#129ec418c31b77fe61c6a75e967a4d0b421031ee"
-  integrity sha512-lPNomDSJeg0h5Id9B+4384VVoXLdn5QE8fSf5R9/N6RoeAHZ/NK665S4vl/w/dvgOmIeVPv3fmyMVGjKdxAA+g==
+mypos-embedded-checkout@^1.4.4:
+  version "1.4.4"
+  resolved "https://registry.yarnpkg.com/mypos-embedded-checkout/-/mypos-embedded-checkout-1.4.4.tgz#80e086e6130faadf0290fc866a41d88e71822b0b"
+  integrity sha512-1lo+feE6H3HdVcZH527LtMB7aMEXw6asLSwwBIkQjZmNd/5kZDaGCB63eV2f1/ykGSi06tett1CWR4V0pbTx9Q==
   dependencies:
     iframe-resizer "^4.3.0"
 
