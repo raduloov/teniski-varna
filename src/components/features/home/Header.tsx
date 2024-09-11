@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Input } from '../../common/Input';
 import { ReactComponent as Logo } from '../../../assets/images/logo.svg';
@@ -7,7 +7,7 @@ import { Color } from '../../../assets/constants';
 import { Cart } from '../cart/Cart';
 import { useAppSelector } from '../../../hooks/useRedux';
 import { HeaderLinks } from './HeaderLinks';
-import { useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 
 interface Props {
   topNavigationShow: boolean;
@@ -22,6 +22,15 @@ export const Header = ({ setTopNavigationShow, topNavigationShow }: Props) => {
   const [headerContainerHeight, setHeaderContainerHeight] = useState<number>(0);
   const cartItems = useAppSelector((state) => state.cart);
   const navigate = useNavigate();
+  const { state } = useLocation();
+
+  useEffect(() => {
+    // When user clicks on toast, navigate home with openCart in state
+    // TODO: Refactor this to use a global state
+    if (state) {
+      setShowModal(true);
+    }
+  }, []);
 
   const cartItemsQuantity = cartItems.reduce(
     (total, item) => total + item.quantity,

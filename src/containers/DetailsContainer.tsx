@@ -15,6 +15,7 @@ import { ColorSelector } from '../components/features/details/ColorSelector';
 import { TShirtColor } from './adminPanel/utils';
 import { ActivityIndicator } from '../components/common/ActivityIndicator';
 import { translateTypeToBulgarian } from '../components/features/cart/utils';
+import { useNavigate } from 'react-router';
 
 interface Props {
   product: Product;
@@ -52,6 +53,7 @@ export const DetailsContainer = ({
   discountedPrice
 }: Props) => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   // @ts-ignore
   const image = product.images[selectedType][selectedColor].url;
@@ -75,7 +77,10 @@ export const DetailsContainer = ({
         selectedType
       })
     );
-    toast.success(`🎉 ${product.title} беше успешно добавен в количката.`);
+
+    toast.success(`🎉 ${product.title} беше успешно добавен в количката.`, {
+      onClick: () => navigate('/', { state: { openCart: true } })
+    });
   };
 
   return (

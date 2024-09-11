@@ -216,6 +216,7 @@ const ButtonPrimary = styled.button<ButtonContainerProps>`
   padding-left: 20px;
   padding-right: 20px;
   font-weight: 500;
+  color: ${Color.BLACK};
   ${(props) =>
     !props.disabled &&
     `
