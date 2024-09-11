@@ -148,6 +148,13 @@ export const DetailsContainer = ({
               onSelectSize={(size) => onSelectSize(size)}
             />
           )}
+          {selectedType === TShirtType.OVERSIZED && (
+            <SizeSelector
+              availableSizes={product.sizes.oversized}
+              selectedSize={selectedSize}
+              onSelectSize={(size) => onSelectSize(size)}
+            />
+          )}
         </TilesWrapper>
         <QuantityWrapper>
           <QuantitySelector

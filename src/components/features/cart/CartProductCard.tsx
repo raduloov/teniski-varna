@@ -7,6 +7,7 @@ import { QuantitySelector } from '../details/QuantitySelector';
 import { CartProduct } from '../../../domain/mappers/cartProductMapper';
 import { useAppDispatch } from '../../../hooks/useRedux';
 import { translateColorToBulgarian, translateTypeToBulgarian } from './utils';
+import { RiCloseFill } from 'react-icons/ri';
 
 interface Props {
   product: CartProduct;
@@ -34,6 +35,14 @@ export const CartProductCard = ({ product }: Props) => {
     <Card onClick={() => navigateToDetails(product.id)}>
       <img src={product.image} />
       <ProductDetails>
+        <RemoveButton
+          onClick={(e) => {
+            e.stopPropagation();
+            dispatch(cartActions.removeFromCart({ product, remove: true }));
+          }}
+        >
+          <RiCloseFill color={Color.GRAY} size={24} />
+        </RemoveButton>
         <h1>{product.title}</h1>
         <Row>
           <TextRow>
@@ -67,6 +76,13 @@ export const CartProductCard = ({ product }: Props) => {
     </Card>
   );
 };
+
+const RemoveButton = styled.div`
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  cursor: pointer;
+`;
 
 const Text = styled.p`
   color: ${Color.GRAY};

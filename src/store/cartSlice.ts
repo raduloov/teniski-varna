@@ -79,10 +79,12 @@ export const cartSlice = createSlice({
         cartItemExists(item, payload.product)
       );
 
-      if (currentStateQuantity === 1) {
+      if (currentStateQuantity === 1 || payload.remove) {
         state.splice(stateIndex, 1);
-        localItems.splice(localIndex, 1);
-        localStorage.setItem('cartItems', JSON.stringify(localItems));
+        const filteredItems = localItems.filter(
+          (item) => item.id !== payload.product.id
+        );
+        localStorage.setItem('cartItems', JSON.stringify(filteredItems));
       } else {
         state[stateIndex].quantity--;
         localItems.splice(localIndex, 1);
