@@ -14,7 +14,7 @@ import { toast } from 'react-toastify';
 import { ColorSelector } from '../components/features/details/ColorSelector';
 import { TShirtColor } from './adminPanel/utils';
 import { ActivityIndicator } from '../components/common/ActivityIndicator';
-import { IconType } from 'react-icons';
+import { translateTypeToBulgarian } from './utils';
 
 interface Props {
   product: Product;
@@ -77,17 +77,6 @@ export const DetailsContainer = ({
     toast.success(`🎉 ${product.title} беше успешно добавен в количката.`);
   };
 
-  const determineTypeIcon = (type: TShirtType): IconType => {
-    switch (type) {
-      case TShirtType.MEN:
-        return icons.SlUser;
-      case TShirtType.WOMEN:
-        return icons.SlUserFemale;
-      case TShirtType.KIDS:
-        return icons.TbMoodKid;
-    }
-  };
-
   return (
     <Container>
       <ActionButtonsWrapper>
@@ -112,17 +101,16 @@ export const DetailsContainer = ({
           <RatingStars />
         </HeaderWrapper>
 
+        <SelectSizeTitle>Изберете модел</SelectSizeTitle>
         <TypeSelector>
           {tShirtTypes.map((type, index) => (
-            <IconButton
-              icon={determineTypeIcon(type)}
-              containerColor={
-                selectedType === type ? Color.ACCENT : Color.WHITE
-              }
-              iconColor={selectedType === type ? Color.BLACK : Color.GRAY}
+            <TypeButton
               onClick={() => onSelectType(type)}
+              selected={selectedType === type}
               key={index}
-            />
+            >
+              {translateTypeToBulgarian(type)}
+            </TypeButton>
           ))}
         </TypeSelector>
 
@@ -185,6 +173,18 @@ export const DetailsContainer = ({
   );
 };
 
+const TypeButton = styled.div<{ selected: boolean }>`
+  cursor: pointer;
+  padding: 10px 20px;
+  background: ${(props) => (props.selected ? Color.ACCENT : Color.LIGHT_GRAY)};
+  border-radius: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+  color: ${(props) => (props.selected ? Color.BLACK : Color.GRAY)};
+`;
+
 const PriceWrapper = styled.div``;
 
 const QuantityWrapper = styled.div`
@@ -196,6 +196,8 @@ const QuantityWrapper = styled.div`
 
 const TypeSelector = styled.div`
   display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
   gap: 10px;
 `;
 
