@@ -287,7 +287,8 @@ const Title = styled.p`
 
 const BottomSheetContainer = styled.div`
   position: absolute;
-  bottom: 0;
+  bottom: -18%;
+  z-index: 100;
   width: 100svw;
   border-top-left-radius: 45px;
   border-top-right-radius: 45px;
@@ -303,7 +304,6 @@ const ActionButtonsWrapper = styled.div`
 `;
 
 const Container = styled.div`
-  height: 100svh;
+  min-height: 100svh;
   width: 100svw;
-  flex-shrink: 1;
 `;
