@@ -14,7 +14,7 @@ import { toast } from 'react-toastify';
 import { ColorSelector } from '../components/features/details/ColorSelector';
 import { TShirtColor } from './adminPanel/utils';
 import { ActivityIndicator } from '../components/common/ActivityIndicator';
-import { translateTypeToBulgarian } from './utils';
+import { translateTypeToBulgarian } from '../components/features/cart/utils';
 
 interface Props {
   product: Product;
@@ -71,7 +71,8 @@ export const DetailsContainer = ({
         image,
         selectedQuantity,
         selectedSize,
-        discountedPrice
+        discountedPrice,
+        selectedType
       })
     );
     toast.success(`🎉 ${product.title} беше успешно добавен в количката.`);

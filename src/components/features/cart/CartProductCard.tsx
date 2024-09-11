@@ -6,7 +6,7 @@ import { cartActions } from '../../../store/cartSlice';
 import { QuantitySelector } from '../details/QuantitySelector';
 import { CartProduct } from '../../../domain/mappers/cartProductMapper';
 import { useAppDispatch } from '../../../hooks/useRedux';
-import { translateColorToBulgarian } from './utils';
+import { translateColorToBulgarian, translateTypeToBulgarian } from './utils';
 
 interface Props {
   product: CartProduct;
@@ -35,10 +35,16 @@ export const CartProductCard = ({ product }: Props) => {
       <img src={product.image} />
       <ProductDetails>
         <h1>{product.title}</h1>
-        <TextRow>
-          <Text>Цвят:</Text>
-          <BoldText>{translateColorToBulgarian(product.color)}</BoldText>
-        </TextRow>
+        <Row>
+          <TextRow>
+            <Text>Цвят:</Text>
+            <BoldText>{translateColorToBulgarian(product.color)}</BoldText>
+          </TextRow>
+          <TextRow>
+            <Text>Модел:</Text>
+            <BoldText>{translateTypeToBulgarian(product.type)}</BoldText>
+          </TextRow>
+        </Row>
         <TextRow>
           <Text>Размер:</Text>
           <BoldText>{product.size}</BoldText>
@@ -67,9 +73,15 @@ const Text = styled.p`
   font-size: 0.9rem;
 `;
 
+const Row = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+
 const TextRow = styled.div`
   display: flex;
   gap: 5px;
+  flex-wrap: wrap;
 `;
 
 const BoldText = styled.p`

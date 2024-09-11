@@ -1,4 +1,4 @@
-import { TShirtSize } from './../domain/models/ProductDTO';
+import { TShirtSize, TShirtType } from './../domain/models/ProductDTO';
 import {
   CartProduct,
   mapProductToCartProduct
@@ -11,6 +11,7 @@ export type LocalItem = {
   color: string;
   image: string;
   size: TShirtSize;
+  type: TShirtType;
 };
 
 export type InitialState = Array<CartProduct>;
@@ -34,7 +35,8 @@ export const cartSlice = createSlice({
           payload.selectedColor,
           payload.image,
           payload.selectedQuantity,
-          payload.selectedSize
+          payload.selectedSize,
+          payload.selectedType
         );
       }
 
@@ -50,7 +52,8 @@ export const cartSlice = createSlice({
         id: product.id,
         color: product.color,
         image: product.image,
-        size: product.size
+        size: product.size,
+        type: product.type
       };
 
       if (!itemExistsInState && !itemExistsInLocalStorage) {

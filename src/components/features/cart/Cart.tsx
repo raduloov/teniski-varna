@@ -56,6 +56,7 @@ export const Cart = ({ setShowModal, showModal, cartItems }: Props) => {
             localCartItem.image,
             1,
             localCartItem.size,
+            localCartItem.type,
             discountedPrice
           );
           cartItems.push(mappedProduct);
