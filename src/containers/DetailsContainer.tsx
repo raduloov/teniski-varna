@@ -287,7 +287,8 @@ const Title = styled.p`
 
 const BottomSheetContainer = styled.div`
   position: absolute;
-  bottom: -18%;
+  top: 0;
+  margin-top: 110%;
   z-index: 100;
   width: 100svw;
   border-top-left-radius: 45px;
