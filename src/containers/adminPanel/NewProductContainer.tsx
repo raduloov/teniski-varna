@@ -144,7 +144,8 @@ export const NewProductContainer = () => {
     const sizesObj: TShirtSizes = {
       men: [],
       women: [],
-      kids: []
+      kids: [],
+      oversized: []
     };
     for (const [sizeType, sizesArray] of Object.entries(sizes)) {
       const imageSelected = imageForTypeIsSelected(sizeType as TShirtType);

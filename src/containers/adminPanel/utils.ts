@@ -39,6 +39,14 @@ export interface SizesCheckbox {
     K156: boolean;
     K168: boolean;
   };
+  oversized: {
+    S: boolean;
+    M: boolean;
+    L: boolean;
+    XL: boolean;
+    XXL: boolean;
+    XXXL: boolean;
+  };
 }
 
 export interface ColorImages {
@@ -63,6 +71,10 @@ export interface ColorImages {
     [TShirtColor.BLUE]: File | null;
     [TShirtColor.YELLOW]: File | null;
     [TShirtColor.LIGHT_PINK]: File | null;
+  };
+  oversized: {
+    [TShirtColor.WHITE]: File | null;
+    [TShirtColor.BLACK]: File | null;
   };
 }
 
@@ -97,6 +109,9 @@ export interface ImageDetails {
       | TShirtColor.YELLOW
       | TShirtColor.LIGHT_PINK]: ImageInfo;
   };
+  oversized: {
+    [color in TShirtColor.WHITE | TShirtColor.BLACK]: ImageInfo;
+  };
 }
 
 export const defaultSizesObj = {
@@ -125,6 +140,14 @@ export const defaultSizesObj = {
       K144: true,
       K156: true,
       K168: true
+    },
+    oversized: {
+      S: true,
+      M: true,
+      L: true,
+      XL: true,
+      XXL: true,
+      XXXL: true
     }
   } as SizesCheckbox,
   none: {
@@ -152,6 +175,14 @@ export const defaultSizesObj = {
       K144: false,
       K156: false,
       K168: false
+    },
+    oversized: {
+      S: false,
+      M: false,
+      L: false,
+      XL: false,
+      XXL: false,
+      XXXL: false
     }
   } as SizesCheckbox
 };
@@ -178,6 +209,10 @@ export const defaultImagesObj: ColorImages = {
     [TShirtColor.BLUE]: null,
     [TShirtColor.YELLOW]: null,
     [TShirtColor.LIGHT_PINK]: null
+  },
+  oversized: {
+    [TShirtColor.WHITE]: null,
+    [TShirtColor.BLACK]: null
   }
 };
 
@@ -203,6 +238,10 @@ export const defaultImageDetails: ImageDetails = {
     [TShirtColor.BLUE]: null,
     [TShirtColor.YELLOW]: null,
     [TShirtColor.LIGHT_PINK]: null
+  },
+  oversized: {
+    [TShirtColor.WHITE]: null,
+    [TShirtColor.BLACK]: null
   }
 };
 

@@ -3,13 +3,15 @@ import { ImageDetails, ImageInfo } from '../../containers/adminPanel/utils';
 export enum TShirtType {
   MEN = 'men',
   WOMEN = 'women',
-  KIDS = 'kids'
+  KIDS = 'kids',
+  OVERSIZED = 'oversized'
 }
 
 export interface TShirtSizes {
   men: Array<TShirtSize>;
   women: Array<TShirtSize>;
   kids: Array<TShirtSize>;
+  oversized: Array<TShirtSize>;
 }
 
 export enum TShirtSize {
@@ -53,6 +55,11 @@ export interface ImagesKids {
   blue: ImageInfo;
   yellow: ImageInfo;
   lightPink: ImageInfo;
+}
+
+export interface ImagesOversized {
+  white: ImageInfo;
+  black: ImageInfo;
 }
 
 export type ProductImages = ImageDetails;

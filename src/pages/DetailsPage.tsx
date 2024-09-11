@@ -5,6 +5,7 @@ import { useProducts } from '../hooks/useProducts';
 import {
   ImagesKids,
   ImagesMen,
+  ImagesOversized,
   ImagesWomen,
   Product,
   TShirtSize,
@@ -42,6 +43,9 @@ export const DetailsPage = () => {
     }
     if (Object.values(product.images.kids).some((url) => url)) {
       types.push(TShirtType.KIDS);
+    }
+    if (Object.values(product.images.oversized).some((url) => url)) {
+      types.push(TShirtType.OVERSIZED);
     }
 
     return types;
@@ -91,7 +95,7 @@ export const DetailsPage = () => {
   };
 
   const getFirstAvailableColor = (
-    images: ImagesMen | ImagesWomen | ImagesKids
+    images: ImagesMen | ImagesWomen | ImagesKids | ImagesOversized
   ) => {
     for (const [color, url] of Object.entries(images)) {
       if (url) {

@@ -5,6 +5,7 @@ import { TShirtColor } from '../../../containers/adminPanel/utils';
 import {
   ImagesKids,
   ImagesMen,
+  ImagesOversized,
   ImagesWomen
 } from '../../../domain/models/ProductDTO';
 
@@ -20,7 +21,7 @@ interface ColorButtonProps {
 }
 
 interface ColorSelectorProps {
-  colors: ImagesMen | ImagesWomen | ImagesKids;
+  colors: ImagesMen | ImagesWomen | ImagesKids | ImagesOversized;
   selectedColor: TShirtColor | null;
   onSelectColor: (size: TShirtColor) => void;
 }

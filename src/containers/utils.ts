@@ -8,5 +8,7 @@ export const translateTypeToBulgarian = (type: TShirtType): string => {
       return 'Дамско';
     case TShirtType.KIDS:
       return 'Детско';
+    case TShirtType.OVERSIZED:
+      return 'Оувърсайз мъжко';
   }
 };
