@@ -22,7 +22,8 @@ import {
   ImageDetails,
   selectLabelIds,
   SizesCheckbox,
-  supportedImageTypes
+  supportedImageTypes,
+  mapSizeToString
 } from './utils';
 import { Label, useLabels } from '../../hooks/useLabels';
 import { LabelsContainer } from '../../components/features/labels/LabelsContainer';
@@ -305,7 +306,7 @@ export const NewProductContainer = () => {
                       return (
                         <CheckboxContainer key={index}>
                           <Checkbox
-                            label={size}
+                            label={mapSizeToString(size as TShirtSize)}
                             checked={checked}
                             onClick={() =>
                               handleSelectSize(

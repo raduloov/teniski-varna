@@ -28,6 +28,7 @@ export interface SizesCheckbox {
     M: boolean;
     L: boolean;
     XL: boolean;
+    XLPlus: boolean;
   };
   kids: {
     K98: boolean;
@@ -113,7 +114,8 @@ export const defaultSizesObj = {
       S: true,
       M: true,
       L: true,
-      XL: true
+      XL: true,
+      XLPlus: true
     },
     kids: {
       K98: true,
@@ -139,7 +141,8 @@ export const defaultSizesObj = {
       S: false,
       M: false,
       L: false,
-      XL: false
+      XL: false,
+      XLPlus: false
     },
     kids: {
       K98: false,
@@ -280,3 +283,6 @@ export const mapTShirtColorToHex = (color: TShirtColor): string => {
       return '#ffb6c1';
   }
 };
+
+export const mapSizeToString = (size: string): string =>
+  size === 'XLPlus' ? 'XL+' : size;

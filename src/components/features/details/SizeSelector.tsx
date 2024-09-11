@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { Color } from '../../../assets/constants';
 import { TShirtSize } from '../../../domain/models/ProductDTO';
+import { mapSizeToString } from '../../../containers/adminPanel/utils';
 
 interface ButtonWrapperProps {
   selected: boolean;
@@ -36,8 +37,8 @@ export const SizeSelector = ({
     <SelectorWrapper>
       {availableSizes.map((size) => (
         <SizeButton
-          label={size}
-          selected={selectedSize === size}
+          label={mapSizeToString(size) as TShirtSize}
+          selected={selectedSize === mapSizeToString(size)}
           onSelectSize={(size) => onSelectSize(size)}
           key={size}
         />

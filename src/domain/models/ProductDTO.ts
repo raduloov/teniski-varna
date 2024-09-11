@@ -18,6 +18,7 @@ export enum TShirtSize {
   M = 'M',
   L = 'L',
   XL = 'XL',
+  XLPlus = 'XL+',
   XXL = 'XXL',
   XXXL = 'XXXL',
   K98 = '98',

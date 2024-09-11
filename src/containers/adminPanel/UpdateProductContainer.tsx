@@ -28,6 +28,7 @@ import {
   defaultImagesObj,
   defaultSizesObj,
   ImageDetails,
+  mapSizeToString,
   selectLabelIds,
   SizesCheckbox,
   supportedImageTypes
@@ -386,7 +387,7 @@ export const UpdateProductContainer = ({
                           return (
                             <CheckboxContainer key={index}>
                               <Checkbox
-                                label={size}
+                                label={mapSizeToString(size as TShirtSize)}
                                 checked={checked}
                                 onClick={() =>
                                   handleSelectSize(
