@@ -19,7 +19,7 @@ export const CartProductCard = ({ product }: Props) => {
 
   const navigateToDetails = (productId: string) => {
     navigate(`/products/${productId}`, {
-      state: { productId }
+      state: { color: product.color, type: product.type }
     });
   };
 

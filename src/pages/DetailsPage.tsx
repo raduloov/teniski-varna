@@ -31,6 +31,8 @@ export const DetailsPage = () => {
   const { state } = useLocation();
   const navigate = useNavigate();
 
+  const { discountedPrice, color, type } = state;
+
   const getTShirtTypes = (product: Product) => {
     const types = [];
 
@@ -56,13 +58,13 @@ export const DetailsPage = () => {
 
     if (product) {
       const tShirtTypes = getTShirtTypes(product);
-      const firstAvailableColor = getFirstAvailableColor(
+      const selectedColor = determineSelectedColor(
         product.images[tShirtTypes[0]]
       );
 
       setTShirtTypes(tShirtTypes as TShirtType[]);
-      setSelectedType(tShirtTypes[0] as TShirtType);
-      setSelectedColor(firstAvailableColor);
+      setSelectedType(type ?? tShirtTypes[0]);
+      setSelectedColor(selectedColor);
       setProduct(product);
     }
   };
@@ -94,6 +96,10 @@ export const DetailsPage = () => {
     setSelectedColor(getFirstAvailableColor(product!.images[type]));
   };
 
+  const determineSelectedColor = (
+    images: ImagesMen | ImagesWomen | ImagesKids | ImagesOversized
+  ) => color ?? getFirstAvailableColor(images);
+
   const getFirstAvailableColor = (
     images: ImagesMen | ImagesWomen | ImagesKids | ImagesOversized
   ) => {
@@ -104,8 +110,6 @@ export const DetailsPage = () => {
     }
     return TShirtColor.WHITE;
   };
-
-  const { discountedPrice } = state;
 
   if (isLoading) {
     return (

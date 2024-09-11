@@ -184,6 +184,7 @@ export const DetailsContainer = ({
 const TypeButton = styled.div<{ selected: boolean }>`
   cursor: pointer;
   padding: 5px 10px;
+  min-height: 48px;
   background: ${(props) => (props.selected ? Color.ACCENT : Color.LIGHT_GRAY)};
   border-radius: 15px;
   display: flex;
@@ -191,6 +192,7 @@ const TypeButton = styled.div<{ selected: boolean }>`
   align-items: center;
   font-size: 16px;
   text-align: center;
+  flex-grow: 1;
   color: ${(props) => (props.selected ? Color.BLACK : Color.GRAY)};
 `;
 
