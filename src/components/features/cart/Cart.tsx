@@ -6,7 +6,7 @@ import {
   CartProduct,
   mapProductToCartProduct
 } from '../../../domain/mappers/cartProductMapper';
-import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux';
+import { useAppDispatch } from '../../../hooks/useRedux';
 import { cartActions, LocalItem } from '../../../store/cartSlice';
 import { CartProductCard } from './CartProductCard';
 import { useProducts } from '../../../hooks/useProducts';
@@ -17,6 +17,9 @@ import {
   TShirtColor
 } from '../../../containers/adminPanel/utils';
 import { useNavigate } from 'react-router';
+import { useDiscounts } from '../../../hooks/useDiscounts';
+import { ActivityIndicator } from '../../common/ActivityIndicator';
+import { Color } from '../../../assets/constants';
 
 interface Props {
   showModal: boolean;
@@ -28,11 +31,10 @@ export const Cart = ({ setShowModal, showModal, cartItems }: Props) => {
   const { getProductById } = useProducts();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const activeDiscounts = useAppSelector(
-    (state) => state.discounts.activeDiscounts
-  );
+  const { getDiscounts, isLoading: isFetchingDiscounts } = useDiscounts();
 
   const setItemsToCart = async () => {
+    const activeDiscounts = await getDiscounts();
     const localCartItems: LocalItem[] = getLocalItems();
 
     const cartItems: CartProduct[] = [];
@@ -88,37 +90,50 @@ export const Cart = ({ setShowModal, showModal, cartItems }: Props) => {
         <Modal onClose={() => setShowModal(false)}>
           <Container>
             <CartHeader>Количка</CartHeader>
-
-            <CartContainer>
+            {isFetchingDiscounts ? (
+              <ActivityIndicatorWrapper>
+                <ActivityIndicator color={Color.ACCENT} size={100} />
+              </ActivityIndicatorWrapper>
+            ) : (
               <>
-                {cartItems.length > 0 &&
-                  cartItems.map((product) => (
-                    <CartProductCard key={product.id} product={product} />
-                  ))}
+                <CartContainer>
+                  <>
+                    {cartItems.length > 0 &&
+                      cartItems.map((product) => (
+                        <CartProductCard key={product.id} product={product} />
+                      ))}
+                  </>
+                </CartContainer>
+                <CartFooter>
+                  <CartPriceContainer>
+                    Тениски:<p>{cartPrice.toFixed(2)}лв</p>
+                  </CartPriceContainer>
+                  <CartPriceContainer>
+                    Доставка:<p>{shippingPrice}лв</p>
+                  </CartPriceContainer>
+                  <CartDivider></CartDivider>
+                  <CartPriceContainer>
+                    Общо: <p>{totalPrice.toFixed(2)}лв</p>
+                  </CartPriceContainer>
+                  <Button
+                    label={'Купи'}
+                    onClick={() => navigate('checkout')}
+                  ></Button>
+                </CartFooter>
               </>
-            </CartContainer>
-            <CartFooter>
-              <CartPriceContainer>
-                Тениски:<p>{cartPrice.toFixed(2)}лв</p>
-              </CartPriceContainer>
-              <CartPriceContainer>
-                Доставка:<p>{shippingPrice}лв</p>
-              </CartPriceContainer>
-              <CartDivider></CartDivider>
-              <CartPriceContainer>
-                Общо: <p>{totalPrice.toFixed(2)}лв</p>
-              </CartPriceContainer>
-              <Button
-                label={'Купи'}
-                onClick={() => navigate('checkout')}
-              ></Button>
-            </CartFooter>
+            )}
           </Container>
         </Modal>
       )}
     </>
   );
 };
+
+const ActivityIndicatorWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  height: 100%;
+`;
 
 const Container = styled.div`
   display: flex;

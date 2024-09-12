@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
 import styled from 'styled-components';
 import { Color } from '../../../assets/constants';
@@ -8,12 +8,14 @@ import { CartProduct } from '../../../domain/mappers/cartProductMapper';
 import { useAppDispatch } from '../../../hooks/useRedux';
 import { translateColorToBulgarian, translateTypeToBulgarian } from './utils';
 import { RiCloseFill } from 'react-icons/ri';
+import { ActivityIndicator } from '../../common/ActivityIndicator';
 
 interface Props {
   product: CartProduct;
 }
 
 export const CartProductCard = ({ product }: Props) => {
+  const [imageHasLoaded, setImageHasLoaded] = useState(false);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
@@ -33,7 +35,17 @@ export const CartProductCard = ({ product }: Props) => {
 
   return (
     <Card onClick={() => navigateToDetails(product.id)}>
-      <img src={product.image} />
+      <ImageWrapper>
+        {!imageHasLoaded && (
+          <ActivityIndicator size={100} color={Color.ACCENT} />
+        )}
+        <Image
+          src={product.image}
+          onLoad={() => setImageHasLoaded(true)}
+          loaded={imageHasLoaded}
+        />
+      </ImageWrapper>
+      {/* <img src={product.image}  /> */}
       <ProductDetails>
         <RemoveButton
           onClick={(e) => {
@@ -76,6 +88,16 @@ export const CartProductCard = ({ product }: Props) => {
     </Card>
   );
 };
+
+const ImageWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const Image = styled.img<{ loaded: boolean }>`
+  ${({ loaded }) => !loaded && 'display: none;'}
+`;
 
 const RemoveButton = styled.div`
   position: absolute;

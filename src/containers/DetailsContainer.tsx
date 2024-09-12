@@ -20,7 +20,7 @@ import { useNavigate } from 'react-router';
 interface Props {
   product: Product;
   tShirtTypes: TShirtType[];
-  discountedPrice?: number;
+  discountedPrice: number | null;
   selectedType: TShirtType | null;
   onSelectType: (type: TShirtType) => void;
   selectedSize: TShirtSize | null;

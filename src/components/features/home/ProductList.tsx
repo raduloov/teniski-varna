@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Product } from '../../../domain/models/ProductDTO';
 import { ProductCard } from './ProductCard';
 import { Label } from '../../../hooks/useLabels';
-import { useAppSelector } from '../../../hooks/useRedux';
 import { getDiscountForProduct } from '../../../containers/adminPanel/utils';
+import { Discount, useDiscounts } from '../../../hooks/useDiscounts';
 
 interface Props {
   products: Array<Product>;
@@ -17,9 +17,17 @@ export const ProductList = ({
   selectedLabel,
   onSelectProductToEdit
 }: Props) => {
-  const activeDiscounts = useAppSelector(
-    (state) => state.discounts.activeDiscounts
-  );
+  const [activeDiscounts, setActiveDiscounts] = useState<Discount[]>([]);
+  const { getDiscounts } = useDiscounts();
+
+  const setDiscountsFromFirebase = async () => {
+    const discounts = await getDiscounts();
+    setActiveDiscounts(discounts);
+  };
+
+  useEffect(() => {
+    setDiscountsFromFirebase();
+  }, []);
 
   return (
     <ProductsContainer>

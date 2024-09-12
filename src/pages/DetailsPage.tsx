@@ -14,7 +14,12 @@ import {
 import styled from 'styled-components';
 import { ActivityIndicator } from '../components/common/ActivityIndicator';
 import { Color } from '../assets/constants';
-import { TShirtColor } from '../containers/adminPanel/utils';
+import {
+  getDiscountedPrice,
+  getDiscountForProduct,
+  TShirtColor
+} from '../containers/adminPanel/utils';
+import { useDiscounts } from '../hooks/useDiscounts';
 
 export const DetailsPage = () => {
   const [product, setProduct] = useState<Product>();
@@ -24,14 +29,14 @@ export const DetailsPage = () => {
   const [selectedColor, setSelectedColor] = useState<TShirtColor>(
     TShirtColor.WHITE
   );
+  const [discountedPrice, setDiscountedPrice] = useState<number | null>(null);
   const [selectedQuantity, setSelectedQuantity] = useState<number>(1);
   const [imageHasLoaded, setImageHasLoaded] = useState<boolean>(false);
-  const { getProductById, isLoading } = useProducts();
+  const { getProductById, isLoading: isFetchingProduct } = useProducts();
   const { productId } = useParams();
   const { state } = useLocation();
   const navigate = useNavigate();
-
-  const { discountedPrice, color, type } = state;
+  const { getDiscounts, isLoading: isFetchingDiscounts } = useDiscounts();
 
   const getTShirtTypes = (product: Product) => {
     const types = [];
@@ -55,16 +60,21 @@ export const DetailsPage = () => {
 
   const setProductFromFirebase = async () => {
     const product = await getProductById(productId ?? '');
+    const activeDiscounts = await getDiscounts();
 
     if (product) {
       const tShirtTypes = getTShirtTypes(product);
+      const selectedType = state && state.type ? state.type : tShirtTypes[0];
       const selectedColor = determineSelectedColor(
         product.images[tShirtTypes[0]]
       );
+      const discount = getDiscountForProduct(product, activeDiscounts);
+      const discountedPrice = getDiscountedPrice(product.price, discount);
 
       setTShirtTypes(tShirtTypes as TShirtType[]);
-      setSelectedType(type ?? tShirtTypes[0]);
+      setSelectedType(selectedType);
       setSelectedColor(selectedColor);
+      setDiscountedPrice(discountedPrice ?? null);
       setProduct(product);
     }
   };
@@ -98,7 +108,12 @@ export const DetailsPage = () => {
 
   const determineSelectedColor = (
     images: ImagesMen | ImagesWomen | ImagesKids | ImagesOversized
-  ) => color ?? getFirstAvailableColor(images);
+  ) => {
+    if (state && state.color) {
+      return state.color;
+    }
+    return getFirstAvailableColor(images);
+  };
 
   const getFirstAvailableColor = (
     images: ImagesMen | ImagesWomen | ImagesKids | ImagesOversized
@@ -111,7 +126,7 @@ export const DetailsPage = () => {
     return TShirtColor.WHITE;
   };
 
-  if (isLoading) {
+  if (isFetchingProduct || isFetchingDiscounts) {
     return (
       <ActivityIndicatorWrapper>
         <ActivityIndicator size={100} color={Color.ACCENT} />
