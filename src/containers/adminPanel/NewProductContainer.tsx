@@ -3,6 +3,7 @@ import { doc, setDoc } from 'firebase/firestore';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { toast } from 'react-toastify';
 import styled from 'styled-components';
+import { v4 as uuid4 } from 'uuid';
 import {
   TShirtSize,
   TShirtSizes,
@@ -101,7 +102,7 @@ export const NewProductContainer = () => {
       return;
     }
 
-    const productId = Date.now().toString();
+    const productId = uuid4();
 
     let imageDetails: ImageDetails = JSON.parse(
       JSON.stringify(defaultImageDetails)
