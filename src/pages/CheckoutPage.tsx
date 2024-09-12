@@ -24,7 +24,6 @@ export const CheckoutPage = () => {
   };
 
   const callbackParams = {
-    isSandbox: true,
     onSuccess: function (data: any) {
       console.log('success callback');
       console.log(data);
