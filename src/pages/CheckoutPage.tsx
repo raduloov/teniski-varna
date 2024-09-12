@@ -9,7 +9,7 @@ export const CheckoutPage = () => {
     Amount: 23.45,
     Currency: 'BGN',
     OrderID: testOID,
-    sid: '768323',
+    SID: '768323',
     WalletNumber: '40559548405',
     KeyIndex: 1,
     URL_OK: window.location.href,
