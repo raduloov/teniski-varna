@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Modal } from '../../common/Modal';
 import { Button } from '../../common/Button';
@@ -20,6 +20,7 @@ import { useNavigate } from 'react-router';
 import { useDiscounts } from '../../../hooks/useDiscounts';
 import { ActivityIndicator } from '../../common/ActivityIndicator';
 import { Color } from '../../../assets/constants';
+import { ShippingData, useShipping } from '../../../hooks/useShipping';
 
 interface Props {
   showModal: boolean;
@@ -28,10 +29,20 @@ interface Props {
 }
 
 export const Cart = ({ setShowModal, showModal, cartItems }: Props) => {
+  const [shipping, setShipping] = useState<ShippingData>({
+    shippingCost: 0,
+    minimumAmount: 0
+  });
   const { getProductById } = useProducts();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { getDiscounts, isLoading: isFetchingDiscounts } = useDiscounts();
+  const { getShipping, isLoading: isFetchingShipping } = useShipping();
+
+  const setShippingFromFirebase = async () => {
+    const shippingData = await getShipping();
+    setShipping(shippingData);
+  };
 
   const setItemsToCart = async () => {
     const activeDiscounts = await getDiscounts();
@@ -75,14 +86,19 @@ export const Cart = ({ setShowModal, showModal, cartItems }: Props) => {
   };
 
   useEffect(() => {
+    setShippingFromFirebase();
     setItemsToCart();
   }, []);
 
   const cartPrice = cartItems.reduce((acc, product) => {
     return acc + product.price * product.quantity;
   }, 0);
-  const shippingPrice = cartItems.length > 0 ? 4.99 : 0;
+  const isFreeShipping = cartPrice >= shipping.minimumAmount;
+  const shippingPrice =
+    isFreeShipping || cartItems.length === 0 ? 0 : shipping.shippingCost;
   const totalPrice = cartPrice + shippingPrice;
+
+  const isLoading = isFetchingDiscounts || isFetchingShipping;
 
   return (
     <>
@@ -90,7 +106,7 @@ export const Cart = ({ setShowModal, showModal, cartItems }: Props) => {
         <Modal onClose={() => setShowModal(false)}>
           <Container>
             <CartHeader>Количка</CartHeader>
-            {isFetchingDiscounts ? (
+            {isLoading ? (
               <ActivityIndicatorWrapper>
                 <ActivityIndicator color={Color.ACCENT} size={100} />
               </ActivityIndicatorWrapper>
@@ -111,6 +127,15 @@ export const Cart = ({ setShowModal, showModal, cartItems }: Props) => {
                   <CartPriceContainer>
                     Доставка:<p>{shippingPrice}лв</p>
                   </CartPriceContainer>
+                  {!isFreeShipping && (
+                    <FreeShippingText>
+                      Поръчай за още{' '}
+                      <RemainingAmount>
+                        {shipping.minimumAmount - cartPrice}лв
+                      </RemainingAmount>{' '}
+                      и доставката е безплатна
+                    </FreeShippingText>
+                  )}
                   <CartDivider></CartDivider>
                   <CartPriceContainer>
                     Общо: <p>{totalPrice.toFixed(2)}лв</p>
@@ -179,6 +204,16 @@ const CartFooter = styled.div`
   border-top-right-radius: 2.5rem;
   border-top-left-radius: 2.5rem;
   box-shadow: 0px -2px 10px rgba(0, 0, 0, 0.15);
+`;
+
+const RemainingAmount = styled.span`
+  font-weight: 600;
+  color: ${Color.RED};
+`;
+
+const FreeShippingText = styled.p`
+  font-size: 0.8rem;
+  color: ${Color.DARK_GRAY};
 `;
 
 const CartPriceContainer = styled.div`

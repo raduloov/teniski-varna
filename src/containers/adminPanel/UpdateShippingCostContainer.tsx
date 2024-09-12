@@ -5,20 +5,21 @@ import { Color } from '../../assets/constants';
 import { Button } from '../../components/common/Button';
 import { db } from '../../firebase/firebaseConfig';
 import { Input } from '../../components/common/Input';
-import { doc, getDoc, updateDoc } from '@firebase/firestore';
+import { doc, updateDoc } from '@firebase/firestore';
+import { useShipping } from '../../hooks/useShipping';
 
 export const UpdateShippingCostContainer = () => {
   const [shippingCost, setShippingCost] = useState<string>('');
   const [minimumAmount, setMinimumAmount] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { getShipping } = useShipping();
 
   const getShippingCost = async () => {
-    const shippingRef = doc(db, 'shipping', '1');
-    const shipping = await getDoc(shippingRef);
+    const shippingData = await getShipping();
 
-    if (shipping.exists()) {
-      setShippingCost(shipping.data().shippingCost);
-      setMinimumAmount(shipping.data().minimumAmount);
+    if (shippingData) {
+      setShippingCost(shippingData.shippingCost.toString());
+      setMinimumAmount(shippingData.minimumAmount.toString());
     }
   };
 
