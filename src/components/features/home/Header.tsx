@@ -26,7 +26,7 @@ export const Header = ({ setTopNavigationShow, topNavigationShow }: Props) => {
 
   useEffect(() => {
     // When user clicks on toast, navigate home with openCart in state
-    // TODO: Refactor this to use a global state
+    // TODO: Maybe refactor this to use a global state
     if (state) {
       setShowModal(true);
     }
@@ -112,6 +112,7 @@ const LogoContainer = styled.div`
 `;
 
 const CartContainer = styled.div`
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
