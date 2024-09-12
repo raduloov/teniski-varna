@@ -6,7 +6,7 @@ export const CheckoutPage = () => {
   //change to guid or uuid later
 
   const paymentParams = {
-    Amount: 0.11,
+    Amount: 1.55,
     Currency: 'BGN',
     OrderID: testOID,
     SID: '768323',
@@ -21,13 +21,13 @@ export const CheckoutPage = () => {
       {
         article: 'Някаква тениска',
         quantity: 1,
-        price: 0.5,
+        price: 1,
         currency: 'BGN'
       },
       {
         article: 'няква доставка',
         quantity: 1,
-        price: 0.6,
+        price: 0.55,
         currency: 'BGN'
       }
     ]
