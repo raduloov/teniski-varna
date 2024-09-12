@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import 'react-toastify/dist/ReactToastify.css';
-import { toast, ToastContainer } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import { AppRoutes } from './routes/routes';
 import { Header } from './components/features/home/Header';
 import { useLocation } from 'react-router';
@@ -13,7 +13,7 @@ export const App = () => {
 
   return (
     <>
-      <ToastContainer position={toast.POSITION.BOTTOM_CENTER} />
+      <ToastContainer position={'bottom-left'} stacked />
       {excludeHeader(currentPath) && (
         <Header
           setTopNavigationShow={setTopNavigationShow}

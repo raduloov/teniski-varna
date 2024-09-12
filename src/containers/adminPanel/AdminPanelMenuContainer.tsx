@@ -9,6 +9,7 @@ import { UpdateBannerImageContainer } from './UpdateBannerImageContainer';
 import { LabelsContainer } from './LabelsContainer';
 import { DiscountsMenuContainer } from './DiscountsContainer';
 import { ManageProductsContainer } from './ManageProductsContainer';
+import { UpdateShippingCostContainer } from './UpdateShippingCostContainer';
 
 export const AdminPanelMenuContainer = () => {
   const [showAddNewProduct, setShowAddNewProduct] = useState<boolean>(false);
@@ -17,6 +18,8 @@ export const AdminPanelMenuContainer = () => {
     useState<boolean>(false);
   const [showLabels, setShowLabels] = useState<boolean>(false);
   const [showDiscounts, setShowDiscounts] = useState<boolean>(false);
+  const [showUpdateShippingCost, setShowUpdateShippingCost] =
+    useState<boolean>(false);
   const { signOut } = useAuth();
 
   const isPageSelected =
@@ -24,7 +27,8 @@ export const AdminPanelMenuContainer = () => {
     showManageProducts ||
     showLabels ||
     showDiscounts ||
-    showUpdateBannerImage;
+    showUpdateBannerImage ||
+    showUpdateShippingCost;
 
   return (
     <Container>
@@ -47,6 +51,7 @@ export const AdminPanelMenuContainer = () => {
         {showUpdateBannerImage && <UpdateBannerImageContainer />}
         {showLabels && <LabelsContainer />}
         {showDiscounts && <DiscountsMenuContainer />}
+        {showUpdateShippingCost && <UpdateShippingCostContainer />}
         {!isPageSelected && (
           <ButtonContainer>
             <Button
@@ -69,6 +74,10 @@ export const AdminPanelMenuContainer = () => {
               label={'Update banner image'}
               onClick={() => setShowUpdateBannerImage(true)}
             />
+            <Button
+              label={'Update shipping cost'}
+              onClick={() => setShowUpdateShippingCost(true)}
+            />
           </ButtonContainer>
         )}
       </PanelContainer>
@@ -80,6 +89,7 @@ export const AdminPanelMenuContainer = () => {
             setShowUpdateBannerImage(false);
             setShowLabels(false);
             setShowDiscounts(false);
+            setShowUpdateShippingCost(false);
           }}
         >
           <p>Back to Menu</p>
