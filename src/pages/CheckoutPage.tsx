@@ -6,7 +6,7 @@ export const CheckoutPage = () => {
   //change to guid or uuid later
 
   const paymentParams = {
-    Amount: 23.45,
+    Amount: 0.11,
     Currency: 'BGN',
     OrderID: testOID,
     SID: '768323',
@@ -19,15 +19,15 @@ export const CheckoutPage = () => {
     PaymentParametersRequired: 3,
     cartItems: [
       {
-        article: 'HP ProBook 6360b sticker',
-        quantity: 2,
-        price: 10,
+        article: 'Някаква тениска',
+        quantity: 1,
+        price: 0.5,
         currency: 'BGN'
       },
       {
-        article: 'Delivery',
+        article: 'няква доставка',
         quantity: 1,
-        price: 3.45,
+        price: 0.6,
         currency: 'BGN'
       }
     ]
