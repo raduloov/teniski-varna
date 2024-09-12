@@ -221,7 +221,7 @@ const ImageWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 50%;
+  height: 50svh;
 `;
 
 const Image = styled.img<{ loaded: boolean }>`

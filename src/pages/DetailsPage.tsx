@@ -102,6 +102,7 @@ export const DetailsPage = () => {
   };
 
   const selectType = (type: TShirtType) => {
+    setImageHasLoaded(false);
     setSelectedType(type);
     setSelectedColor(getFirstAvailableColor(product!.images[type]));
   };
