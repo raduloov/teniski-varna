@@ -16,6 +16,8 @@ import { TShirtColor } from './adminPanel/utils';
 import { ActivityIndicator } from '../components/common/ActivityIndicator';
 import { translateTypeToBulgarian } from '../components/features/cart/utils';
 import { useNavigate } from 'react-router';
+import { RiInformationFill } from 'react-icons/ri';
+import { Modal } from '../components/common/Modal';
 
 interface Props {
   product: Product;
@@ -33,6 +35,8 @@ interface Props {
   onGoBack: () => void;
   onIncreaseQuantity: () => void;
   onDecreaseQuantity: () => void;
+  onShowSizeInfo: () => void;
+  showSizeInfo: boolean;
 }
 
 export const DetailsContainer = ({
@@ -49,6 +53,8 @@ export const DetailsContainer = ({
   onGoBack,
   onIncreaseQuantity,
   onDecreaseQuantity,
+  onShowSizeInfo,
+  showSizeInfo,
   product,
   discountedPrice
 }: Props) => {
@@ -84,107 +90,140 @@ export const DetailsContainer = ({
   };
 
   return (
-    <Container>
-      <ActionButtonsWrapper>
-        <IconButton icon={icons.FaChevronLeft} onClick={onGoBack} />
-      </ActionButtonsWrapper>
-      <ImageWrapper>
-        {!imageHasLoaded && (
-          <ActivityIndicator size={100} color={Color.ACCENT} />
-        )}
-        <Image
-          src={image}
-          onLoad={() => onImageLoad()}
-          loaded={imageHasLoaded}
-        />
-      </ImageWrapper>
-      <BottomSheetContainer>
-        <HeaderWrapper>
-          <TitleWrapper>
-            <Title>{product.title}</Title>
-            <Description>{product.description}</Description>
-          </TitleWrapper>
-          <RatingStars />
-        </HeaderWrapper>
-
-        <SelectSizeTitle>Изберете модел</SelectSizeTitle>
-        <TypeSelector>
-          {tShirtTypes.map((type, index) => (
-            <TypeButton
-              onClick={() => onSelectType(type)}
-              selected={selectedType === type}
-              key={index}
-            >
-              {translateTypeToBulgarian(type)}
-            </TypeButton>
-          ))}
-        </TypeSelector>
-
-        <SelectSizeTitle>Изберете цвят</SelectSizeTitle>
-        <TilesWrapper>
-          {selectedType && (
-            <ColorSelector
-              colors={product.images[selectedType]}
-              selectedColor={selectedColor}
-              onSelectColor={(color) => onSelectColor(color)}
-            />
+    <>
+      <Container>
+        <ActionButtonsWrapper>
+          <IconButton icon={icons.FaChevronLeft} onClick={onGoBack} />
+        </ActionButtonsWrapper>
+        <ImageWrapper>
+          {!imageHasLoaded && (
+            <ActivityIndicator size={100} color={Color.ACCENT} />
           )}
-        </TilesWrapper>
-        <SelectSizeTitle>Изберете размер</SelectSizeTitle>
-        <TilesWrapper>
-          {selectedType === TShirtType.MEN && (
-            <SizeSelector
-              availableSizes={product.sizes.men}
-              selectedSize={selectedSize}
-              onSelectSize={(size) => onSelectSize(size)}
-            />
-          )}
-          {selectedType === TShirtType.WOMEN && (
-            <SizeSelector
-              availableSizes={product.sizes.women}
-              selectedSize={selectedSize}
-              onSelectSize={(size) => onSelectSize(size)}
-            />
-          )}
-          {selectedType === TShirtType.KIDS && (
-            <SizeSelector
-              availableSizes={product.sizes.kids}
-              selectedSize={selectedSize}
-              onSelectSize={(size) => onSelectSize(size)}
-            />
-          )}
-          {selectedType === TShirtType.OVERSIZED && (
-            <SizeSelector
-              availableSizes={product.sizes.oversized}
-              selectedSize={selectedSize}
-              onSelectSize={(size) => onSelectSize(size)}
-            />
-          )}
-        </TilesWrapper>
-        <QuantityWrapper>
-          <QuantitySelector
-            quantity={selectedQuantity}
-            onIncreaseQuantity={onIncreaseQuantity}
-            onDecreaseQuantity={onDecreaseQuantity}
+          <Image
+            src={image}
+            onLoad={() => onImageLoad()}
+            loaded={imageHasLoaded}
           />
-        </QuantityWrapper>
-        <CtaWrapper>
-          <PriceWrapper>
-            <Price discounted={!!discountedPrice}>{product.price}лв</Price>
-            {discountedPrice && (
-              <DiscountedPrice>{discountedPrice}лв</DiscountedPrice>
+        </ImageWrapper>
+        <BottomSheetContainer>
+          <HeaderWrapper>
+            <TitleWrapper>
+              <Title>{product.title}</Title>
+              <Description>{product.description}</Description>
+            </TitleWrapper>
+            <RatingStars />
+          </HeaderWrapper>
+
+          <SelectTitle>Изберете модел</SelectTitle>
+          <TypeSelector>
+            {tShirtTypes.map((type, index) => (
+              <TypeButton
+                onClick={() => onSelectType(type)}
+                selected={selectedType === type}
+                key={index}
+              >
+                {translateTypeToBulgarian(type)}
+              </TypeButton>
+            ))}
+          </TypeSelector>
+
+          <SelectTitle>Изберете цвят</SelectTitle>
+          <TilesWrapper>
+            {selectedType && (
+              <ColorSelector
+                colors={product.images[selectedType]}
+                selectedColor={selectedColor}
+                onSelectColor={(color) => onSelectColor(color)}
+              />
             )}
-          </PriceWrapper>
-          <Button
-            label="Добави в количка"
-            size={ButtonSize.MEDIUM}
-            onClick={addToCartHandler}
-          />
-        </CtaWrapper>
-      </BottomSheetContainer>
-    </Container>
+          </TilesWrapper>
+          <SizeWrapper>
+            <SelectSizeTitle>Изберете размер</SelectSizeTitle>
+            <RiInformationFill
+              color={Color.DARK_GRAY}
+              onClick={() => onShowSizeInfo()}
+            />
+          </SizeWrapper>
+          <TilesWrapper>
+            {selectedType === TShirtType.MEN && (
+              <SizeSelector
+                availableSizes={product.sizes.men}
+                selectedSize={selectedSize}
+                onSelectSize={(size) => onSelectSize(size)}
+              />
+            )}
+            {selectedType === TShirtType.WOMEN && (
+              <SizeSelector
+                availableSizes={product.sizes.women}
+                selectedSize={selectedSize}
+                onSelectSize={(size) => onSelectSize(size)}
+              />
+            )}
+            {selectedType === TShirtType.KIDS && (
+              <SizeSelector
+                availableSizes={product.sizes.kids}
+                selectedSize={selectedSize}
+                onSelectSize={(size) => onSelectSize(size)}
+              />
+            )}
+            {selectedType === TShirtType.OVERSIZED && (
+              <SizeSelector
+                availableSizes={product.sizes.oversized}
+                selectedSize={selectedSize}
+                onSelectSize={(size) => onSelectSize(size)}
+              />
+            )}
+          </TilesWrapper>
+          <QuantityWrapper>
+            <QuantitySelector
+              quantity={selectedQuantity}
+              onIncreaseQuantity={onIncreaseQuantity}
+              onDecreaseQuantity={onDecreaseQuantity}
+            />
+          </QuantityWrapper>
+          <CtaWrapper>
+            <PriceWrapper>
+              <Price discounted={!!discountedPrice}>{product.price}лв</Price>
+              {discountedPrice && (
+                <DiscountedPrice>{discountedPrice}лв</DiscountedPrice>
+              )}
+            </PriceWrapper>
+            <Button
+              label="Добави в количка"
+              size={ButtonSize.MEDIUM}
+              onClick={addToCartHandler}
+            />
+          </CtaWrapper>
+        </BottomSheetContainer>
+      </Container>
+      {showSizeInfo && (
+        <Modal onClose={() => onShowSizeInfo()}>
+          <SizeInfoWrapper>
+            <img src={require('../assets/images/sizeInfo.png')} />
+          </SizeInfoWrapper>
+        </Modal>
+      )}
+    </>
   );
 };
+
+const SizeInfoWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  img {
+    max-width: 100%;
+    max-height: 100%;
+  }
+`;
+
+const SizeWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 15px;
+`;
 
 const TypeButton = styled.div<{ selected: boolean }>`
   cursor: pointer;
@@ -230,10 +269,15 @@ const Image = styled.img<{ loaded: boolean }>`
   ${({ loaded }) => !loaded && 'display: none;'}
 `;
 
-const SelectSizeTitle = styled.p`
+const SelectTitle = styled.p`
   font-size: 18px;
   font-weight: 500;
   margin-top: 15px;
+`;
+
+const SelectSizeTitle = styled.p`
+  font-size: 18px;
+  font-weight: 500;
 `;
 
 const DiscountedPrice = styled.p`

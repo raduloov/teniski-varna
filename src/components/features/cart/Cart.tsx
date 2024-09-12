@@ -103,7 +103,7 @@ export const Cart = ({ setShowModal, showModal, cartItems }: Props) => {
   return (
     <>
       {showModal && (
-        <Modal onClose={() => setShowModal(false)}>
+        <Modal onClose={() => setShowModal(false)} fullscreen backButton>
           <Container>
             <CartHeader>Количка</CartHeader>
             {isLoading ? (

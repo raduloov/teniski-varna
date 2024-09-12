@@ -15,6 +15,7 @@ import styled from 'styled-components';
 import { ActivityIndicator } from '../components/common/ActivityIndicator';
 import { Color } from '../assets/constants';
 import {
+  defaultImageDetails,
   getDiscountedPrice,
   getDiscountForProduct,
   TShirtColor
@@ -32,6 +33,7 @@ export const DetailsPage = () => {
   const [discountedPrice, setDiscountedPrice] = useState<number | null>(null);
   const [selectedQuantity, setSelectedQuantity] = useState<number>(1);
   const [imageHasLoaded, setImageHasLoaded] = useState<boolean>(false);
+  const [showSizeInfo, setShowSizeInfo] = useState<boolean>(false);
   const { getProductById, isLoading: isFetchingProduct } = useProducts();
   const { productId } = useParams();
   const { state } = useLocation();
@@ -104,7 +106,9 @@ export const DetailsPage = () => {
   const selectType = (type: TShirtType) => {
     setImageHasLoaded(false);
     setSelectedType(type);
-    setSelectedColor(getFirstAvailableColor(product!.images[type]));
+
+    const images = product ? product.images[type] : defaultImageDetails[type];
+    setSelectedColor(getFirstAvailableColor(images));
   };
 
   const determineSelectedColor = (
@@ -152,6 +156,8 @@ export const DetailsPage = () => {
           onGoBack={goBack}
           onIncreaseQuantity={increaseQuantity}
           onDecreaseQuantity={decreaseQuantity}
+          onShowSizeInfo={() => setShowSizeInfo((state) => !state)}
+          showSizeInfo={showSizeInfo}
           product={product}
           discountedPrice={discountedPrice}
         />
