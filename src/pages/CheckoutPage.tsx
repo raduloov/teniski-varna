@@ -2,35 +2,47 @@ import React, { useEffect } from 'react';
 import * as MyPOSEmbedded from 'mypos-embedded-checkout';
 
 export const CheckoutPage = () => {
+  const testOID = Math.random().toString(36).substr(2, 9);
+  //change to guid or uuid later
+
   const paymentParams = {
-    sid: '768323',
-    ipcLanguage: 'bg',
-    walletNumber: '40559548405',
-    amount: 23.45,
-    currency: 'BGN',
-    orderID: Math.random().toString(36).substr(2, 9),
-    urlNotify: MyPOSEmbedded.IPC_URL + '/client/ipcNotify',
-    urlOk: window.location.href,
-    urlCancel: window.location.href,
-    keyIndex: 1,
+    Amount: 23.45,
+    Currency: 'BGN',
+    OrderID: testOID,
+    SID: '768323',
+    WalletNumber: '40559548405',
+    KeyIndex: 1,
+    URL_OK: window.location.href,
+    URL_Cancel: window.location.href,
+    URL_Notify: window.location.href,
+    CardTokenRequest: 0,
+    PaymentParametersRequired: 3,
     cartItems: [
       {
         article: 'HP ProBook 6360b sticker',
         quantity: 2,
-        price: 1,
+        price: 10,
+        currency: 'BGN'
+      },
+      {
+        article: 'Delivery',
+        quantity: 1,
+        price: 3.45,
         currency: 'BGN'
       }
     ]
   };
 
   const callbackParams = {
+    isSandbox: true,
     onSuccess: function (data: any) {
       console.log('success callback');
       console.log(data);
     },
 
-    onError: function () {
+    onError: function (data: any) {
       console.log('error');
+      console.log(data);
     }
   };
 
@@ -49,3 +61,4 @@ export const CheckoutPage = () => {
     </div>
   );
 };
+
