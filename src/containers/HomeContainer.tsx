@@ -7,6 +7,8 @@ import { HorizontalScroll } from '../components/common/HorizontalScroll';
 import { ProductList } from '../components/features/home/ProductList';
 import { Product } from '../domain/models/ProductDTO';
 import { Label, useLabels } from '../hooks/useLabels';
+import { ScrollToTopButton } from '../components/features/home/ScrollToTopButton';
+import { useElementOnScreen } from '../hooks/useElementOnScreen';
 
 interface Props {
   products: Array<Product>;
@@ -17,6 +19,11 @@ export const HomeContainer = ({ products, isLoading }: Props) => {
   const [labels, setLabels] = useState<Label[]>([]);
   const [selectedLabel, setSelectedLabel] = useState<Label>(labels[0]);
   const { getLabels } = useLabels();
+  const { containerRef, isVisible } = useElementOnScreen({
+    root: null,
+    rootMargin: '0px',
+    threshold: 0.3
+  });
 
   const setLabelsFromFirebase = async () => {
     const fetchedLabels = await getLabels();
@@ -27,8 +34,13 @@ export const HomeContainer = ({ products, isLoading }: Props) => {
     setLabelsFromFirebase();
   }, []);
 
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <>
+      <div ref={containerRef}></div>
       <Banner />
       <HorizontalScroll
         labels={labels}
@@ -41,6 +53,7 @@ export const HomeContainer = ({ products, isLoading }: Props) => {
           <ProductList products={products} selectedLabel={selectedLabel} />
         )}
       </ProductListContainer>
+      <ScrollToTopButton onScrollToTop={scrollToTop} showButton={!isVisible} />
     </>
   );
 };

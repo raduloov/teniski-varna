@@ -6,6 +6,7 @@ import {
   MdPermContactCalendar
 } from 'react-icons/md';
 import {
+  FaArrowUp,
   FaChevronLeft,
   FaQuestionCircle,
   FaHome,
@@ -44,5 +45,6 @@ export const icons = {
   BsChevronCompactDown,
   MdPermContactCalendar,
   FaEdit,
-  FaCheck
+  FaCheck,
+  FaArrowUp
 };

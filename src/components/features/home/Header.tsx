@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Input } from '../../common/Input';
 import { ReactComponent as Logo } from '../../../assets/images/logo.svg';
@@ -9,6 +9,7 @@ import { useAppSelector } from '../../../hooks/useRedux';
 import { HeaderLinks } from './HeaderLinks';
 import { useLocation, useNavigate } from 'react-router';
 import { CartButton } from '../cart/CartButton';
+import { useElementOnScreen } from '../../../hooks/useElementOnScreen';
 
 interface Props {
   topNavigationShow: boolean;
@@ -19,24 +20,17 @@ interface ChevronContainerProps {
 }
 
 export const Header = ({ setTopNavigationShow, topNavigationShow }: Props) => {
-  const [cartInScreen, setCartInScreen] = useState<boolean>(false);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [headerContainerHeight, setHeaderContainerHeight] = useState<number>(0);
-  const fixedCartButtonRef = useRef<HTMLDivElement>(null);
   const cartItems = useAppSelector((state) => state.cart);
   const navigate = useNavigate();
   const { state } = useLocation();
-
-  const callback = (entries: IntersectionObserverEntry[]) => {
-    const [entry] = entries;
-    setCartInScreen(entry.isIntersecting);
-  };
-
-  const observerOptions = {
-    root: null,
-    rootMargin: '0px',
-    threshold: 0.3
-  };
+  const { containerRef: fixedCartButtonRef, isVisible: cartIsVisible } =
+    useElementOnScreen({
+      root: null,
+      rootMargin: '0px',
+      threshold: 0.3
+    });
 
   useEffect(() => {
     // When user clicks on toast, navigate home with openCart in state
@@ -45,21 +39,9 @@ export const Header = ({ setTopNavigationShow, topNavigationShow }: Props) => {
       setShowModal(true);
     }
 
-    const observer = new IntersectionObserver(callback, observerOptions);
-
-    if (fixedCartButtonRef.current) {
-      observer.observe(fixedCartButtonRef.current);
-    }
-
     // Reset the state so that the modal doesn't open again
     window.history.replaceState({}, '');
-
-    return () => {
-      if (fixedCartButtonRef.current) {
-        observer.unobserve(fixedCartButtonRef.current);
-      }
-    };
-  }, [fixedCartButtonRef, observerOptions]);
+  }, []);
 
   const cartItemsQuantity = cartItems.reduce(
     (total, item) => total + item.quantity,
@@ -80,7 +62,7 @@ export const Header = ({ setTopNavigationShow, topNavigationShow }: Props) => {
         <CartButton
           onOpenCart={() => setShowModal(true)}
           itemsQuantity={cartItemsQuantity}
-          isInBounds={cartInScreen}
+          isInBounds={cartIsVisible}
         />
       </LogoContainer>
       <Input value={''} icon={icons.FaSearch} />
