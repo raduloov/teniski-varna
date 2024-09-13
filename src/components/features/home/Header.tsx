@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { Input } from '../../common/Input';
 import { ReactComponent as Logo } from '../../../assets/images/logo.svg';
@@ -18,11 +18,24 @@ interface ChevronContainerProps {
 }
 
 export const Header = ({ setTopNavigationShow, topNavigationShow }: Props) => {
+  const [cartInScreen, setCartInScreen] = useState<boolean>(false);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [headerContainerHeight, setHeaderContainerHeight] = useState<number>(0);
+  const fixedCartButtonRef = useRef<HTMLDivElement>(null);
   const cartItems = useAppSelector((state) => state.cart);
   const navigate = useNavigate();
   const { state } = useLocation();
+
+  const callback = (entries: IntersectionObserverEntry[]) => {
+    const [entry] = entries;
+    setCartInScreen(entry.isIntersecting);
+  };
+
+  const observerOptions = {
+    root: null,
+    rootMargin: '0px',
+    threshold: 0.3
+  };
 
   useEffect(() => {
     // When user clicks on toast, navigate home with openCart in state
@@ -31,9 +44,21 @@ export const Header = ({ setTopNavigationShow, topNavigationShow }: Props) => {
       setShowModal(true);
     }
 
+    const observer = new IntersectionObserver(callback, observerOptions);
+
+    if (fixedCartButtonRef.current) {
+      observer.observe(fixedCartButtonRef.current);
+    }
+
     // Reset the state so that the modal doesn't open again
     window.history.replaceState({}, '');
-  }, []);
+
+    return () => {
+      if (fixedCartButtonRef.current) {
+        observer.unobserve(fixedCartButtonRef.current);
+      }
+    };
+  }, [fixedCartButtonRef, observerOptions]);
 
   const cartItemsQuantity = cartItems.reduce(
     (total, item) => total + item.quantity,
@@ -47,11 +72,11 @@ export const Header = ({ setTopNavigationShow, topNavigationShow }: Props) => {
         setShowModal={setShowModal}
         showModal={showModal}
       />
-      <LogoContainer>
+      <LogoContainer ref={fixedCartButtonRef}>
         <LogoButton onClick={() => navigate('/')}>
           <Logo />
         </LogoButton>
-        <FixedCartWrapper>
+        <FixedCartWrapper isInBounds={cartInScreen}>
           <CartContainer onClick={() => setShowModal(true)}>
             <icons.MdOutlineShoppingBag />
             <CartItemTick>{cartItemsQuantity}</CartItemTick>
@@ -116,12 +141,38 @@ const LogoContainer = styled.div`
   }
 `;
 
-const FixedCartWrapper = styled.div`
-  position: fixed;
-  top: 2rem;
-  right: 2rem;
+const FixedCartWrapper = styled.div<{ isInBounds: boolean }>`
   z-index: 800;
   filter: drop-shadow(0px 2px 10px rgba(0, 0, 0, 0.15));
+  ${({ isInBounds }) =>
+    !isInBounds
+      ? `
+        position: fixed;
+        top: 1.5rem;
+        right: 1.5rem;
+        animation: slideout 0.5s ease-out forwards;
+      `
+      : `
+        animation: slidein 0.3s ease-in forwards;
+    `}
+
+  @keyframes slideout {
+    from {
+      transform: translateY(-90%) scale(1.2);
+    }
+    to {
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  @keyframes slidein {
+    from {
+      transform: translateY(90%);
+    }
+    to {
+      transform: translateY(0);
+    }
+  }
 `;
 
 const CartContainer = styled.div`
