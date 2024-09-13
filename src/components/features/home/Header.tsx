@@ -30,6 +30,9 @@ export const Header = ({ setTopNavigationShow, topNavigationShow }: Props) => {
     if (state) {
       setShowModal(true);
     }
+
+    // Reset the state so that the modal doesn't open again
+    window.history.replaceState({}, '');
   }, []);
 
   const cartItemsQuantity = cartItems.reduce(
@@ -48,10 +51,12 @@ export const Header = ({ setTopNavigationShow, topNavigationShow }: Props) => {
         <LogoButton onClick={() => navigate('/')}>
           <Logo />
         </LogoButton>
-        <CartContainer onClick={() => setShowModal(true)}>
-          <icons.MdOutlineShoppingBag />
-          <CartItemTick>{cartItemsQuantity}</CartItemTick>
-        </CartContainer>
+        <FixedCartWrapper>
+          <CartContainer onClick={() => setShowModal(true)}>
+            <icons.MdOutlineShoppingBag />
+            <CartItemTick>{cartItemsQuantity}</CartItemTick>
+          </CartContainer>
+        </FixedCartWrapper>
       </LogoContainer>
       <Input value={''} icon={icons.FaSearch} />
       {topNavigationShow && (
@@ -111,6 +116,14 @@ const LogoContainer = styled.div`
   }
 `;
 
+const FixedCartWrapper = styled.div`
+  position: fixed;
+  top: 2rem;
+  right: 2rem;
+  z-index: 800;
+  filter: drop-shadow(0px 2px 10px rgba(0, 0, 0, 0.15));
+`;
+
 const CartContainer = styled.div`
   position: relative;
   display: flex;
@@ -119,7 +132,6 @@ const CartContainer = styled.div`
   padding: 0.75rem;
   border-radius: 50%;
   background-color: ${Color.WHITE};
-  filter: drop-shadow(0px 2px 10px rgba(0, 0, 0, 0.15));
   svg {
     cursor: pointer;
     color: ${Color.GRAY};
