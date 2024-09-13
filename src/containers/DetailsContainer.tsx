@@ -9,7 +9,7 @@ import { RatingStars } from '../components/features/details/RatingStars';
 import { SizeSelector } from '../components/features/details/SizeSelector';
 import { cartActions } from '../store/cartSlice';
 import { Product, TShirtSize, TShirtType } from '../domain/models/ProductDTO';
-import { useAppDispatch } from '../hooks/useRedux';
+import { useAppDispatch, useAppSelector } from '../hooks/useRedux';
 import { toast } from 'react-toastify';
 import { ColorSelector } from '../components/features/details/ColorSelector';
 import { TShirtColor } from './adminPanel/utils';
@@ -18,6 +18,8 @@ import { translateTypeToBulgarian } from '../components/features/cart/utils';
 import { useNavigate } from 'react-router';
 import { RiInformationFill } from 'react-icons/ri';
 import { Modal } from '../components/common/Modal';
+import { Cart } from '../components/features/cart/Cart';
+import { CartButton } from '../components/features/cart/CartButton';
 
 interface Props {
   product: Product;
@@ -37,6 +39,8 @@ interface Props {
   onDecreaseQuantity: () => void;
   onShowSizeInfo: () => void;
   showSizeInfo: boolean;
+  onShowCart: () => void;
+  showCart: boolean;
 }
 
 export const DetailsContainer = ({
@@ -55,11 +59,19 @@ export const DetailsContainer = ({
   onDecreaseQuantity,
   onShowSizeInfo,
   showSizeInfo,
+  onShowCart,
+  showCart,
   product,
   discountedPrice
 }: Props) => {
+  const cartItems = useAppSelector((state) => state.cart);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+
+  const cartItemsQuantity = cartItems.reduce(
+    (total, item) => total + item.quantity,
+    0
+  );
 
   // @ts-ignore
   const image = product.images[selectedType][selectedColor].url;
@@ -91,6 +103,12 @@ export const DetailsContainer = ({
 
   return (
     <>
+      <Cart
+        cartItems={cartItems}
+        showModal={showCart}
+        setShowModal={onShowCart}
+      />
+      <CartButton onOpenCart={onShowCart} itemsQuantity={cartItemsQuantity} />
       <Container>
         <ActionButtonsWrapper>
           <IconButton icon={icons.FaChevronLeft} onClick={onGoBack} />

@@ -34,6 +34,7 @@ export const DetailsPage = () => {
   const [selectedQuantity, setSelectedQuantity] = useState<number>(1);
   const [imageHasLoaded, setImageHasLoaded] = useState<boolean>(false);
   const [showSizeInfo, setShowSizeInfo] = useState<boolean>(false);
+  const [showCart, setShowCart] = useState<boolean>(false);
   const { getProductById, isLoading: isFetchingProduct } = useProducts();
   const { productId } = useParams();
   const { state } = useLocation();
@@ -158,6 +159,8 @@ export const DetailsPage = () => {
           onDecreaseQuantity={decreaseQuantity}
           onShowSizeInfo={() => setShowSizeInfo((state) => !state)}
           showSizeInfo={showSizeInfo}
+          onShowCart={() => setShowCart((state) => !state)}
+          showCart={showCart}
           product={product}
           discountedPrice={discountedPrice}
         />
