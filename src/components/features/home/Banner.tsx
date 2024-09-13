@@ -49,7 +49,7 @@ const BannerContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  /* min-height: 200px; */
+  min-height: 195px;
   transform: translateY(-0.5rem);
   box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.25);
   img {
