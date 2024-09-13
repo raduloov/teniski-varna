@@ -245,7 +245,7 @@ export const defaultImageDetails: ImageDetails = {
   }
 };
 
-export const supportedImageTypes = ['image/jpeg'];
+export const supportedImageTypes = ['image/jpeg', 'image/png'];
 
 export const availableTShirtColors = [
   TShirtColor.WHITE,

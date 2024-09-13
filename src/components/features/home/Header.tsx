@@ -110,10 +110,12 @@ const HeaderContainer = styled.div<{ height: number }>`
   display: flex;
   gap: 1.5rem;
   flex-direction: column;
-  border-bottom-left-radius: 2rem;
-  border-bottom-right-radius: 2rem;
-  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.15);
+  border-bottom-left-radius: 0.5rem;
+  border-bottom-right-radius: 0.5rem;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.25);
   height: ${({ height }) => (height ? height + 15 : 0) + 200}px;
+  z-index: 800;
+  background-color: ${Color.WHITE};
   svg:last-child {
     padding: 0;
     cursor: pointer;

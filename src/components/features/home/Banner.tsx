@@ -31,32 +31,29 @@ export const Banner = () => {
     getImage();
   }, []);
 
+  const navigateToBannerLink = () =>
+    bannerLink && window.open(bannerLink, '_self');
+
   return (
     <BannerContainer>
       {isLoading || !imageUrl ? (
         <ActivityIndicator size={75} color={Color.ACCENT} />
       ) : (
-        <a href={bannerLink ?? ''}>
-          <img src={imageUrl} />
-        </a>
+        <img src={imageUrl} onClick={navigateToBannerLink} />
       )}
     </BannerContainer>
   );
 };
 
 const BannerContainer = styled.div`
-  background-color: transparent;
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 200px;
-  background-color: ${Color.LIGHT_GRAY};
-  margin: 1.5rem;
-  border-radius: 45px/50px;
+  /* min-height: 200px; */
+  transform: translateY(-0.5rem);
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.25);
   img {
-    margin: auto;
     width: 100%;
     height: 100%;
-    border-radius: 45px/50px;
   }
 `;
