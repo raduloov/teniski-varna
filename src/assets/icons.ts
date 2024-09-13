@@ -23,8 +23,6 @@ import {
   BsChevronCompactDown
 } from 'react-icons/bs';
 import { FcLike } from 'react-icons/fc';
-import { SlUser, SlUserFemale } from 'react-icons/sl';
-import { TbMoodKid } from 'react-icons/tb';
 
 export const icons = {
   MdPolicy,
@@ -46,8 +44,5 @@ export const icons = {
   BsChevronCompactDown,
   MdPermContactCalendar,
   FaEdit,
-  FaCheck,
-  SlUser,
-  SlUserFemale,
-  TbMoodKid
+  FaCheck
 };

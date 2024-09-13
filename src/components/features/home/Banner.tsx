@@ -10,6 +10,7 @@ export const Banner = () => {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [bannerLink, setBannerLink] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [startAnimation, setStartAnimation] = useState<boolean>(false);
 
   const getImage = async () => {
     const imageRef = ref(storage, `bannerImage.jpeg`);
@@ -31,11 +32,19 @@ export const Banner = () => {
     getImage();
   }, []);
 
+  useEffect(() => {
+    if (!isLoading) {
+      setTimeout(() => {
+        setStartAnimation(true);
+      }, 1500);
+    }
+  }, [isLoading]);
+
   const navigateToBannerLink = () =>
     bannerLink && window.open(bannerLink, '_self');
 
   return (
-    <BannerContainer>
+    <BannerContainer startAnimation={startAnimation}>
       {isLoading || !imageUrl ? (
         <ActivityIndicator size={75} color={Color.ACCENT} />
       ) : (
@@ -45,7 +54,7 @@ export const Banner = () => {
   );
 };
 
-const BannerContainer = styled.div`
+const BannerContainer = styled.div<{ startAnimation: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -55,5 +64,17 @@ const BannerContainer = styled.div`
   img {
     width: 100%;
     height: 100%;
+    ${({ startAnimation }) => startAnimation && `animation: slideleft 1.5s;`}
+  }
+  @keyframes slideleft {
+    0% {
+      transform: translateX(0);
+    }
+    50% {
+      transform: translateX(-50px);
+    }
+    100% {
+      transform: translateX(0);
+    }
   }
 `;

@@ -18,6 +18,7 @@ export const useAuth = () => {
 
       const formattedEmail = email.toLowerCase().trim();
       await signInWithEmailAndPassword(auth, formattedEmail, password);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       setError(err.message);
     } finally {
