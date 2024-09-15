@@ -84,6 +84,11 @@ export const Header = ({ setTopNavigationShow, topNavigationShow }: Props) => {
 
 const LogoButton = styled.div`
   cursor: pointer;
+  svg {
+    cursor: pointer;
+    width: 4.5rem;
+    height: 4.5rem;
+  }
 `;
 
 const HeaderContainer = styled.div<{ height: number }>`
@@ -103,6 +108,7 @@ const HeaderContainer = styled.div<{ height: number }>`
     cursor: pointer;
   }
 `;
+
 const ChevronContainer = styled.div<ChevronContainerProps>`
   position: absolute;
   left: 50%;
@@ -118,9 +124,4 @@ const LogoContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  svg {
-    cursor: pointer;
-    width: 4.5rem;
-    height: 4.5rem;
-  }
 `;

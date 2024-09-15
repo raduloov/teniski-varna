@@ -17,7 +17,7 @@ export const CartButton = ({
   return (
     <FixedCartWrapper isInBounds={isInBounds}>
       <CartContainer onClick={onOpenCart}>
-        <icons.MdOutlineShoppingBag color={Color.GRAY} />
+        <icons.MdOutlineShoppingBag color={Color.GRAY} size={25} />
         <CartItemTick>{itemsQuantity}</CartItemTick>
       </CartContainer>
     </FixedCartWrapper>
