@@ -1,29 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Input } from '../../common/Input';
-import { ReactComponent as Logo } from '../../../assets/images/logo.svg';
 import { icons } from '../../../assets/icons';
 import { Color } from '../../../assets/constants';
 import { Cart } from '../cart/Cart';
 import { useAppSelector } from '../../../hooks/useRedux';
-import { HeaderLinks } from './HeaderLinks';
-import { useLocation, useNavigate } from 'react-router';
+import { useLocation } from 'react-router';
 import { CartButton } from '../cart/CartButton';
 import { useElementOnScreen } from '../../../hooks/useElementOnScreen';
 
-interface Props {
-  topNavigationShow: boolean;
-  setTopNavigationShow: React.Dispatch<React.SetStateAction<boolean>>;
-}
-interface ChevronContainerProps {
-  topNavigationShow: boolean;
-}
-
-export const Header = ({ setTopNavigationShow, topNavigationShow }: Props) => {
+export const Header = () => {
   const [showModal, setShowModal] = useState<boolean>(false);
-  const [headerContainerHeight, setHeaderContainerHeight] = useState<number>(0);
   const cartItems = useAppSelector((state) => state.cart);
-  const navigate = useNavigate();
   const { state } = useLocation();
   const { containerRef: fixedCartButtonRef, isVisible: cartIsVisible } =
     useElementOnScreen({
@@ -49,79 +37,67 @@ export const Header = ({ setTopNavigationShow, topNavigationShow }: Props) => {
   );
 
   return (
-    <HeaderContainer height={headerContainerHeight}>
+    <HeaderContainer>
       <Cart
         cartItems={cartItems}
         setShowModal={setShowModal}
         showModal={showModal}
       />
       <LogoContainer ref={fixedCartButtonRef}>
-        <LogoButton onClick={() => navigate('/')}>
-          <Logo />
-        </LogoButton>
-        <CartButton
-          onOpenCart={() => setShowModal(true)}
-          itemsQuantity={cartItemsQuantity}
-          isInBounds={cartIsVisible}
-        />
+        <MenuButtonWrapper>
+          <icons.HiOutlineMenu size={30} color={Color.GRAY} />
+        </MenuButtonWrapper>
+        <TitleWrapper>
+          <TitleLogo
+            src={require('../../../assets/images/logo-horizontal.png')}
+          />
+        </TitleWrapper>
+        <CartButtonWrapper>
+          <CartButton
+            onOpenCart={() => setShowModal(true)}
+            itemsQuantity={cartItemsQuantity}
+            isInBounds={cartIsVisible}
+          />
+        </CartButtonWrapper>
       </LogoContainer>
       <Input value={''} icon={icons.FaSearch} />
-      {topNavigationShow && (
-        <HeaderLinks
-          height={headerContainerHeight}
-          setHeaderContainerHeight={setHeaderContainerHeight}
-        />
-      )}
-      <ChevronContainer topNavigationShow={topNavigationShow}>
-        <icons.BsChevronCompactDown
-          color={Color.GRAY}
-          onClick={() => setTopNavigationShow(!topNavigationShow)}
-        />
-      </ChevronContainer>
     </HeaderContainer>
   );
 };
 
-const LogoButton = styled.div`
-  cursor: pointer;
-  svg {
-    cursor: pointer;
-    width: 4.5rem;
-    height: 4.5rem;
-  }
+const TitleWrapper = styled.div`
+  display: flex;
+  justify-content: center;
 `;
 
-const HeaderContainer = styled.div<{ height: number }>`
+const CartButtonWrapper = styled.div`
+  display: flex;
+  justify-content: flex-end;
+`;
+
+const MenuButtonWrapper = styled.div`
+  display: flex;
+  align-items: flex-end;
+`;
+
+const TitleLogo = styled.img`
+  width: 10rem;
+`;
+
+const HeaderContainer = styled.div`
   position: relative;
-  padding: 1.5rem;
+  padding: 1rem 1.5rem 1rem 1.5rem;
   display: flex;
   gap: 1.5rem;
   flex-direction: column;
   border-bottom-left-radius: 0.5rem;
   border-bottom-right-radius: 0.5rem;
   box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.25);
-  height: ${({ height }) => (height ? height + 15 : 0) + 200}px;
   z-index: 800;
   background-color: ${Color.WHITE};
-  svg:last-child {
-    padding: 0;
-    cursor: pointer;
-  }
-`;
-
-const ChevronContainer = styled.div<ChevronContainerProps>`
-  position: absolute;
-  left: 50%;
-  transform: translate(-50%, 0);
-  bottom: 0rem;
-  svg {
-    cursor: pointer;
-    ${(props) => props.topNavigationShow && 'transform: rotate(180deg);'}
-  }
 `;
 
 const LogoContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  display: grid;
+  grid-template-columns: 1fr 3fr 1fr;
 `;

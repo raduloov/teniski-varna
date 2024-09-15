@@ -24,6 +24,7 @@ import {
   BsChevronCompactDown
 } from 'react-icons/bs';
 import { FcLike } from 'react-icons/fc';
+import { HiOutlineMenu } from 'react-icons/hi';
 
 export const icons = {
   MdPolicy,
@@ -46,5 +47,6 @@ export const icons = {
   MdPermContactCalendar,
   FaEdit,
   FaCheck,
-  FaArrowUp
+  FaArrowUp,
+  HiOutlineMenu
 };

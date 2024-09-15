@@ -217,7 +217,7 @@ export const DetailsContainer = ({
       {showSizeInfo && (
         <Modal onClose={() => onShowSizeInfo()}>
           <SizeInfoWrapper>
-            <img src={require('../assets/images/sizeInfo.png')} />
+            <img src={require('../assets/images/size-info.png')} />
           </SizeInfoWrapper>
         </Modal>
       )}

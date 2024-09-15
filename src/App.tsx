@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
 import { AppRoutes } from './routes/routes';
@@ -8,19 +8,13 @@ import { excludeHeader } from './utils/excludeHeader';
 import styled from 'styled-components';
 
 export const App = () => {
-  const [topNavigationShow, setTopNavigationShow] = useState<boolean>(false);
   const location = useLocation();
   const currentPath = location.pathname;
 
   return (
     <>
       <StyledToast position={'top-center'} stacked />
-      {excludeHeader(currentPath) && (
-        <Header
-          setTopNavigationShow={setTopNavigationShow}
-          topNavigationShow={topNavigationShow}
-        />
-      )}
+      {excludeHeader(currentPath) && <Header />}
       <AppRoutes />
     </>
   );
