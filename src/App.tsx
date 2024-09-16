@@ -14,12 +14,14 @@ export const App = () => {
   const currentPath = location.pathname;
 
   return (
-    <>
-      <StyledToast position={'top-center'} stacked />
-      {excludeHeader(currentPath) && <Header />}
-      <AppRoutes />
+    <AppContainer>
+      <div>
+        <StyledToast position={'top-center'} stacked />
+        {excludeHeader(currentPath) && <Header />}
+        <AppRoutes />
+      </div>
       {excludeFooter(currentPath) && <Footer />}
-    </>
+    </AppContainer>
   );
 };
 
@@ -27,4 +29,11 @@ const StyledToast = styled(ToastContainer)`
   .Toastify__toast {
     border-radius: 30px;
   }
+`;
+
+const AppContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 100svh;
 `;

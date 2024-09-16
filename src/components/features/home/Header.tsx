@@ -5,7 +5,7 @@ import { icons } from '../../../assets/icons';
 import { Color } from '../../../assets/constants';
 import { Cart } from '../cart/Cart';
 import { useAppSelector } from '../../../hooks/useRedux';
-import { useLocation } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 import { CartButton } from '../cart/CartButton';
 import { useElementOnScreen } from '../../../hooks/useElementOnScreen';
 import { ReactComponent as Logo } from '../../../assets/images/logo-horizontal.svg';
@@ -13,6 +13,7 @@ import { ReactComponent as Logo } from '../../../assets/images/logo-horizontal.s
 export const Header = () => {
   const [showModal, setShowModal] = useState<boolean>(false);
   const cartItems = useAppSelector((state) => state.cart);
+  const navigate = useNavigate();
   const { state } = useLocation();
   const { containerRef: fixedCartButtonRef, isVisible: cartIsVisible } =
     useElementOnScreen({
@@ -48,7 +49,7 @@ export const Header = () => {
         <MenuButtonWrapper>
           <icons.HiOutlineMenu size={30} color={Color.GRAY} />
         </MenuButtonWrapper>
-        <TitleWrapper>
+        <TitleWrapper onClick={() => navigate('/')}>
           <Logo />
         </TitleWrapper>
         <CartButtonWrapper>

@@ -3,14 +3,33 @@ import styled from 'styled-components';
 import { Color } from '../../../assets/constants';
 import { ReactComponent as Logo } from '../../../assets/images/logo.svg';
 import { icons } from '../../../assets/icons';
+import { useNavigate } from 'react-router';
+
+const navigationItems = [
+  { name: 'Начало', path: '/' },
+  { name: 'Любими', path: '/favorites' },
+  { name: 'За нас', path: '/about' }
+];
+
+const NavigationItems = () => {
+  const navigate = useNavigate();
+
+  return (
+    <>
+      {navigationItems.map((item, index) => (
+        <NavigationItem onClick={() => navigate(item.path)} key={index}>
+          {item.name}
+        </NavigationItem>
+      ))}
+    </>
+  );
+};
 
 export const Footer = () => {
   return (
     <FooterWrapper>
       <NavigationWrapper>
-        <Text>Начало</Text>
-        <Text>Любими</Text>
-        <Text>За нас</Text>
+        <NavigationItems />
       </NavigationWrapper>
 
       <ContactWrapper>
@@ -106,6 +125,11 @@ const ContactWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+`;
+
+const NavigationItem = styled.p`
+  font-size: 14px;
+  cursor: pointer;
 `;
 
 const LogoWrapper = styled.div`
