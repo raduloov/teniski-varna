@@ -5,6 +5,13 @@ import { ReactComponent as Logo } from '../../../assets/images/logo.svg';
 import { icons } from '../../../assets/icons';
 import { useNavigate } from 'react-router';
 
+const socialMediaLinks = {
+  facebook: 'https://www.facebook.com/teniskitevarna',
+  tiktok: 'https://www.tiktok.com/@teniskivarna',
+  instagram: 'https://www.instagram.com/teniskivarna',
+  youtube: 'https://www.youtube.com/@teniskivarna'
+};
+
 const navigationItems = [
   { name: 'Начало', path: '/' },
   { name: 'Любими', path: '/favorites' },
@@ -26,6 +33,8 @@ const NavigationItems = () => {
 };
 
 export const Footer = () => {
+  const navigateToSocialMedia = (url: string) => window.open(url, '_blank');
+
   return (
     <FooterWrapper>
       <NavigationWrapper>
@@ -52,16 +61,24 @@ export const Footer = () => {
         </Contacts>
 
         <SocialMediaWrapper>
-          <SocialMediaIconWrapper>
+          <SocialMediaIconWrapper
+            onClick={() => navigateToSocialMedia(socialMediaLinks.facebook)}
+          >
             <icons.FaFacebookF size={20} color={Color.ACCENT} />
           </SocialMediaIconWrapper>
-          <SocialMediaIconWrapper>
+          <SocialMediaIconWrapper
+            onClick={() => navigateToSocialMedia(socialMediaLinks.tiktok)}
+          >
             <icons.FaTiktok size={20} color={Color.ACCENT} />
           </SocialMediaIconWrapper>
-          <SocialMediaIconWrapper>
+          <SocialMediaIconWrapper
+            onClick={() => navigateToSocialMedia(socialMediaLinks.instagram)}
+          >
             <icons.FaInstagram size={20} color={Color.ACCENT} />
           </SocialMediaIconWrapper>
-          <SocialMediaIconWrapper>
+          <SocialMediaIconWrapper
+            onClick={() => navigateToSocialMedia(socialMediaLinks.youtube)}
+          >
             <icons.FaYoutube size={20} color={Color.ACCENT} />
           </SocialMediaIconWrapper>
         </SocialMediaWrapper>
