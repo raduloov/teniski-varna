@@ -14,7 +14,14 @@ import {
   FaRegHeart,
   FaSignOutAlt,
   FaEdit,
-  FaCheck
+  FaCheck,
+  FaFacebookF,
+  FaTiktok,
+  FaInstagram,
+  FaYoutube,
+  FaPhone,
+  FaMapMarkerAlt,
+  FaAt
 } from 'react-icons/fa';
 import { RiCloseFill, RiInformationFill } from 'react-icons/ri';
 import {
@@ -48,5 +55,12 @@ export const icons = {
   FaEdit,
   FaCheck,
   FaArrowUp,
-  HiOutlineMenu
+  HiOutlineMenu,
+  FaFacebookF,
+  FaTiktok,
+  FaInstagram,
+  FaYoutube,
+  FaPhone,
+  FaMapMarkerAlt,
+  FaAt
 };

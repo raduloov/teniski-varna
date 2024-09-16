@@ -16,7 +16,6 @@ import { TShirtColor } from './adminPanel/utils';
 import { ActivityIndicator } from '../components/common/ActivityIndicator';
 import { translateTypeToBulgarian } from '../components/features/cart/utils';
 import { useNavigate } from 'react-router';
-import { RiInformationFill } from 'react-icons/ri';
 import { Modal } from '../components/common/Modal';
 import { Cart } from '../components/features/cart/Cart';
 import { CartButton } from '../components/features/cart/CartButton';
@@ -155,12 +154,9 @@ export const DetailsContainer = ({
               />
             )}
           </TilesWrapper>
-          <SizeWrapper>
+          <SizeWrapper onClick={onShowSizeInfo}>
             <SelectSizeTitle>Изберете размер</SelectSizeTitle>
-            <RiInformationFill
-              color={Color.DARK_GRAY}
-              onClick={() => onShowSizeInfo()}
-            />
+            <SizeChartButton src={require('../assets/images/size-chart.png')} />
           </SizeWrapper>
           <TilesWrapper>
             {selectedType === TShirtType.MEN && (
@@ -225,6 +221,11 @@ export const DetailsContainer = ({
   );
 };
 
+const SizeChartButton = styled.img`
+  cursor: pointer;
+  width: 40px;
+`;
+
 const SizeInfoWrapper = styled.div`
   display: flex;
   justify-content: center;
@@ -239,7 +240,7 @@ const SizeInfoWrapper = styled.div`
 const SizeWrapper = styled.div`
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 20px;
   margin-top: 15px;
 `;
 

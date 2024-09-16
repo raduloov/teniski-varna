@@ -8,6 +8,7 @@ import { useAppSelector } from '../../../hooks/useRedux';
 import { useLocation } from 'react-router';
 import { CartButton } from '../cart/CartButton';
 import { useElementOnScreen } from '../../../hooks/useElementOnScreen';
+import { ReactComponent as Logo } from '../../../assets/images/logo-horizontal.svg';
 
 export const Header = () => {
   const [showModal, setShowModal] = useState<boolean>(false);
@@ -48,9 +49,7 @@ export const Header = () => {
           <icons.HiOutlineMenu size={30} color={Color.GRAY} />
         </MenuButtonWrapper>
         <TitleWrapper>
-          <TitleLogo
-            src={require('../../../assets/images/logo-horizontal.png')}
-          />
+          <Logo />
         </TitleWrapper>
         <CartButtonWrapper>
           <CartButton
@@ -68,6 +67,9 @@ export const Header = () => {
 const TitleWrapper = styled.div`
   display: flex;
   justify-content: center;
+  svg {
+    width: 10rem;
+  }
 `;
 
 const CartButtonWrapper = styled.div`
@@ -78,10 +80,6 @@ const CartButtonWrapper = styled.div`
 const MenuButtonWrapper = styled.div`
   display: flex;
   align-items: flex-end;
-`;
-
-const TitleLogo = styled.img`
-  width: 10rem;
 `;
 
 const HeaderContainer = styled.div`
