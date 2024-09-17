@@ -66,9 +66,11 @@ const FixedButtonWrapper = styled.div<{
 
   @keyframes appear {
     from {
+      opacity: 0;
       transform: translateY(-10%) scale(1.2);
     }
     to {
+      opacity: 1;
       transform: translateY(0) scale(1);
     }
   }

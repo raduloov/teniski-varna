@@ -34,6 +34,8 @@ export const DetailsPage = () => {
   const [selectedQuantity, setSelectedQuantity] = useState<number>(1);
   const [imageHasLoaded, setImageHasLoaded] = useState<boolean>(false);
   const [showSizeInfo, setShowSizeInfo] = useState<boolean>(false);
+  const [showShippingInfo, setShowShippingInfo] = useState<boolean>(false);
+  const [showMaterialsInfo, setShowMaterialsInfo] = useState<boolean>(false);
   const [showCart, setShowCart] = useState<boolean>(false);
   const { getProductById, isLoading: isFetchingProduct } = useProducts();
   const { productId } = useParams();
@@ -132,6 +134,16 @@ export const DetailsPage = () => {
     return TShirtColor.WHITE;
   };
 
+  const onShowShippingInfo = () => {
+    setShowMaterialsInfo(false);
+    setShowShippingInfo((state) => !state);
+  };
+
+  const onShowMaterialsInfo = () => {
+    setShowShippingInfo(false);
+    setShowMaterialsInfo((state) => !state);
+  };
+
   if (isFetchingProduct || isFetchingDiscounts) {
     return (
       <ActivityIndicatorWrapper>
@@ -161,6 +173,10 @@ export const DetailsPage = () => {
           showSizeInfo={showSizeInfo}
           onShowCart={() => setShowCart((state) => !state)}
           showCart={showCart}
+          onShowShippingInfo={onShowShippingInfo}
+          showShippingInfo={showShippingInfo}
+          onShowMaterialsInfo={onShowMaterialsInfo}
+          showMaterialsInfo={showMaterialsInfo}
           product={product}
           discountedPrice={discountedPrice}
         />

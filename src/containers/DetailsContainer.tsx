@@ -19,6 +19,9 @@ import { useNavigate } from 'react-router';
 import { Modal } from '../components/common/Modal';
 import { Cart } from '../components/features/cart/Cart';
 import { CartButton } from '../components/features/cart/CartButton';
+import { Footer } from '../components/features/home/Footer';
+import { ReactComponent as ShippingButton } from '../assets/images/shipping.svg';
+import { ReactComponent as MaterialsButton } from '../assets/images/materials.svg';
 
 interface Props {
   product: Product;
@@ -38,6 +41,10 @@ interface Props {
   onDecreaseQuantity: () => void;
   onShowSizeInfo: () => void;
   showSizeInfo: boolean;
+  onShowShippingInfo: () => void;
+  showShippingInfo: boolean;
+  onShowMaterialsInfo: () => void;
+  showMaterialsInfo: boolean;
   onShowCart: () => void;
   showCart: boolean;
 }
@@ -60,6 +67,10 @@ export const DetailsContainer = ({
   showSizeInfo,
   onShowCart,
   showCart,
+  onShowShippingInfo,
+  showShippingInfo,
+  onShowMaterialsInfo,
+  showMaterialsInfo,
   product,
   discountedPrice
 }: Props) => {
@@ -123,113 +134,166 @@ export const DetailsContainer = ({
           />
         </ImageWrapper>
         <BottomSheetContainer>
-          <HeaderWrapper>
-            <TitleWrapper>
-              <Title>{product.title}</Title>
-              <Description>{product.description}</Description>
-            </TitleWrapper>
-            <RatingStars />
-          </HeaderWrapper>
+          <BottomSheetContent>
+            <HeaderWrapper>
+              <TitleWrapper>
+                <Title>{product.title}</Title>
+                <Description>{product.description}</Description>
+              </TitleWrapper>
+              <RatingStars />
+            </HeaderWrapper>
 
-          <SelectTitle>Изберете модел</SelectTitle>
-          <TypeSelector>
-            {tShirtTypes.map((type, index) => (
-              <TypeButton
-                onClick={() => onSelectType(type)}
-                selected={selectedType === type}
-                key={index}
-              >
-                {translateTypeToBulgarian(type)}
-              </TypeButton>
-            ))}
-          </TypeSelector>
+            <SelectTitle>Изберете модел</SelectTitle>
+            <TypeSelector>
+              {tShirtTypes.map((type, index) => (
+                <TypeButton
+                  onClick={() => onSelectType(type)}
+                  selected={selectedType === type}
+                  key={index}
+                >
+                  {translateTypeToBulgarian(type)}
+                </TypeButton>
+              ))}
+            </TypeSelector>
 
-          <SelectTitle>Изберете цвят</SelectTitle>
-          <TilesWrapper>
-            {selectedType && (
-              <ColorSelector
-                colors={product.images[selectedType]}
-                selectedColor={selectedColor}
-                onSelectColor={(color) => onSelectColor(color)}
-              />
-            )}
-          </TilesWrapper>
-          <SizeWrapper onClick={onShowSizeInfo}>
-            <SelectSizeTitle>Изберете размер</SelectSizeTitle>
-            <SizeChartButton src={require('../assets/images/size-chart.png')} />
-          </SizeWrapper>
-          <TilesWrapper>
-            {selectedType === TShirtType.MEN && (
-              <SizeSelector
-                availableSizes={product.sizes.men}
-                selectedSize={selectedSize}
-                onSelectSize={(size) => onSelectSize(size)}
-              />
-            )}
-            {selectedType === TShirtType.WOMEN && (
-              <SizeSelector
-                availableSizes={product.sizes.women}
-                selectedSize={selectedSize}
-                onSelectSize={(size) => onSelectSize(size)}
-              />
-            )}
-            {selectedType === TShirtType.KIDS && (
-              <SizeSelector
-                availableSizes={product.sizes.kids}
-                selectedSize={selectedSize}
-                onSelectSize={(size) => onSelectSize(size)}
-              />
-            )}
-            {selectedType === TShirtType.OVERSIZED && (
-              <SizeSelector
-                availableSizes={product.sizes.oversized}
-                selectedSize={selectedSize}
-                onSelectSize={(size) => onSelectSize(size)}
-              />
-            )}
-          </TilesWrapper>
-          <QuantityWrapper>
-            <QuantitySelector
-              quantity={selectedQuantity}
-              onIncreaseQuantity={onIncreaseQuantity}
-              onDecreaseQuantity={onDecreaseQuantity}
-            />
-          </QuantityWrapper>
-          <CtaWrapper>
-            <PriceWrapper>
-              <Price discounted={!!discountedPrice}>{product.price}лв</Price>
-              {discountedPrice && (
-                <DiscountedPrice>{discountedPrice}лв</DiscountedPrice>
+            <SelectTitle>Изберете цвят</SelectTitle>
+            <TilesWrapper>
+              {selectedType && (
+                <ColorSelector
+                  colors={product.images[selectedType]}
+                  selectedColor={selectedColor}
+                  onSelectColor={(color) => onSelectColor(color)}
+                />
               )}
-            </PriceWrapper>
-            <Button
-              label="Добави в количка"
-              size={ButtonSize.MEDIUM}
-              onClick={addToCartHandler}
-            />
-          </CtaWrapper>
+            </TilesWrapper>
+            <SizeWrapper onClick={onShowSizeInfo}>
+              <SelectSizeTitle>Изберете размер</SelectSizeTitle>
+              <SizeChartButton
+                src={require('../assets/images/size-chart.png')}
+              />
+            </SizeWrapper>
+            <TilesWrapper>
+              {selectedType === TShirtType.MEN && (
+                <SizeSelector
+                  availableSizes={product.sizes.men}
+                  selectedSize={selectedSize}
+                  onSelectSize={(size) => onSelectSize(size)}
+                />
+              )}
+              {selectedType === TShirtType.WOMEN && (
+                <SizeSelector
+                  availableSizes={product.sizes.women}
+                  selectedSize={selectedSize}
+                  onSelectSize={(size) => onSelectSize(size)}
+                />
+              )}
+              {selectedType === TShirtType.KIDS && (
+                <SizeSelector
+                  availableSizes={product.sizes.kids}
+                  selectedSize={selectedSize}
+                  onSelectSize={(size) => onSelectSize(size)}
+                />
+              )}
+              {selectedType === TShirtType.OVERSIZED && (
+                <SizeSelector
+                  availableSizes={product.sizes.oversized}
+                  selectedSize={selectedSize}
+                  onSelectSize={(size) => onSelectSize(size)}
+                />
+              )}
+            </TilesWrapper>
+            <QuantityWrapper>
+              <QuantitySelector
+                quantity={selectedQuantity}
+                onIncreaseQuantity={onIncreaseQuantity}
+                onDecreaseQuantity={onDecreaseQuantity}
+              />
+            </QuantityWrapper>
+            <CtaWrapper>
+              <PriceWrapper>
+                <Price discounted={!!discountedPrice}>{product.price}лв</Price>
+                {discountedPrice && (
+                  <DiscountedPrice>{discountedPrice}лв</DiscountedPrice>
+                )}
+              </PriceWrapper>
+              <Button
+                label="Добави в количка"
+                size={ButtonSize.MEDIUM}
+                onClick={addToCartHandler}
+              />
+            </CtaWrapper>
+          </BottomSheetContent>
+          <ShippingAndMaterialsWrapper>
+            <FullWidthButton onClick={() => onShowShippingInfo()}>
+              <ShippingButton />
+            </FullWidthButton>
+            <FullWidthButton onClick={() => onShowMaterialsInfo()}>
+              <MaterialsButton />
+            </FullWidthButton>
+          </ShippingAndMaterialsWrapper>
+          <Footer />
         </BottomSheetContainer>
       </Container>
       {showSizeInfo && (
         <Modal onClose={() => onShowSizeInfo()}>
-          <SizeInfoWrapper>
+          <InfoModalWrapper>
             <img src={require('../assets/images/size-info.png')} />
-          </SizeInfoWrapper>
+          </InfoModalWrapper>
+        </Modal>
+      )}
+      {showShippingInfo && (
+        <Modal onClose={() => onShowShippingInfo()}>
+          <InfoModalWrapper>
+            <h1>Shipping info</h1>
+            <p>Waiting for Tomi to provide copy</p>
+          </InfoModalWrapper>
+        </Modal>
+      )}
+      {showMaterialsInfo && (
+        <Modal onClose={() => onShowMaterialsInfo()}>
+          <InfoModalWrapper>
+            <h1>Materials info</h1>
+            <p>Waiting for Tomi to provide copy</p>
+          </InfoModalWrapper>
         </Modal>
       )}
     </>
   );
 };
 
+const FullWidthButton = styled.div`
+  width: 100%;
+  padding: 1rem;
+  cursor: pointer;
+  border-bottom: 2px solid ${Color.WHITE};
+  &:first-child {
+    border-right: 1px solid ${Color.WHITE};
+  }
+  &:last-child {
+    border-left: 1px solid ${Color.WHITE};
+  }
+  &:hover {
+    backdrop-filter: brightness(0.8);
+  }
+`;
+
+const ShippingAndMaterialsWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  background-color: ${Color.ACCENT};
+`;
+
 const SizeChartButton = styled.img`
   cursor: pointer;
   width: 40px;
 `;
 
-const SizeInfoWrapper = styled.div`
+const InfoModalWrapper = styled.div`
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+  padding: 0.5rem;
 
   img {
     max-width: 100%;
@@ -353,6 +417,10 @@ const Title = styled.p`
   font-weight: bold;
 `;
 
+const BottomSheetContent = styled.div`
+  padding: 1.5rem;
+`;
+
 const BottomSheetContainer = styled.div`
   position: absolute;
   top: 0;
@@ -362,7 +430,6 @@ const BottomSheetContainer = styled.div`
   border-top-left-radius: 45px;
   border-top-right-radius: 45px;
   background: ${Color.WHITE};
-  padding: 1.5rem;
   box-shadow: 0px -10px 20px -10px rgba(0, 0, 0, 0.75);
 `;
 
