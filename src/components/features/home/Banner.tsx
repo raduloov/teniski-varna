@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { getDownloadURL, ref } from 'firebase/storage';
 import { collection, getDocs } from '@firebase/firestore';
 import styled from 'styled-components';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/css';
 import { Color } from '../../../assets/constants';
 import { db, storage } from '../../../firebase/firebaseConfig';
 import { ActivityIndicator } from '../../common/ActivityIndicator';
@@ -44,28 +46,36 @@ export const Banner = () => {
     bannerLink && window.open(bannerLink, '_self');
 
   return (
-    <BannerContainer startAnimation={startAnimation}>
-      {isLoading || !imageUrl ? (
-        <ActivityIndicator size={75} color={Color.ACCENT} />
-      ) : (
-        <img src={imageUrl} onClick={navigateToBannerLink} />
-      )}
-    </BannerContainer>
+    <StyledSwiper
+      onSlideChange={() => console.log('slide change')}
+      // @ts-ignore
+      onSwiper={(swiper) => console.log(swiper)}
+      loop={true}
+    >
+      <SwiperSlide>
+        {isLoading || !imageUrl ? (
+          <ActivityIndicator size={75} color={Color.ACCENT} />
+        ) : (
+          <Image
+            src={imageUrl}
+            onClick={navigateToBannerLink}
+            startAnimation={startAnimation}
+          />
+        )}
+      </SwiperSlide>
+      <SwiperSlide>Slide 2</SwiperSlide>
+      <SwiperSlide>Slide 3</SwiperSlide>
+      <SwiperSlide>Slide 4</SwiperSlide>
+    </StyledSwiper>
   );
 };
 
-const BannerContainer = styled.div<{ startAnimation: boolean }>`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 195px;
-  transform: translateY(-0.5rem);
-  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.25);
-  img {
-    width: 100%;
-    height: 100%;
-    ${({ startAnimation }) => startAnimation && `animation: slideleft 1.5s;`}
-  }
+const Image = styled.img<{ startAnimation: boolean }>`
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  ${({ startAnimation }) => startAnimation && `animation: slideleft 1.5s;`}
+
   @keyframes slideleft {
     0% {
       transform: translateX(0);
@@ -77,4 +87,13 @@ const BannerContainer = styled.div<{ startAnimation: boolean }>`
       transform: translateX(0);
     }
   }
+`;
+
+const StyledSwiper = styled(Swiper)<{ startAnimation?: boolean }>`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 195px;
+  transform: translateY(-0.5rem);
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.25);
 `;
