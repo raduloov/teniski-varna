@@ -16,11 +16,7 @@ export const Header = () => {
   const navigate = useNavigate();
   const { state } = useLocation();
   const { containerRef: fixedCartButtonRef, isVisible: cartIsVisible } =
-    useElementOnScreen({
-      root: null,
-      rootMargin: '0px',
-      threshold: 0.3
-    });
+    useElementOnScreen({ threshold: 0.4 });
 
   useEffect(() => {
     // When user clicks on toast, navigate home with openCart in state

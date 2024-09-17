@@ -6,11 +6,19 @@ import { icons } from '../../../assets/icons';
 interface Props {
   onScrollToTop: () => void;
   showButton: boolean;
+  isFooterVisible: boolean;
 }
 
-export const ScrollToTopButton = ({ onScrollToTop, showButton }: Props) => {
+export const ScrollToTopButton = ({
+  onScrollToTop,
+  showButton,
+  isFooterVisible
+}: Props) => {
   return (
-    <FixedButtonWrapper isVisible={showButton}>
+    <FixedButtonWrapper
+      showButton={showButton}
+      isFooterVisible={isFooterVisible}
+    >
       <Button onClick={onScrollToTop}>
         <icons.FaArrowUp color={Color.GRAY} />
       </Button>
@@ -30,21 +38,31 @@ const Button = styled.div`
   cursor: pointer;
 `;
 
-const FixedButtonWrapper = styled.div<{ isVisible: boolean }>`
-  position: fixed;
+const FixedButtonWrapper = styled.div<{
+  showButton: boolean;
+  isFooterVisible: boolean;
+}>`
   z-index: 800;
   filter: drop-shadow(0px 2px 10px rgba(0, 0, 0, 0.15));
-  bottom: 3.5rem;
+  bottom: 2.5rem;
   right: 1.5rem;
-  ${({ isVisible }) =>
-    isVisible
+  ${({ showButton }) =>
+    showButton
       ? `
+        position: fixed;
         animation: appear 0.5s ease-out forwards;
       `
       : `
         bottom: 1.5rem;
         animation: dissapear 0.3s ease-in forwards;
     `}
+  ${({ isFooterVisible }) =>
+    isFooterVisible &&
+    `
+      position: absolute;
+      bottom: 0.5rem;
+    `}
+  
 
   @keyframes appear {
     from {

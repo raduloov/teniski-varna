@@ -19,11 +19,10 @@ export const HomeContainer = ({ products, isLoading }: Props) => {
   const [labels, setLabels] = useState<Label[]>([]);
   const [selectedLabel, setSelectedLabel] = useState<Label>(labels[0]);
   const { getLabels } = useLabels();
-  const { containerRef, isVisible } = useElementOnScreen({
-    root: null,
-    rootMargin: '0px',
-    threshold: 0.3
-  });
+  const { containerRef: topRef, isVisible: isHeaderVisible } =
+    useElementOnScreen();
+  const { containerRef: bottomRef, isVisible: isFooterVisible } =
+    useElementOnScreen();
 
   const setLabelsFromFirebase = async () => {
     const fetchedLabels = await getLabels();
@@ -40,7 +39,7 @@ export const HomeContainer = ({ products, isLoading }: Props) => {
 
   return (
     <>
-      <div ref={containerRef}></div>
+      <div ref={topRef}></div>
       <Banner />
       <HorizontalScroll
         labels={labels}
@@ -53,15 +52,27 @@ export const HomeContainer = ({ products, isLoading }: Props) => {
           <ProductList products={products} selectedLabel={selectedLabel} />
         )}
       </ProductListContainer>
-      <ScrollToTopButton onScrollToTop={scrollToTop} showButton={!isVisible} />
+      <div ref={bottomRef}></div>
+      <ScrollToTopButtonWrapper>
+        <ScrollToTopButton
+          onScrollToTop={scrollToTop}
+          showButton={!isHeaderVisible}
+          isFooterVisible={isFooterVisible}
+        />
+      </ScrollToTopButtonWrapper>
     </>
   );
 };
+
+const ScrollToTopButtonWrapper = styled.div`
+  position: relative;
+`;
 
 export const ProductListContainer = styled.div`
   z-index: 10;
   background-color: transparent;
   margin-top: 10px;
+  margin-bottom: 3rem;
   padding-left: 1.5rem;
   padding-right: 1.5rem;
   padding-bottom: 1.5rem;
