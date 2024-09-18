@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { Modal } from '../../common/Modal';
+import {
+  Modal,
+  ModalEnterAnimation,
+  ModalExitAnimation
+} from '../../common/Modal';
 import { Button } from '../../common/Button';
 import {
   CartProduct,
@@ -103,7 +107,13 @@ export const Cart = ({ setShowModal, showModal, cartItems }: Props) => {
   return (
     <>
       {showModal && (
-        <Modal onClose={() => setShowModal(false)} fullscreen backButton>
+        <Modal
+          onClose={() => setShowModal(false)}
+          enterAnimation={ModalEnterAnimation.SLIDE_DOWN}
+          exitAnimation={ModalExitAnimation.SLIDE_RIGHT}
+          fullscreen
+          backButton
+        >
           <Container>
             <CartHeader>Количка</CartHeader>
             {isLoading ? (

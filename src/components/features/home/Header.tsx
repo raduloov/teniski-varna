@@ -9,8 +9,10 @@ import { useLocation, useNavigate } from 'react-router';
 import { CartButton } from '../cart/CartButton';
 import { useElementOnScreen } from '../../../hooks/useElementOnScreen';
 import { ReactComponent as Logo } from '../../../assets/images/logo-horizontal.svg';
+import { Menu } from '../menu/Menu';
 
 export const Header = () => {
+  const [showMenu, setShowMenu] = useState<boolean>(false);
   const [showModal, setShowModal] = useState<boolean>(false);
   const cartItems = useAppSelector((state) => state.cart);
   const navigate = useNavigate();
@@ -41,9 +43,12 @@ export const Header = () => {
         setShowModal={setShowModal}
         showModal={showModal}
       />
+      <Menu showMenu={showMenu} setShowMenu={setShowMenu} />
       <LogoContainer ref={fixedCartButtonRef}>
         <MenuButtonWrapper>
-          <icons.HiOutlineMenu size={30} color={Color.GRAY} />
+          <MenuButton onClick={() => setShowMenu(true)}>
+            <icons.HiOutlineMenu color={Color.GRAY} size={25} />
+          </MenuButton>
         </MenuButtonWrapper>
         <TitleWrapper onClick={() => navigate('/')}>
           <Logo />
@@ -76,7 +81,21 @@ const CartButtonWrapper = styled.div`
 
 const MenuButtonWrapper = styled.div`
   display: flex;
-  align-items: flex-end;
+  cursor: pointer;
+`;
+
+const MenuButton = styled.div`
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem;
+  border-radius: 50%;
+  background-color: ${Color.WHITE};
+  width: 3.5rem;
+  height: 3.5rem;
+  cursor: pointer;
+  filter: drop-shadow(0px 2px 10px rgba(0, 0, 0, 0.15));
 `;
 
 const HeaderContainer = styled.div`

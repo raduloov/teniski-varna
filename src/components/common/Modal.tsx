@@ -1,8 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { icons } from '../../assets/icons';
 import { IconButton } from './IconButton';
+
+export enum ModalEnterAnimation {
+  SLIDE_DOWN = 'enter-slide-down',
+  SLIDE_RIGHT = 'enter-slide-right'
+}
+
+export enum ModalExitAnimation {
+  SLIDE_RIGHT = 'exit-slide-right',
+  SLIDE_LEFT = 'exit-slide-left'
+}
 
 const portalElement = document.getElementById('overlays') as HTMLElement;
 
@@ -10,6 +20,9 @@ interface Props {
   onClose: () => void;
   fullscreen?: boolean;
   backButton?: boolean;
+  enterAnimation?: ModalEnterAnimation;
+  exitAnimation?: ModalExitAnimation;
+  additionalStyles?: string;
   children?: React.ReactNode;
 }
 
@@ -22,12 +35,19 @@ export const Backdrop = ({ onClose, closing }: ContProps) => {
 export const ModalOverlay = ({
   children,
   onClose,
-  fullscreen,
   backButton,
-  closing
+  enterAnimation,
+  exitAnimation,
+  closing,
+  additionalStyles
 }: ContProps) => {
   return (
-    <ModalOverlayCont fullscreen={fullscreen} closing={closing}>
+    <ModalOverlayCont
+      closing={closing}
+      enterAnimation={enterAnimation ?? ModalEnterAnimation.SLIDE_DOWN}
+      exitAnimation={exitAnimation ?? ModalExitAnimation.SLIDE_RIGHT}
+      additionalStyles={additionalStyles}
+    >
       {backButton && (
         <BackButtonCont>
           <IconButton onClick={onClose} icon={icons.FaChevronLeft}></IconButton>
@@ -38,7 +58,14 @@ export const ModalOverlay = ({
   );
 };
 
-export const Modal = ({ children, onClose, fullscreen, backButton }: Props) => {
+export const Modal = ({
+  children,
+  onClose,
+  backButton,
+  enterAnimation,
+  exitAnimation,
+  additionalStyles
+}: Props) => {
   const [closing, setClosing] = useState(false);
 
   const handleClose = () => {
@@ -65,9 +92,11 @@ export const Modal = ({ children, onClose, fullscreen, backButton }: Props) => {
       {ReactDOM.createPortal(
         <ModalOverlay
           onClose={handleClose}
-          fullscreen={fullscreen}
           backButton={backButton}
           closing={closing}
+          enterAnimation={enterAnimation}
+          exitAnimation={exitAnimation}
+          additionalStyles={additionalStyles}
         >
           {children}
         </ModalOverlay>,
@@ -114,23 +143,29 @@ const BackDropCont = styled.div<{ closing: boolean }>`
   }
 `;
 
-const ModalOverlayCont = styled.div<{ fullscreen?: boolean; closing: boolean }>`
+const ModalOverlayCont = styled.div<{
+  additionalStyles?: string;
+  closing: boolean;
+  enterAnimation: ModalEnterAnimation;
+  exitAnimation: ModalExitAnimation;
+}>`
   position: fixed;
-  top: 40%;
-  left: 50%;
   z-index: 1000;
   background-color: white;
   border-radius: 4px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
   transition: all 0.5s ease-out;
-  animation: ${({ closing }) =>
+  animation: ${({ closing, enterAnimation, exitAnimation }) =>
     closing
-      ? 'slide-out 0.5s ease-out forwards'
-      : 'slide-in 0.5s ease-out forwards'};
-  transform: ${({ fullscreen }) =>
-    fullscreen ? `translateX(-50%)` : `translate(-50%, 100%)`};
+      ? `${exitAnimation} 0.5s ease-out forwards`
+      : `${enterAnimation} 0.5s ease-out forwards`};
 
-  @keyframes slide-in {
+  ${({ additionalStyles }) =>
+    css`
+      ${additionalStyles}
+    `}
+
+  @keyframes enter-slide-down {
     0% {
       top: -100%;
     }
@@ -139,21 +174,30 @@ const ModalOverlayCont = styled.div<{ fullscreen?: boolean; closing: boolean }>`
     }
   }
 
-  @keyframes slide-out {
+  @keyframes enter-slide-right {
     0% {
-      top: 0;
+      left: -100%;
     }
     100% {
-      top: 0;
-      left: 200%;
+      left: 0%;
     }
   }
 
-  // Media query for mobile devices
-  @media (max-width: 768px) {
-    width: ${({ fullscreen }) => (fullscreen ? '100%' : '95%')};
-    ${({ fullscreen }) => fullscreen && 'height: 100%;'}
-    top: 0;
-    left: 50%;
+  @keyframes exit-slide-left {
+    0% {
+      left: 0%;
+    }
+    100% {
+      left: -200%;
+    }
+  }
+
+  @keyframes exit-slide-right {
+    0% {
+      left: 0%;
+    }
+    100% {
+      left: 200%;
+    }
   }
 `;
