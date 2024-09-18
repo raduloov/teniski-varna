@@ -9,6 +9,7 @@ import { Banner, useBanners } from '../../../hooks/useBanners';
 
 export const BannerSlider = () => {
   const [banners, setBanners] = useState<Banner[]>([]);
+  const [imageHasLoaded, setImageHasLoaded] = useState<boolean>(false);
   const { getBanners, isFetchingBanners } = useBanners();
 
   const setBannersFromFirebase = async () => {
@@ -30,24 +31,39 @@ export const BannerSlider = () => {
     >
       {banners.map((banner) => (
         <SwiperSlide key={banner.id}>
-          {isFetchingBanners || !banner.imageUrl ? (
-            <ActivityIndicator size={75} color={Color.ACCENT} />
-          ) : (
+          <ImageWrapper>
+            {!imageHasLoaded ||
+              (isFetchingBanners && (
+                <ActivityIndicator size={75} color={Color.ACCENT} />
+              ))}
             <Image
               src={banner.imageUrl}
+              loaded={imageHasLoaded}
+              onLoad={() => {
+                setImageHasLoaded(true);
+              }}
               onClick={() => navigateToBannerLink(banner.redirectUrl)}
             />
-          )}
+          </ImageWrapper>
         </SwiperSlide>
       ))}
     </StyledSwiper>
   );
 };
 
-const Image = styled.img`
+const ImageWrapper = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const Image = styled.img<{ loaded: boolean }>`
   width: 100%;
   height: 100%;
   cursor: pointer;
+  ${({ loaded }) => !loaded && 'display: none;'}
 `;
 
 const StyledSwiper = styled(Swiper)`
