@@ -25,6 +25,7 @@ import { useDiscounts } from '../../../hooks/useDiscounts';
 import { ActivityIndicator } from '../../common/ActivityIndicator';
 import { Color } from '../../../assets/constants';
 import { ShippingData, useShipping } from '../../../hooks/useShipping';
+import { useModalClose } from '../../../hooks/useModalClose';
 
 interface Props {
   showModal: boolean;
@@ -42,6 +43,7 @@ export const Cart = ({ setShowModal, showModal, cartItems }: Props) => {
   const navigate = useNavigate();
   const { getDiscounts, isLoading: isFetchingDiscounts } = useDiscounts();
   const { getShipping, isLoading: isFetchingShipping } = useShipping();
+  const { closing, handleClose } = useModalClose(() => setShowModal(false));
 
   const setShippingFromFirebase = async () => {
     const shippingData = await getShipping();
@@ -108,9 +110,10 @@ export const Cart = ({ setShowModal, showModal, cartItems }: Props) => {
     <>
       {showModal && (
         <Modal
-          onClose={() => setShowModal(false)}
+          onClose={handleClose}
           enterAnimation={ModalEnterAnimation.SLIDE_DOWN}
           exitAnimation={ModalExitAnimation.SLIDE_RIGHT}
+          closing={closing}
           fullscreen
           backButton
         >

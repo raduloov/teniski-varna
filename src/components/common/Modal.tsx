@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import styled, { css } from 'styled-components';
 import { icons } from '../../assets/icons';
@@ -23,6 +23,7 @@ interface Props {
   enterAnimation?: ModalEnterAnimation;
   exitAnimation?: ModalExitAnimation;
   additionalStyles?: string;
+  closing: boolean;
   children?: React.ReactNode;
 }
 
@@ -64,17 +65,9 @@ export const Modal = ({
   backButton,
   enterAnimation,
   exitAnimation,
-  additionalStyles
+  additionalStyles,
+  closing
 }: Props) => {
-  const [closing, setClosing] = useState(false);
-
-  const handleClose = () => {
-    setClosing(true);
-    setTimeout(() => {
-      onClose();
-    }, 500);
-  };
-
   useEffect(() => {
     document.body.style.overflowY = 'hidden';
 
@@ -86,12 +79,12 @@ export const Modal = ({
   return (
     <React.Fragment>
       {ReactDOM.createPortal(
-        <Backdrop onClose={handleClose} closing={closing} />,
+        <Backdrop onClose={onClose} closing={closing} />,
         portalElement
       )}
       {ReactDOM.createPortal(
         <ModalOverlay
-          onClose={handleClose}
+          onClose={onClose}
           backButton={backButton}
           closing={closing}
           enterAnimation={enterAnimation}

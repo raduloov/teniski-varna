@@ -43,7 +43,7 @@ export const Header = () => {
         setShowModal={setShowModal}
         showModal={showModal}
       />
-      <Menu showMenu={showMenu} setShowMenu={setShowMenu} />
+      <Menu showMenu={showMenu} onCloseMenu={() => setShowMenu(false)} />
       <LogoContainer ref={fixedCartButtonRef}>
         <MenuButtonWrapper>
           <MenuButton onClick={() => setShowMenu(true)}>

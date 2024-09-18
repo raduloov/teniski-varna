@@ -22,6 +22,7 @@ import { CartButton } from '../components/features/cart/CartButton';
 import { Footer } from '../components/features/home/Footer';
 import { ReactComponent as ShippingButton } from '../assets/images/shipping.svg';
 import { ReactComponent as MaterialsButton } from '../assets/images/materials.svg';
+import { useModalClose } from '../hooks/useModalClose';
 
 interface Props {
   product: Product;
@@ -77,6 +78,15 @@ export const DetailsContainer = ({
   const cartItems = useAppSelector((state) => state.cart);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+
+  const { closing: sizeInfoClosing, handleClose: handleCloseSizeInfo } =
+    useModalClose(() => onShowSizeInfo());
+  const { closing: shippingInfoClosing, handleClose: handleCloseShippingInfo } =
+    useModalClose(() => onShowShippingInfo());
+  const {
+    closing: materialsInfoClosing,
+    handleClose: handleCloseMaterialsInfo
+  } = useModalClose(() => onShowMaterialsInfo());
 
   const cartItemsQuantity = cartItems.reduce(
     (total, item) => total + item.quantity,
@@ -235,14 +245,14 @@ export const DetailsContainer = ({
         </BottomSheetContainer>
       </Container>
       {showSizeInfo && (
-        <Modal onClose={() => onShowSizeInfo()}>
+        <Modal closing={sizeInfoClosing} onClose={handleCloseSizeInfo}>
           <InfoModalWrapper>
             <img src={require('../assets/images/size-info.png')} />
           </InfoModalWrapper>
         </Modal>
       )}
       {showShippingInfo && (
-        <Modal onClose={() => onShowShippingInfo()}>
+        <Modal closing={shippingInfoClosing} onClose={handleCloseShippingInfo}>
           <InfoModalWrapper>
             <h1>Shipping info</h1>
             <p>Waiting for Tomi to provide copy</p>
@@ -250,7 +260,10 @@ export const DetailsContainer = ({
         </Modal>
       )}
       {showMaterialsInfo && (
-        <Modal onClose={() => onShowMaterialsInfo()}>
+        <Modal
+          closing={materialsInfoClosing}
+          onClose={handleCloseMaterialsInfo}
+        >
           <InfoModalWrapper>
             <h1>Materials info</h1>
             <p>Waiting for Tomi to provide copy</p>

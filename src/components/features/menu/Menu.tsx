@@ -9,32 +9,81 @@ import styled from 'styled-components';
 import { icons } from '../../../assets/icons';
 import { Color } from '../../../assets/constants';
 import { Link, useLocation } from 'react-router-dom';
+import { useModalClose } from '../../../hooks/useModalClose';
+
+const pages = [
+  {
+    name: 'Начало',
+    icon: icons.FaHome,
+    path: '/'
+  },
+  {
+    name: 'Любими',
+    icon: icons.FaHeart,
+    path: '/favorites'
+  },
+  {
+    name: 'Контакти',
+    icon: icons.FaPhone,
+    path: '/contact'
+  },
+  {
+    name: 'За нас',
+    icon: icons.RiInformationFill,
+    path: '/about'
+  },
+  {
+    name: 'FAQ',
+    icon: icons.FaQuestionCircle,
+    path: '/faq'
+  }
+];
 
 interface Props {
   showMenu: boolean;
-  setShowMenu: (showMenu: boolean) => void;
+  onCloseMenu: () => void;
 }
 
-export const Menu = ({ showMenu, setShowMenu }: Props) => {
-  // enum Page {
-  //   HOME = '/',
-  //   FAVORITES = '/favorites',
-  //   CONTACT = '/contact',
-  //   ABOUT = '/about',
-  //   FAQ = '/faq'
-  // }
+interface MenuLinkProps {
+  currentPage: string;
+  onClick: () => void;
+}
+
+const MenuLinks = ({ currentPage, onClick }: MenuLinkProps) => {
+  return (
+    <NavigationContainer>
+      {pages.map((page) => (
+        <StyledLink
+          currentPage={currentPage === page.path}
+          to={page.path}
+          onClick={onClick}
+          key={page.path}
+        >
+          <page.icon
+            color={currentPage === page.path ? Color.WHITE : Color.DARK_GRAY}
+            size={25}
+          />
+          {page.name}
+        </StyledLink>
+      ))}
+    </NavigationContainer>
+  );
+};
+
+export const Menu = ({ showMenu, onCloseMenu }: Props) => {
+  const { closing, handleClose } = useModalClose(onCloseMenu);
   const location = useLocation();
   const currentPage = location.pathname;
-  console.log(currentPage === '/favorites');
 
   return (
     <>
       {showMenu && (
         <Modal
-          onClose={() => setShowMenu(false)}
+          onClose={handleClose}
           enterAnimation={ModalEnterAnimation.SLIDE_RIGHT}
           exitAnimation={ModalExitAnimation.SLIDE_LEFT}
           backButton
+          closing={closing}
           additionalStyles={`
             width: 65%;
             height: 100%;
@@ -42,55 +91,7 @@ export const Menu = ({ showMenu, setShowMenu }: Props) => {
         >
           <MenuContainer>
             <StyledLogo />
-            <NavigationContainer>
-              <StyledLink
-                to={'/'}
-                onClick={() => setShowMenu(false)}
-                currentPage={currentPage === '/'}
-              >
-                <icons.FaHome
-                  color={currentPage === '/' ? Color.WHITE : Color.DARK_GRAY}
-                  size={25}
-                />
-                Начало
-              </StyledLink>
-              <StyledLink
-                to={'/favorites'}
-                currentPage={currentPage === '/favorites'}
-              >
-                <icons.FaHeart
-                  color={
-                    currentPage === '/favorites' ? Color.WHITE : Color.DARK_GRAY
-                  }
-                />
-                Любими
-              </StyledLink>
-              <StyledLink
-                to={'/contact'}
-                currentPage={currentPage === '/contact'}
-              >
-                <icons.FaPhone
-                  color={
-                    currentPage === '/contact' ? Color.WHITE : Color.DARK_GRAY
-                  }
-                />
-                Контакти
-              </StyledLink>
-              <StyledLink to={'/about'} currentPage={currentPage === '/about'}>
-                <icons.RiInformationFill
-                  color={
-                    currentPage === '/about' ? Color.WHITE : Color.DARK_GRAY
-                  }
-                />
-                За нас
-              </StyledLink>
-              <StyledLink to={'/faq'} currentPage={currentPage === '/faq'}>
-                <icons.FaQuestionCircle
-                  color={currentPage === '/faq' ? Color.WHITE : Color.DARK_GRAY}
-                />
-                FAQ
-              </StyledLink>
-            </NavigationContainer>
+            <MenuLinks currentPage={currentPage} onClick={handleClose} />
           </MenuContainer>
         </Modal>
       )}
