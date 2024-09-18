@@ -1,79 +1,219 @@
 import React, { useEffect, useState } from 'react';
-import { ref, uploadBytes } from 'firebase/storage';
 import { toast } from 'react-toastify';
 import styled from 'styled-components';
 import { Color } from '../../assets/constants';
-import { Button } from '../../components/common/Button';
-import { ImageInput } from '../../components/common/ImageInput';
-import { db, storage } from '../../firebase/firebaseConfig';
-import { supportedImageTypes } from './utils';
 import { Input } from '../../components/common/Input';
-import { collection, doc, getDocs, updateDoc } from '@firebase/firestore';
+import { Button } from '../../components/common/Button';
+import {
+  addDoc,
+  setDoc,
+  collection,
+  deleteDoc,
+  doc
+} from '@firebase/firestore';
+import { db, storage } from '../../firebase/firebaseConfig';
+import { ImageInput } from '../../components/common/ImageInput';
+import { supportedImageTypes } from './utils';
+import { Banner, useBanners } from '../../hooks/useBanners';
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+import { v4 as uuid4 } from 'uuid';
+import { EdittableAndSelectableItems } from '../../components/common/EdittableAndSelectableItems';
 
 export const UpdateBannerImageContainer = () => {
-  const [image, setImage] = useState<File | null>(null);
+  const [banners, setBanners] = useState<Banner[]>([]);
+  const [image, setImage] = useState<File>();
   const [bannerLink, setBannerLink] = useState<string>('');
+  const [newBannerIndex, setNewBannerIndex] = useState<number>(0);
+  const [bannerIdToEdit, setBannerIdToEdit] = useState<string | null>(null);
+  const [isDeletingBanner, setIsDeletingBanner] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { getBanners, isFetchingBanners } = useBanners();
 
-  const getBannerLink = async () => {
-    const bannerLinkRef = collection(db, 'bannerLink');
-    const bannerLink = await getDocs(bannerLinkRef);
-
-    setBannerLink(bannerLink.docs[0].data().bannerLink);
+  const setLabelsFromFirebase = async () => {
+    const fetchedBanners = await getBanners();
+    setBanners(fetchedBanners);
   };
 
   useEffect(() => {
-    getBannerLink();
+    setLabelsFromFirebase();
   }, []);
 
-  const updateBannerImage = async () => {
+  const replaceBannersInFirebase = async (
+    currentBanners: Banner[],
+    newBanners: Banner[]
+  ) => {
+    setIsLoading(true);
+
+    // Delete all current banners and add the rearranged ones
+    // Not the most efficient way to do this, but it's the simplest
+    try {
+      for await (const banner of currentBanners) {
+        await deleteDoc(doc(db, 'banners', banner.id));
+      }
+      for await (const banner of newBanners) {
+        // Keep the same ID if label already exists
+        if (banner.id) {
+          await setDoc(doc(db, 'banners', banner.id), banner);
+        } else {
+          await addDoc(collection(db, 'banners'), banner);
+        }
+      }
+
+      toast.success('🎉 Labels updated successfully!');
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (e: any) {
+      setIsLoading(false);
+      return toast.error(`💥 ${e.message}`);
+    } finally {
+      setLabelsFromFirebase();
+      setIsLoading(false);
+    }
+  };
+
+  const uploadImage = async (image: File) => {
+    const bannerId = uuid4();
+    const storageRef = ref(storage, `bannerImages/${bannerId}`);
+    const snapshot = await uploadBytes(storageRef, image as File);
+    const imageUrl = await getDownloadURL(snapshot.ref);
+
+    return { bannerId, imageUrl };
+  };
+
+  const handleAddNewBanner = async () => {
     if (!image) {
       return;
     }
 
     setIsLoading(true);
 
-    const storageRef = ref(storage, `bannerImage.jpeg`);
+    const { bannerId, imageUrl } = await uploadImage(image);
+
+    const newBanner = {
+      id: bannerId,
+      name: image.name,
+      imageUrl: '',
+      redirectUrl: bannerLink,
+      index: newBannerIndex
+    };
+
+    const newBanners: Banner[] = [];
+
+    newBanner.imageUrl = imageUrl;
+
+    // if banner with the same index exists, increment all labels with index >= newLabelIndex
+    if (banners.some((banner) => banner.index === newBannerIndex)) {
+      banners.forEach((banner) => {
+        if (banner.index >= newBannerIndex) {
+          newBanners.push({ ...banner, index: banner.index + 1 });
+        } else {
+          newBanners.push(banner);
+        }
+      });
+      newBanners.push(newBanner as Banner);
+    } else {
+      newBanners.push(...banners, newBanner as Banner);
+    }
+
+    await replaceBannersInFirebase(banners, newBanners);
+    resetForm();
+  };
+
+  const handleEditExistingLabel = async () => {
+    const bannerToEdit = banners.find((label) => label.id === bannerIdToEdit);
+    if (!bannerToEdit) {
+      resetForm();
+      return toast.error(
+        `Cannot find existing banner with ID: ${bannerIdToEdit}`
+      );
+    }
+    if (
+      newBannerIndex === bannerToEdit.index &&
+      bannerLink === bannerToEdit.redirectUrl
+    ) {
+      resetForm();
+      return toast.info(
+        `No changes made to exising banner: ${bannerToEdit.name}`
+      );
+    }
+
+    bannerToEdit.name = image ? image.name : bannerToEdit.name;
+    bannerToEdit.index =
+      newBannerIndex > banners.length - 1 ? banners.length - 1 : newBannerIndex;
+    bannerToEdit.redirectUrl = bannerLink;
+
+    if (image) {
+      const { imageUrl } = await uploadImage(image);
+      bannerToEdit.imageUrl = imageUrl;
+    }
+
+    const newBanners: Banner[] = [];
+    banners.forEach((banner) => {
+      if (banner.id !== bannerIdToEdit) {
+        if (banner.index >= newBannerIndex) {
+          newBanners.push({ ...banner, index: banner.index + 1 });
+        } else if (banner.index < newBannerIndex && banner.index !== 0) {
+          newBanners.push({ ...banner, index: banner.index - 1 });
+        } else {
+          newBanners.push(banner);
+        }
+      }
+    });
+    newBanners.push(bannerToEdit);
+
+    await replaceBannersInFirebase(banners, newBanners);
+    resetForm();
+  };
+
+  const handleDeleteBanner = async (bannerId: string) => {
+    setIsDeletingBanner(true);
+
     try {
-      await uploadBytes(storageRef, image);
-      setImage(null);
+      await deleteDoc(doc(db, 'banners', bannerId));
+      // TODO: Remove image from storage
+
+      toast.success('🎉 Banner deleted successfully!');
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
+      setIsDeletingBanner(false);
       return toast.error(`💥 ${e.message}`);
     } finally {
-      setIsLoading(false);
-      toast.success('🎉 Banner image updated successfully!');
+      setLabelsFromFirebase();
+      setIsDeletingBanner(false);
+      resetForm();
     }
   };
 
-  const updateBannerLink = async () => {
-    if (!bannerLink) {
-      return toast.error('💥 Please add a banner link to update.');
-    }
-
-    setIsLoading(true);
-
-    try {
-      await updateDoc(doc(db, 'bannerLink', '1'), { bannerLink });
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (e: any) {
-      return toast.error(`💥 ${e.message}`);
-    } finally {
-      setIsLoading(false);
-      toast.success('🎉 Banner link updated successfully!');
-    }
+  const handleStartEditingBanner = (banner: Banner) => {
+    setBannerIdToEdit(banner.id);
+    setBannerLink(banner.redirectUrl);
+    setNewBannerIndex(banner.index);
   };
 
-  const updateBanner = () => {
-    updateBannerImage();
-    updateBannerLink();
+  const resetForm = () => {
+    setImage(undefined);
+    setBannerIdToEdit(null);
+    setNewBannerIndex(0);
+    setBannerLink('');
+    setIsLoading(false);
   };
+
+  const handleActionButtonFunction = !bannerIdToEdit
+    ? handleAddNewBanner
+    : handleEditExistingLabel;
+
+  const actionButtonLabel = bannerIdToEdit ? 'Edit banner' : 'Add banner';
 
   return (
     <Wrapper>
-      <Title>Change banner image</Title>
+      <Text>Banner images</Text>
+      <EdittableAndSelectableItems
+        items={banners}
+        isFetchingItems={isFetchingBanners}
+        // @ts-ignore
+        handleStartEditingItem={handleStartEditingBanner}
+      />
+      <Text>{actionButtonLabel}</Text>
       <InputContainer>
-        <Text>Banner image</Text>
         <ImageInput
           fileName={image?.name}
           supportedTypes={supportedImageTypes}
@@ -81,19 +221,46 @@ export const UpdateBannerImageContainer = () => {
             e.target.files && setImage(e.target.files[0]);
           }}
         />
-        <Text>Banner link</Text>
-        <Input
-          value={bannerLink}
-          placeholder={'Banner link...'}
-          onChange={(e) => setBannerLink(e.target.value)}
-        />
+        <LinkAndIndexContainer>
+          <LinkInputWrapper>
+            <Input
+              value={bannerLink}
+              placeholder={'Banner link...'}
+              onChange={(e) => setBannerLink(e.target.value)}
+            />
+          </LinkInputWrapper>
+          <IndexInputWrapper>
+            <Input
+              value={newBannerIndex}
+              placeholder={'Index...'}
+              type={'number'}
+              min={0}
+              onChange={(e) => {
+                // TODO: Currently working but should be able to delete the initial 0, making it possible to write 1 instead of 01
+                setNewBannerIndex(Number(e.target.value));
+              }}
+            />
+          </IndexInputWrapper>
+        </LinkAndIndexContainer>
       </InputContainer>
       <ButtonContainer>
         <Button
-          label={'Update banner'}
+          label={actionButtonLabel}
+          disabled={!bannerIdToEdit && image === undefined}
           loading={isLoading}
-          onClick={updateBanner}
+          onClick={handleActionButtonFunction}
         />
+        {bannerIdToEdit && (
+          <Button
+            label={'Delete banner'}
+            backgroundColor={Color.RED}
+            loading={isDeletingBanner}
+            onClick={() => handleDeleteBanner(bannerIdToEdit)}
+          />
+        )}
+        {bannerIdToEdit && (
+          <Button label={'Stop editing'} onClick={resetForm} />
+        )}
       </ButtonContainer>
     </Wrapper>
   );
@@ -107,9 +274,7 @@ const ButtonContainer = styled.div`
 `;
 
 const Text = styled.p`
-  font-size: 20px;
-  font-weight: bold;
-  margin-left: 10px;
+  font-size: 24px;
   color: ${Color.WHITE};
 `;
 
@@ -120,9 +285,17 @@ const InputContainer = styled.div`
   margin: 10px 0 10px 0;
 `;
 
-const Title = styled.p`
-  font-size: 24px;
-  color: ${Color.WHITE};
+const LinkInputWrapper = styled.div`
+  flex: 3;
+`;
+
+const IndexInputWrapper = styled.div`
+  flex: 1;
+`;
+
+const LinkAndIndexContainer = styled.div`
+  display: flex;
+  gap: 5px;
 `;
 
 const Wrapper = styled.div`

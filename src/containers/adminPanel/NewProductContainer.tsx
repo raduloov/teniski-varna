@@ -27,7 +27,7 @@ import {
   mapSizeToString
 } from './utils';
 import { Label, useLabels } from '../../hooks/useLabels';
-import { LabelsContainer } from '../../components/features/labels/LabelsContainer';
+import { EdittableAndSelectableItems } from '../../components/common/EdittableAndSelectableItems';
 import { ColorTile } from '../../components/common/ColorTile';
 
 export const NewProductContainer = () => {
@@ -329,14 +329,14 @@ export const NewProductContainer = () => {
       </SizesWrapper>
       <InputContainer>
         <Text>Labels</Text>
-        <LabelsContainer
-          labels={labels}
-          selectedLabelIds={selectedLabelIds}
-          handleSelectLabel={(labelId) =>
+        <EdittableAndSelectableItems
+          items={labels}
+          selectedItemIds={selectedLabelIds}
+          handleSelectItem={(labelId) =>
             selectLabelIds(labelId, selectedLabelIds, setSelectedLabelIds)
           }
+          isFetchingItems={isFetchingLabels}
           selective
-          isFetchingLabels={isFetchingLabels}
         />
       </InputContainer>
       <ButtonContainer>

@@ -16,7 +16,7 @@ import {
 import { db } from '../../firebase/firebaseConfig';
 import { ActivityIndicator } from '../../components/common/ActivityIndicator';
 import { Label, useLabels } from '../../hooks/useLabels';
-import { LabelsContainer } from '../../components/features/labels/LabelsContainer';
+import { EdittableAndSelectableItems } from '../../components/common/EdittableAndSelectableItems';
 import { Discount, DiscountType, useDiscounts } from '../../hooks/useDiscounts';
 import { selectLabelIds } from './utils';
 
@@ -353,14 +353,14 @@ export const DiscountsMenuContainer = () => {
       {selectedOption === DiscountType.STANDARD && (
         <LabelsWrapper>
           <SmallText>Choose labels</SmallText>
-          <LabelsContainer
-            labels={labels}
-            isFetchingLabels={isFetchingLabels}
-            selective={true}
-            selectedLabelIds={selectedLabelIds}
-            handleSelectLabel={(labelId) =>
+          <EdittableAndSelectableItems
+            items={labels}
+            selectedItemIds={selectedLabelIds}
+            handleSelectItem={(labelId) =>
               selectLabelIds(labelId, selectedLabelIds, setSelectedLabelIds)
             }
+            isFetchingItems={isFetchingLabels}
+            selective
           />
         </LabelsWrapper>
       )}

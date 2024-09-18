@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import styled from 'styled-components';
-import { LabelsContainer as LabelsWrapper } from '../../components/features/labels/LabelsContainer';
+import { EdittableAndSelectableItems } from '../../components/common/EdittableAndSelectableItems';
 import { Color } from '../../assets/constants';
 import { Input } from '../../components/common/Input';
 import { Button } from '../../components/common/Button';
@@ -200,10 +200,10 @@ export const LabelsContainer = () => {
   return (
     <Wrapper>
       <Text>Labels</Text>
-      <LabelsWrapper
-        labels={labels}
-        isFetchingLabels={isFetchingLabels}
-        handleStartEditingLabel={handleStartEditingLabel}
+      <EdittableAndSelectableItems
+        items={labels}
+        isFetchingItems={isFetchingLabels}
+        handleStartEditingItem={handleStartEditingLabel}
       />
       <Text>{actionButtonLabel}</Text>
       <InputContainer>

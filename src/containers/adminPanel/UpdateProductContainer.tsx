@@ -34,7 +34,7 @@ import {
   supportedImageTypes
 } from './utils';
 import { ActivityIndicator } from '../../components/common/ActivityIndicator';
-import { LabelsContainer } from '../../components/features/labels/LabelsContainer';
+import { EdittableAndSelectableItems } from '../../components/common/EdittableAndSelectableItems';
 import { Label, useLabels } from '../../hooks/useLabels';
 import { ColorTile } from '../../components/common/ColorTile';
 
@@ -409,14 +409,14 @@ export const UpdateProductContainer = ({
           </SizesWrapper>
           <InputContainer>
             <Text>Labels</Text>
-            <LabelsContainer
-              labels={labels}
-              selectedLabelIds={selectedLabelIds}
-              handleSelectLabel={(labelId) =>
+            <EdittableAndSelectableItems
+              items={labels}
+              selectedItemIds={selectedLabelIds}
+              handleSelectItem={(labelId) =>
                 selectLabelIds(labelId, selectedLabelIds, setSelectedLabelIds)
               }
+              isFetchingItems={isFetchingLabels}
               selective
-              isFetchingLabels={isFetchingLabels}
             />
           </InputContainer>
           <ButtonContainer>

@@ -71,7 +71,7 @@ export const AdminPanelMenuContainer = () => {
               onClick={() => setShowDiscounts(true)}
             />
             <Button
-              label={'Update banner image'}
+              label={'Update banners'}
               onClick={() => setShowUpdateBannerImage(true)}
             />
             <Button

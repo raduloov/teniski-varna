@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Color } from '../assets/constants';
 import { ActivityIndicator } from '../components/common/ActivityIndicator';
-import { Banner } from '../components/features/home/Banner';
+import { BannerSlider } from '../components/features/home/BannerSlider';
 import { HorizontalScroll } from '../components/common/HorizontalScroll';
 import { ProductList } from '../components/features/home/ProductList';
 import { Product } from '../domain/models/ProductDTO';
@@ -40,7 +40,7 @@ export const HomeContainer = ({ products, isLoading }: Props) => {
   return (
     <>
       <div ref={topRef}></div>
-      <Banner />
+      <BannerSlider />
       <HorizontalScroll
         labels={labels}
         selected={selectedLabel}
