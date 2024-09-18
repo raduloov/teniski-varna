@@ -16,7 +16,14 @@ export const App = () => {
   return (
     <AppContainer>
       <div>
-        <StyledToast position={'top-center'} stacked />
+        <StyledToast
+          position={'top-center'}
+          autoClose={2000}
+          pauseOnHover={false}
+          pauseOnFocusLoss={false}
+          hideProgressBar={true}
+          stacked
+        />
         {excludeHeader(currentPath) && <Header />}
         <AppRoutes />
       </div>
