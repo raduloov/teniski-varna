@@ -1,5 +1,12 @@
 import { useState } from 'react';
-import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
+import {
+  collection,
+  getDocs,
+  doc,
+  getDoc,
+  query,
+  where
+} from 'firebase/firestore';
 import { db } from '../firebase/firebaseConfig';
 import { Product } from '../domain/models/ProductDTO';
 
@@ -35,5 +42,23 @@ export const useProducts = () => {
     }
   };
 
-  return { getAllProducts, getProductById, isLoading };
+  const queryProducts = async (searchTerm: string) => {
+    setIsLoading(true);
+
+    const q = query(
+      collection(db, 'products'),
+      where('title', '>=', searchTerm),
+      where('title', '<=', searchTerm + '\uf8ff')
+    );
+    const data = await getDocs(q);
+    const products = data.docs.map((doc) => ({
+      ...doc.data(),
+      id: doc.id
+    })) as Product[];
+
+    setIsLoading(false);
+    return products;
+  };
+
+  return { getAllProducts, getProductById, queryProducts, isLoading };
 };

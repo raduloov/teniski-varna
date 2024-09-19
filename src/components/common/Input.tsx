@@ -9,6 +9,8 @@ interface Props {
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   placeholder?: string;
   icon?: IconType;
+  onIconClick?: () => void;
+  onEnterKey?: () => void;
   type?: string;
   min?: number;
   max?: number;
@@ -19,17 +21,20 @@ export const Input = ({
   onChange,
   placeholder = 'Looking for fashion',
   icon,
+  onIconClick,
+  onEnterKey,
   type,
   min,
   max
 }: Props) => {
   return (
     <InputContainer>
-      {icon && <IconButton icon={icon} />}
+      {icon && <IconButton icon={icon} onClick={onIconClick} />}
       <input
         value={value}
         placeholder={placeholder}
         onChange={onChange}
+        onKeyDown={(e) => e.key === 'Enter' && onEnterKey && onEnterKey()}
         type={type}
         min={min}
         max={max}

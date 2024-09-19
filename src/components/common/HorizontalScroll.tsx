@@ -5,7 +5,7 @@ import { Label } from '../../hooks/useLabels';
 
 interface Props {
   labels: Array<Label>;
-  selected: Label;
+  selected?: Label;
   onSelectLabel: (label: Label) => void;
 }
 

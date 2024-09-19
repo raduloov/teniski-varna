@@ -11,13 +11,14 @@ import { ScrollToTopButton } from '../components/features/home/ScrollToTopButton
 import { useElementOnScreen } from '../hooks/useElementOnScreen';
 
 interface Props {
-  products: Array<Product>;
+  products: Product[];
+  searchTerm: boolean;
   isLoading: boolean;
 }
 
-export const HomeContainer = ({ products, isLoading }: Props) => {
+export const HomeContainer = ({ products, searchTerm, isLoading }: Props) => {
   const [labels, setLabels] = useState<Label[]>([]);
-  const [selectedLabel, setSelectedLabel] = useState<Label>(labels[0]);
+  const [selectedLabel, setSelectedLabel] = useState<Label>();
   const { getLabels } = useLabels();
   const { containerRef: topRef, isVisible: isHeaderVisible } =
     useElementOnScreen();
@@ -32,6 +33,12 @@ export const HomeContainer = ({ products, isLoading }: Props) => {
   useEffect(() => {
     setLabelsFromFirebase();
   }, []);
+
+  useEffect(() => {
+    if (!searchTerm) {
+      setSelectedLabel(undefined);
+    }
+  }, [searchTerm]);
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { Input } from '../../common/Input';
 import { icons } from '../../../assets/icons';
 import { Color } from '../../../assets/constants';
 import { Cart } from '../cart/Cart';
@@ -10,6 +9,7 @@ import { CartButton } from '../cart/CartButton';
 import { useElementOnScreen } from '../../../hooks/useElementOnScreen';
 import { ReactComponent as Logo } from '../../../assets/images/logo-horizontal.svg';
 import { Menu } from '../menu/Menu';
+import { Search } from './Search';
 
 export const Header = () => {
   const [showMenu, setShowMenu] = useState<boolean>(false);
@@ -61,7 +61,7 @@ export const Header = () => {
           />
         </CartButtonWrapper>
       </LogoContainer>
-      <Input value={''} icon={icons.FaSearch} />
+      <Search />
     </HeaderContainer>
   );
 };
