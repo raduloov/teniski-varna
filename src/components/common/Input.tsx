@@ -19,7 +19,7 @@ interface Props {
 export const Input = ({
   value,
   onChange,
-  placeholder = 'Looking for fashion',
+  placeholder = 'Готина тениска...',
   icon,
   onIconClick,
   onEnterKey,
@@ -55,6 +55,7 @@ const InputContainer = styled.div`
     margin-left: 0.75rem;
     outline: none;
     background-color: transparent;
+    color: ${Color.DARK_GRAY};
     ::placeholder {
       color: ${Color.MEDIUM_GRAY};
     }

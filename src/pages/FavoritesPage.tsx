@@ -2,17 +2,18 @@ import React from 'react';
 import { ProductList } from '../components/features/home/ProductList';
 import { ProductListContainer } from '../containers/HomeContainer';
 import { Product } from '../domain/models/ProductDTO';
+import { EmptyProductList } from '../components/common/EmptyList';
 
 export const FavoritesPage = () => {
-  const localStorageProducts: Array<Product> = JSON.parse(
+  const localStorageProducts: Product[] = JSON.parse(
     localStorage.getItem('Favorites') || '[]'
   );
-  if (!localStorageProducts.length) {
-    return <div>You have no items in favorites.</div>;
-  }
+
   return (
     <ProductListContainer>
-      {localStorageProducts.length && (
+      {localStorageProducts.length === 0 ? (
+        <EmptyProductList />
+      ) : (
         <ProductList products={localStorageProducts} />
       )}
     </ProductListContainer>

@@ -9,6 +9,7 @@ import { Product } from '../domain/models/ProductDTO';
 import { Label, useLabels } from '../hooks/useLabels';
 import { ScrollToTopButton } from '../components/features/home/ScrollToTopButton';
 import { useElementOnScreen } from '../hooks/useElementOnScreen';
+import { EmptyProductList } from '../components/common/EmptyList';
 
 interface Props {
   products: Product[];
@@ -55,7 +56,9 @@ export const HomeContainer = ({ products, searchTerm, isLoading }: Props) => {
       />
       <ProductListContainer>
         {isLoading && <ActivityIndicator size={75} color={Color.ACCENT} />}
-        {products.length > 0 && (
+        {products.length === 0 && !isLoading ? (
+          <EmptyProductList />
+        ) : (
           <ProductList products={products} selectedLabel={selectedLabel} />
         )}
       </ProductListContainer>
