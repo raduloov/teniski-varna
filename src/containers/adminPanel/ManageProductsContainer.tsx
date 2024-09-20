@@ -16,7 +16,7 @@ export const ManageProductsContainer = () => {
   const { getAllProducts, isLoading: isFetchingProducts } = useProducts();
 
   const fetchProducts = async () => {
-    const products = await getAllProducts();
+    const { products } = await getAllProducts();
     setProducts(products);
   };
 

@@ -13,11 +13,19 @@ import { EmptyProductList } from '../components/common/EmptyList';
 
 interface Props {
   products: Product[];
+  onLoadMore: () => void;
+  allProductsHaveBeenFetched: boolean;
   searchTerm: boolean;
   isLoading: boolean;
 }
 
-export const HomeContainer = ({ products, searchTerm, isLoading }: Props) => {
+export const HomeContainer = ({
+  products,
+  onLoadMore,
+  allProductsHaveBeenFetched,
+  searchTerm,
+  isLoading
+}: Props) => {
   const [labels, setLabels] = useState<Label[]>([]);
   const [selectedLabel, setSelectedLabel] = useState<Label>();
   const { getLabels } = useLabels();
@@ -59,7 +67,12 @@ export const HomeContainer = ({ products, searchTerm, isLoading }: Props) => {
         {products.length === 0 && !isLoading ? (
           <EmptyProductList />
         ) : (
-          <ProductList products={products} selectedLabel={selectedLabel} />
+          <ProductList
+            products={products}
+            onLoadMore={onLoadMore}
+            allProductsHaveBeenFetched={allProductsHaveBeenFetched}
+            selectedLabel={selectedLabel}
+          />
         )}
       </ProductListContainer>
       <div ref={bottomRef}></div>
@@ -79,8 +92,6 @@ const ScrollToTopButtonWrapper = styled.div`
 `;
 
 export const ProductListContainer = styled.div`
-  z-index: 10;
-  background-color: transparent;
   margin-top: 10px;
   margin-bottom: 3rem;
   padding-left: 1.5rem;
