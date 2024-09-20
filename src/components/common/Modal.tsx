@@ -18,7 +18,6 @@ const portalElement = document.getElementById('overlays') as HTMLElement;
 
 interface Props {
   onClose: () => void;
-  fullscreen?: boolean;
   backButton?: boolean;
   enterAnimation?: ModalEnterAnimation;
   exitAnimation?: ModalExitAnimation;

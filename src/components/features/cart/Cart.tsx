@@ -114,8 +114,10 @@ export const Cart = ({ setShowModal, showModal, cartItems }: Props) => {
           enterAnimation={ModalEnterAnimation.SLIDE_DOWN}
           exitAnimation={ModalExitAnimation.SLIDE_RIGHT}
           closing={closing}
-          fullscreen
           backButton
+          additionalStyles={`
+            width: 100%;
+          `}
         >
           <Container>
             <CartHeader>Количка</CartHeader>
