@@ -23,4 +23,5 @@ const EmptyContainer = styled.div`
   text-align: center;
   gap: 10px;
   height: 100%;
+  margin-top: 4rem;
 `;

@@ -26,6 +26,7 @@ export const Search = () => {
     <Input
       icon={icons.FaSearch}
       onEnterKey={() => setSearchTerm(searchQuery)}
+      onBlur={() => setSearchTerm(searchQuery)}
       clearIcon={searchQuery.length > 0}
       onClear={onClear}
       value={searchQuery}

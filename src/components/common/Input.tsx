@@ -12,6 +12,7 @@ interface Props {
   clearIcon?: boolean;
   onClear?: () => void;
   onEnterKey?: () => void;
+  onBlur?: () => void;
   type?: string;
   min?: number;
   max?: number;
@@ -25,6 +26,7 @@ export const Input = ({
   clearIcon,
   onClear,
   onEnterKey,
+  onBlur,
   type,
   min,
   max
@@ -49,6 +51,7 @@ export const Input = ({
             onEnterKey();
           }
         }}
+        onBlur={onBlur}
         enterKeyHint="go"
         type={type}
         min={min}
