@@ -49,6 +49,14 @@ export const HomeContainer = ({
     }
   }, [searchTerm]);
 
+  const onSelectLabel = (label: Label) => {
+    if (label === selectedLabel) {
+      setSelectedLabel(undefined);
+    } else {
+      setSelectedLabel(label);
+    }
+  };
+
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -60,7 +68,7 @@ export const HomeContainer = ({
       <HorizontalScroll
         labels={labels}
         selected={selectedLabel}
-        onSelectLabel={(label: Label) => setSelectedLabel(label)}
+        onSelectLabel={(label: Label) => onSelectLabel(label)}
       />
       <ProductListContainer>
         {isLoading && <ActivityIndicator size={75} color={Color.ACCENT} />}

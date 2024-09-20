@@ -2,13 +2,15 @@ import React from 'react';
 import styled from 'styled-components';
 import { IconType } from 'react-icons';
 import { Color } from '../../assets/constants';
+import { icons } from '../../assets/icons';
 
 interface Props {
   value: string | number;
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   placeholder?: string;
   icon?: IconType;
-  onIconClick?: () => void;
+  clearIcon?: boolean;
+  onClear?: () => void;
   onEnterKey?: () => void;
   type?: string;
   min?: number;
@@ -20,6 +22,8 @@ export const Input = ({
   onChange,
   placeholder = 'Готина тениска...',
   icon,
+  clearIcon,
+  onClear,
   onEnterKey,
   type,
   min,
@@ -34,7 +38,7 @@ export const Input = ({
 
   return (
     <InputContainer>
-      <IconWrapper>{iconElement && iconElement}</IconWrapper>
+      {iconElement && <IconWrapper>{iconElement}</IconWrapper>}
       <input
         value={value}
         placeholder={placeholder}
@@ -50,9 +54,22 @@ export const Input = ({
         min={min}
         max={max}
       />
+      {clearIcon && (
+        <ClearWrapper onClick={onClear}>
+          <icons.RiCloseFill size={30} color={Color.MEDIUM_GRAY} />
+        </ClearWrapper>
+      )}
     </InputContainer>
   );
 };
+
+const ClearWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-right: 8px;
+  cursor: pointer;
+`;
 
 const IconWrapper = styled.div`
   display: flex;
