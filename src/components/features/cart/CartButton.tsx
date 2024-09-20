@@ -2,6 +2,10 @@ import React from 'react';
 import styled from 'styled-components';
 import { Color } from '../../../assets/constants';
 import { icons } from '../../../assets/icons';
+import {
+  cartButtonSlideInAnimation,
+  cartButtonSlideOutAnimation
+} from '../../../utils/animations';
 
 interface Props {
   isInBounds?: boolean;
@@ -61,27 +65,9 @@ const FixedCartWrapper = styled.div<{ isInBounds: boolean }>`
         position: fixed;
         top: 1.5rem;
         right: 1.5rem;
-        animation: slideout 0.5s ease-out forwards;
+        ${cartButtonSlideOutAnimation}
       `
       : `
-        animation: slidein 0.3s ease-in forwards;
+        ${cartButtonSlideInAnimation}
     `}
-
-  @keyframes slideout {
-    from {
-      transform: translateY(-90%) scale(1.2);
-    }
-    to {
-      transform: translateY(0) scale(1);
-    }
-  }
-
-  @keyframes slidein {
-    from {
-      transform: translateY(90%);
-    }
-    to {
-      transform: translateY(0);
-    }
-  }
 `;

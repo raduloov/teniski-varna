@@ -114,7 +114,7 @@ const BackDropCont = styled.div<{ closing: boolean }>`
   z-index: 900;
   animation: ${({ closing }) =>
     closing
-      ? 'dissapear 0.5s ease-out forwards'
+      ? 'disappear 0.5s ease-out forwards'
       : 'appear 0.5s ease-out forwards'};
 
   @keyframes appear {
@@ -126,7 +126,7 @@ const BackDropCont = styled.div<{ closing: boolean }>`
     }
   }
 
-  @keyframes dissapear {
+  @keyframes disappear {
     0% {
       opacity: 1;
     }

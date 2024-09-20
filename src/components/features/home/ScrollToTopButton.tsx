@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { Color } from '../../../assets/constants';
 import { icons } from '../../../assets/icons';
+import { scrollButtonAppearAnimation } from '../../../utils/animations';
 
 interface Props {
   onScrollToTop: () => void;
@@ -50,11 +51,10 @@ const FixedButtonWrapper = styled.div<{
     showButton
       ? `
         position: fixed;
-        animation: appear 0.5s ease-out forwards;
+        ${scrollButtonAppearAnimation}
       `
       : `
         bottom: 1.5rem;
-        animation: dissapear 0.3s ease-in forwards;
     `}
   ${({ isFooterVisible }) =>
     isFooterVisible &&
@@ -62,26 +62,4 @@ const FixedButtonWrapper = styled.div<{
       position: absolute;
       bottom: 0.5rem;
     `}
-  
-
-  @keyframes appear {
-    from {
-      opacity: 0;
-      transform: translateY(-10%) scale(1.2);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0) scale(1);
-    }
-  }
-
-  @keyframes dissapear {
-    from {
-      opacity: 1;
-    }
-    to {
-      transform: scale(0.2);
-      opacity: 0;
-    }
-  }
 `;

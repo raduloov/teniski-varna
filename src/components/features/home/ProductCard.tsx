@@ -6,6 +6,7 @@ import { icons } from '../../../assets/icons';
 import { Product } from '../../../domain/models/ProductDTO';
 import { IconButton } from '../../common/IconButton';
 import { getDiscountedPrice } from '../../../containers/adminPanel/utils';
+import { productAppearAnimation } from '../../../utils/animations';
 
 interface Props {
   product: Product;
@@ -132,6 +133,7 @@ const Card = styled.div`
     color: ${Color.GRAY};
     font-size: 0.9rem;
   }
+  ${productAppearAnimation}
 `;
 
 const FavoriteButton = styled.div`
