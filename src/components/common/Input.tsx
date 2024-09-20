@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 import { IconType } from 'react-icons';
-import { IconButton } from './IconButton';
 import { Color } from '../../assets/constants';
 
 interface Props {
@@ -21,20 +20,32 @@ export const Input = ({
   onChange,
   placeholder = 'Готина тениска...',
   icon,
-  onIconClick,
   onEnterKey,
   type,
   min,
   max
 }: Props) => {
+  const iconElement = icon
+    ? React.createElement(icon, {
+        size: 20,
+        style: { color: Color.MEDIUM_GRAY }
+      })
+    : null;
+
   return (
     <InputContainer>
-      {icon && <IconButton icon={icon} onClick={onIconClick} />}
+      <IconWrapper>{iconElement && iconElement}</IconWrapper>
       <input
         value={value}
         placeholder={placeholder}
         onChange={onChange}
-        onKeyDown={(e) => e.key === 'Enter' && onEnterKey && onEnterKey()}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' && onEnterKey) {
+            e.currentTarget.blur(); // close keyboard
+            onEnterKey();
+          }
+        }}
+        enterKeyHint="go"
         type={type}
         min={min}
         max={max}
@@ -42,6 +53,13 @@ export const Input = ({
     </InputContainer>
   );
 };
+
+const IconWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+`;
 
 const InputContainer = styled.div`
   display: flex;
