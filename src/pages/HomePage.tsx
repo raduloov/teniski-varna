@@ -19,6 +19,8 @@ export const HomePage = () => {
   } = useProducts();
 
   const setProductsFromFirebase = async () => {
+    setAllProductsHaveBeenFetched(false);
+
     if (searchTerm !== '') {
       const { products: filteredProducts, lastDoc } = await queryProducts(
         4,

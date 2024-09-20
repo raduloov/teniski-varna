@@ -64,9 +64,8 @@ export const HomeContainer = ({
       />
       <ProductListContainer>
         {isLoading && <ActivityIndicator size={75} color={Color.ACCENT} />}
-        {products.length === 0 && !isLoading ? (
-          <EmptyProductList />
-        ) : (
+        {!isLoading && products.length === 0 && <EmptyProductList />}
+        {!isLoading && products.length > 0 && (
           <ProductList
             products={products}
             onLoadMore={onLoadMore}

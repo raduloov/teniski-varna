@@ -48,7 +48,7 @@ export const ProductList = ({
           <ActivityIndicator size={75} color={Color.ACCENT} />
         </Loader>
       }
-      threshold={100}
+      threshold={0}
     >
       {products.map((product) => {
         if (selectedLabel && !product.labels.includes(selectedLabel.id)) {

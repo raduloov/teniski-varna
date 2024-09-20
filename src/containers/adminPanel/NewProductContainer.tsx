@@ -65,6 +65,7 @@ export const NewProductContainer = () => {
     setDescription('');
     setPrice(0);
     setImages(defaultImagesObj);
+    setThumbnailImage(null);
     setSizes(defaultSizesObj.all);
   };
 

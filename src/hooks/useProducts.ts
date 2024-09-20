@@ -48,8 +48,6 @@ export const useProducts = () => {
     lastDoc: QueryDocumentSnapshot<DocumentData>,
     searchTerm?: string
   ) => {
-    setIsLoading(true);
-
     const q =
       searchTerm !== ''
         ? query(
@@ -76,7 +74,6 @@ export const useProducts = () => {
       id: doc.id
     })) as Product[];
 
-    setIsLoading(false);
     return { nextBatch: products, lastDocFromBatch };
   };
 
