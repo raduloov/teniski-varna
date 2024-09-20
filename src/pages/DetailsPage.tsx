@@ -107,6 +107,10 @@ export const DetailsPage = () => {
   };
 
   const selectType = (type: TShirtType) => {
+    if (selectedType === type) {
+      return;
+    }
+
     setImageHasLoaded(false);
     setSelectedType(type);
 
