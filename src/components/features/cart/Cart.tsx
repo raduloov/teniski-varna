@@ -26,6 +26,7 @@ import { ActivityIndicator } from '../../common/ActivityIndicator';
 import { Color } from '../../../assets/constants';
 import { ShippingData, useShipping } from '../../../hooks/useShipping';
 import { useModalClose } from '../../../hooks/useModalClose';
+import { ScreenSize, useScreenSize } from '../../../hooks/useScreenSize';
 
 interface Props {
   showModal: boolean;
@@ -44,6 +45,9 @@ export const Cart = ({ setShowModal, showModal, cartItems }: Props) => {
   const { getDiscounts, isLoading: isFetchingDiscounts } = useDiscounts();
   const { getShipping, isLoading: isFetchingShipping } = useShipping();
   const { closing, handleClose } = useModalClose(() => setShowModal(false));
+  const screenSize = useScreenSize();
+
+  const isLargeScreen = screenSize === ScreenSize.LARGE;
 
   const setShippingFromFirebase = async () => {
     const shippingData = await getShipping();
@@ -116,7 +120,7 @@ export const Cart = ({ setShowModal, showModal, cartItems }: Props) => {
           closing={closing}
           backButton
           additionalStyles={`
-            width: 100%;
+            ${!isLargeScreen && 'width: 100%;'}
           `}
         >
           <Container>

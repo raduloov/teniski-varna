@@ -22,7 +22,7 @@ const pages = [
   },
   {
     name: 'За нас',
-    icon: icons.RiInformationFill,
+    icon: icons.FaInfoCircle,
     path: '/about'
   },
   {
@@ -50,6 +50,7 @@ export const MenuLinks = ({ currentPage, onClick }: MenuLinkProps) => {
           <page.icon
             color={currentPage === page.path ? Color.WHITE : Color.DARK_GRAY}
             size={25}
+            style={{ transition: 'none' }}
           />
           {page.name}
         </StyledLink>
@@ -77,11 +78,11 @@ const StyledLink = styled(Link)<{ currentPage: boolean }>`
     `
       background-color: ${Color.GRAY};
       color: ${Color.WHITE};
+      cursor: default;
+      &:hover {
+        background-color: ${Color.GRAY};
+      }
     `}
-
-  &icons {
-    color: ${Color.DARK_GRAY};
-  }
 `;
 
 const NavigationContainer = styled.div`

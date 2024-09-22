@@ -245,7 +245,13 @@ export const DetailsContainer = ({
         </BottomSheetContainer>
       </Container>
       {showSizeInfo && (
-        <Modal closing={sizeInfoClosing} onClose={handleCloseSizeInfo}>
+        <Modal
+          closing={sizeInfoClosing}
+          onClose={handleCloseSizeInfo}
+          additionalStyles={`
+            width: 90%;    
+          `}
+        >
           <InfoModalWrapper>
             <img src={require('../assets/images/size-info.png')} />
           </InfoModalWrapper>

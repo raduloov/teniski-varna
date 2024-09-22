@@ -19,7 +19,7 @@ export const App = () => {
   const isLargeScreen = screenSize === ScreenSize.LARGE;
 
   return (
-    <AppContainer>
+    <>
       <StyledToast
         position={'top-center'}
         autoClose={2000}
@@ -28,19 +28,21 @@ export const App = () => {
         hideProgressBar={true}
         stacked
       />
-      <DesktopLayout>
-        {isLargeScreen && (
-          <div>
-            <MenuDesktop />
-          </div>
-        )}
-        <Content>
-          {excludeHeader(currentPath) && <Header />}
-          <AppRoutes />
-        </Content>
-      </DesktopLayout>
-      {excludeFooter(currentPath) && <Footer />}
-    </AppContainer>
+      <AppContainer>
+        <DesktopLayout>
+          {isLargeScreen && (
+            <div>
+              <MenuDesktop />
+            </div>
+          )}
+          <Content>
+            {excludeHeader(currentPath) && <Header />}
+            <AppRoutes />
+          </Content>
+        </DesktopLayout>
+        {excludeFooter(currentPath) && <Footer />}
+      </AppContainer>
+    </>
   );
 };
 
@@ -51,9 +53,6 @@ const StyledToast = styled(ToastContainer)`
 `;
 
 const DesktopLayout = styled.div`
-  @media (min-width: 768px) {
-  }
-
   @media (min-width: 1024px) {
     display: grid;
     grid-template-columns: 1fr auto 1fr;
@@ -63,15 +62,15 @@ const DesktopLayout = styled.div`
 
 const Content = styled.div`
   @media (min-width: 768px) {
-    max-width: 800px;
+    width: 800px;
   }
 
   @media (min-width: 1366px) {
-    max-width: 1000px;
+    width: 1000px;
   }
 
   @media (min-width: 1600px) {
-    max-width: 1200px;
+    width: 1200px;
   }
 `;
 

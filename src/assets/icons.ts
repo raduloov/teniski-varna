@@ -23,9 +23,10 @@ import {
   FaYoutube,
   FaPhone,
   FaMapMarkerAlt,
-  FaAt
+  FaAt,
+  FaInfoCircle
 } from 'react-icons/fa';
-import { RiCloseFill, RiInformationFill } from 'react-icons/ri';
+import { RiCloseFill } from 'react-icons/ri';
 import {
   BsStar,
   BsStarFill,
@@ -37,7 +38,7 @@ import { HiOutlineMenu } from 'react-icons/hi';
 
 export const icons = {
   MdPolicy,
-  RiInformationFill,
+  FaInfoCircle,
   FaSearch,
   MdOutlineShoppingBag,
   FaRegHeart,
