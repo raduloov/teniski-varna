@@ -1,5 +1,4 @@
 import {
-  MdOutlineShoppingBag,
   MdFavorite,
   MdPolicy,
   MdOutlinePermContactCalendar,
@@ -24,7 +23,8 @@ import {
   FaPhone,
   FaMapMarkerAlt,
   FaAt,
-  FaInfoCircle
+  FaInfoCircle,
+  FaShoppingBag
 } from 'react-icons/fa';
 import { RiCloseFill } from 'react-icons/ri';
 import {
@@ -40,7 +40,6 @@ export const icons = {
   MdPolicy,
   FaInfoCircle,
   FaSearch,
-  MdOutlineShoppingBag,
   FaRegHeart,
   FaHeart,
   FaHeartBroken,
@@ -67,5 +66,6 @@ export const icons = {
   FaYoutube,
   FaPhone,
   FaMapMarkerAlt,
-  FaAt
+  FaAt,
+  FaShoppingBag
 };

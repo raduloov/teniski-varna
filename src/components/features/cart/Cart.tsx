@@ -120,11 +120,20 @@ export const Cart = ({ setShowModal, showModal, cartItems }: Props) => {
           closing={closing}
           backButton
           additionalStyles={`
-            ${!isLargeScreen && 'width: 100%;'}
+            ${
+              isLargeScreen
+                ? `
+                left: 50%;
+                transform: translate(-50%);
+              `
+                : `
+                width: 100%;
+              `
+            }
           `}
         >
           <Container>
-            <CartHeader>Количка</CartHeader>
+            <CartHeader>Кошница</CartHeader>
             {isLoading ? (
               <ActivityIndicatorWrapper>
                 <ActivityIndicator color={Color.ACCENT} size={100} />

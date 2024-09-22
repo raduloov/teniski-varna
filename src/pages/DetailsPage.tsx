@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router';
-import { DetailsContainer } from '../containers/DetailsContainer';
 import { useProducts } from '../hooks/useProducts';
 import {
   ImagesKids,
@@ -21,6 +20,7 @@ import {
   TShirtColor
 } from '../containers/adminPanel/utils';
 import { useDiscounts } from '../hooks/useDiscounts';
+import { DetailsContainer } from '../containers/Details';
 
 export const DetailsPage = () => {
   const [product, setProduct] = useState<Product>();

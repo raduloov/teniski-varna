@@ -142,8 +142,6 @@ const ModalOverlayCont = styled.div<{
   exitAnimation: ModalExitAnimation;
 }>`
   position: fixed;
-  left: 50%;
-  transform: translate(-50%, 100%);
   z-index: 1000;
   background-color: white;
   border-radius: 4px;
@@ -179,7 +177,7 @@ const ModalOverlayCont = styled.div<{
 
   @keyframes exit-slide-left {
     0% {
-      left: 50%;
+      left: 0%;
     }
     100% {
       left: -200%;

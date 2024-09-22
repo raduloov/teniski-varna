@@ -1,16 +1,17 @@
 import React from 'react';
 import styled from 'styled-components';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { MenuLinks } from './MenuLinks';
 import { MenuLogo } from './MenuLogo';
 
 export const MenuDesktop = () => {
+  const navigate = useNavigate();
   const location = useLocation();
   const currentPage = location.pathname;
 
   return (
     <MenuContainer>
-      <MenuLogo />
+      <MenuLogo onClick={() => navigate('/')} />
       <MenuLinks currentPage={currentPage} />
     </MenuContainer>
   );

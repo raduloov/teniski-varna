@@ -45,6 +45,7 @@ const Button = styled.button<ButtonProps>`
   font-size: 20px;
   font-weight: bold;
   color: ${(props) => props.color ?? Color.BLACK};
+  cursor: pointer;
 `;
 
 const Wrapper = styled.div`

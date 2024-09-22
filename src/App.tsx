@@ -17,6 +17,12 @@ export const App = () => {
   const screenSize = useScreenSize();
 
   const isLargeScreen = screenSize === ScreenSize.LARGE;
+  const showMenuDesktop = isLargeScreen;
+
+  const excludeFooterArray = ['/admin-panel'];
+  if (isLargeScreen) {
+    excludeFooterArray.push('/products');
+  }
 
   return (
     <>
@@ -30,7 +36,7 @@ export const App = () => {
       />
       <AppContainer>
         <DesktopLayout>
-          {isLargeScreen && (
+          {showMenuDesktop && (
             <div>
               <MenuDesktop />
             </div>

@@ -7,8 +7,11 @@ export const MenuLogo = styled(Logo)`
   left: 50%;
   transform: translateX(-50%);
   height: 100px;
+  cursor: pointer;
 
   @media (min-width: 1024px) {
     top: 2rem;
+    left: 2rem;
+    transform: translateX(0);
   }
 `;

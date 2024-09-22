@@ -1,28 +1,32 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Color } from '../assets/constants';
-import { icons } from '../assets/icons';
-import { Button, ButtonSize } from '../components/common/Button';
-import { IconButton } from '../components/common/IconButton';
-import { QuantitySelector } from '../components/features/details/QuantitySelector';
-import { RatingStars } from '../components/features/details/RatingStars';
-import { SizeSelector } from '../components/features/details/SizeSelector';
-import { cartActions } from '../store/cartSlice';
-import { Product, TShirtSize, TShirtType } from '../domain/models/ProductDTO';
-import { useAppDispatch, useAppSelector } from '../hooks/useRedux';
+import { Color } from '../../assets/constants';
+import { icons } from '../../assets/icons';
+import { Button, ButtonSize } from '../../components/common/Button';
+import { IconButton } from '../../components/common/IconButton';
+import { QuantitySelector } from '../../components/features/details/QuantitySelector';
+import { RatingStars } from '../../components/features/details/RatingStars';
+import { SizeSelector } from '../../components/features/details/SizeSelector';
+import { cartActions } from '../../store/cartSlice';
+import {
+  Product,
+  TShirtSize,
+  TShirtType
+} from '../../domain/models/ProductDTO';
+import { useAppDispatch, useAppSelector } from '../../hooks/useRedux';
 import { toast } from 'react-toastify';
-import { ColorSelector } from '../components/features/details/ColorSelector';
-import { TShirtColor } from './adminPanel/utils';
-import { ActivityIndicator } from '../components/common/ActivityIndicator';
-import { translateTypeToBulgarian } from '../components/features/cart/utils';
+import { ColorSelector } from '../../components/features/details/ColorSelector';
+import { TShirtColor } from '../adminPanel/utils';
+import { ActivityIndicator } from '../../components/common/ActivityIndicator';
+import { translateTypeToBulgarian } from '../../components/features/cart/utils';
 import { useNavigate } from 'react-router';
-import { Modal } from '../components/common/Modal';
-import { Cart } from '../components/features/cart/Cart';
-import { CartButton } from '../components/features/cart/CartButton';
-import { Footer } from '../components/features/home/Footer';
-import { ReactComponent as ShippingButton } from '../assets/images/shipping.svg';
-import { ReactComponent as MaterialsButton } from '../assets/images/materials.svg';
-import { useModalClose } from '../hooks/useModalClose';
+import { Modal } from '../../components/common/Modal';
+import { Cart } from '../../components/features/cart/Cart';
+import { CartButton } from '../../components/features/cart/CartButton';
+import { Footer } from '../../components/features/home/Footer';
+import { ReactComponent as ShippingButton } from '../../assets/images/shipping.svg';
+import { ReactComponent as MaterialsButton } from '../../assets/images/materials.svg';
+import { useModalClose } from '../../hooks/useModalClose';
 
 interface Props {
   product: Product;
@@ -50,7 +54,7 @@ interface Props {
   showCart: boolean;
 }
 
-export const DetailsContainer = ({
+export const DetailsContainerMobile = ({
   tShirtTypes,
   selectedType,
   onSelectType,
@@ -88,11 +92,6 @@ export const DetailsContainer = ({
     handleClose: handleCloseMaterialsInfo
   } = useModalClose(() => onShowMaterialsInfo());
 
-  const cartItemsQuantity = cartItems.reduce(
-    (total, item) => total + item.quantity,
-    0
-  );
-
   // @ts-ignore
   const image = product.images[selectedType][selectedColor].url;
 
@@ -116,10 +115,15 @@ export const DetailsContainer = ({
       })
     );
 
-    toast.success(`🎉 ${product.title} беше успешно добавен в количката.`, {
+    toast.success(`🎉 ${product.title} беше успешно добавен в кошницата.`, {
       onClick: () => navigate('/', { state: { openCart: true } })
     });
   };
+
+  const cartItemsQuantity = cartItems.reduce(
+    (total, item) => total + item.quantity,
+    0
+  );
 
   return (
     <>
@@ -179,7 +183,7 @@ export const DetailsContainer = ({
             <SizeWrapper onClick={onShowSizeInfo}>
               <SelectSizeTitle>Изберете размер</SelectSizeTitle>
               <SizeChartButton
-                src={require('../assets/images/size-chart.png')}
+                src={require('../../assets/images/size-chart.png')}
               />
             </SizeWrapper>
             <TilesWrapper>
@@ -227,7 +231,7 @@ export const DetailsContainer = ({
                 )}
               </PriceWrapper>
               <Button
-                label="Добави в количка"
+                label="Добави в кошницата"
                 size={ButtonSize.MEDIUM}
                 onClick={addToCartHandler}
               />
@@ -253,7 +257,7 @@ export const DetailsContainer = ({
           `}
         >
           <InfoModalWrapper>
-            <img src={require('../assets/images/size-info.png')} />
+            <img src={require('../../assets/images/size-info.png')} />
           </InfoModalWrapper>
         </Modal>
       )}
