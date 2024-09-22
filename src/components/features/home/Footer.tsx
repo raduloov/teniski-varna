@@ -37,57 +37,59 @@ export const Footer = () => {
 
   return (
     <FooterWrapper>
-      <NavigationWrapper>
-        <NavigationItems />
-      </NavigationWrapper>
+      <InnerWrapper>
+        <NavigationWrapper>
+          <NavigationItems />
+        </NavigationWrapper>
 
-      <ContactWrapper>
-        <Text>Контакти</Text>
-        <Contacts>
-          <ContactRow>
-            <icons.FaMapMarkerAlt size={16} color={Color.DARK_GRAY} />
-            <TinyText>
-              г. Варна, бул. Сливница 165, ет. 0, срещу Costa кафе
-            </TinyText>
-          </ContactRow>
-          <ContactRow>
-            <icons.FaAt size={16} color={Color.DARK_GRAY} />
-            <SmallText>teniski.varna2022@gmail.com</SmallText>
-          </ContactRow>
-          <ContactRow>
-            <icons.FaPhone size={16} color={Color.DARK_GRAY} />
-            <SmallText>088 822 8975</SmallText>
-          </ContactRow>
-        </Contacts>
+        <ContactWrapper>
+          <Text>Контакти</Text>
+          <Contacts>
+            <ContactRow>
+              <icons.FaMapMarkerAlt size={16} color={Color.DARK_GRAY} />
+              <TinyText>
+                г. Варна, бул. Сливница 165, ет. 0, срещу Costa кафе
+              </TinyText>
+            </ContactRow>
+            <ContactRow>
+              <icons.FaAt size={16} color={Color.DARK_GRAY} />
+              <SmallText>teniski.varna2022@gmail.com</SmallText>
+            </ContactRow>
+            <ContactRow>
+              <icons.FaPhone size={16} color={Color.DARK_GRAY} />
+              <SmallText>088 822 8975</SmallText>
+            </ContactRow>
+          </Contacts>
 
-        <SocialMediaWrapper>
-          <SocialMediaIconWrapper
-            onClick={() => navigateToSocialMedia(socialMediaLinks.facebook)}
-          >
-            <icons.FaFacebookF size={20} color={Color.ACCENT} />
-          </SocialMediaIconWrapper>
-          <SocialMediaIconWrapper
-            onClick={() => navigateToSocialMedia(socialMediaLinks.tiktok)}
-          >
-            <icons.FaTiktok size={20} color={Color.ACCENT} />
-          </SocialMediaIconWrapper>
-          <SocialMediaIconWrapper
-            onClick={() => navigateToSocialMedia(socialMediaLinks.instagram)}
-          >
-            <icons.FaInstagram size={20} color={Color.ACCENT} />
-          </SocialMediaIconWrapper>
-          <SocialMediaIconWrapper
-            onClick={() => navigateToSocialMedia(socialMediaLinks.youtube)}
-          >
-            <icons.FaYoutube size={20} color={Color.ACCENT} />
-          </SocialMediaIconWrapper>
-        </SocialMediaWrapper>
-        <SmallText>© Тениски Варна 2024</SmallText>
-      </ContactWrapper>
+          <SocialMediaWrapper>
+            <SocialMediaIconWrapper
+              onClick={() => navigateToSocialMedia(socialMediaLinks.facebook)}
+            >
+              <icons.FaFacebookF size={20} color={Color.ACCENT} />
+            </SocialMediaIconWrapper>
+            <SocialMediaIconWrapper
+              onClick={() => navigateToSocialMedia(socialMediaLinks.tiktok)}
+            >
+              <icons.FaTiktok size={20} color={Color.ACCENT} />
+            </SocialMediaIconWrapper>
+            <SocialMediaIconWrapper
+              onClick={() => navigateToSocialMedia(socialMediaLinks.instagram)}
+            >
+              <icons.FaInstagram size={20} color={Color.ACCENT} />
+            </SocialMediaIconWrapper>
+            <SocialMediaIconWrapper
+              onClick={() => navigateToSocialMedia(socialMediaLinks.youtube)}
+            >
+              <icons.FaYoutube size={20} color={Color.ACCENT} />
+            </SocialMediaIconWrapper>
+          </SocialMediaWrapper>
+          <SmallText>© Тениски Варна 2024</SmallText>
+        </ContactWrapper>
 
-      <LogoWrapper>
-        <Logo />
-      </LogoWrapper>
+        <LogoWrapper>
+          <Logo />
+        </LogoWrapper>
+      </InnerWrapper>
     </FooterWrapper>
   );
 };
@@ -159,10 +161,18 @@ const LogoWrapper = styled.div`
   }
 `;
 
-const FooterWrapper = styled.div`
+const InnerWrapper = styled.div`
   display: grid;
   grid-template-columns: 1fr 3fr 1fr;
   width: 100%;
+  max-width: 1200px;
+  align-self: center;
+`;
+
+const FooterWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  width: 100svw;
   padding: 1rem 1.5rem;
   color: ${Color.DARK_GRAY};
   background-color: ${Color.ACCENT};

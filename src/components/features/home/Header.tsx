@@ -8,8 +8,9 @@ import { useLocation, useNavigate } from 'react-router';
 import { CartButton } from '../cart/CartButton';
 import { useElementOnScreen } from '../../../hooks/useElementOnScreen';
 import { ReactComponent as Logo } from '../../../assets/images/logo-horizontal.svg';
-import { Menu } from '../menu/Menu';
+import { MenuMobile } from '../menu/MenuMobile';
 import { Search } from './Search';
+import { useScreenSize } from '../../../hooks/useScreenSize';
 
 export const Header = () => {
   const [showMenu, setShowMenu] = useState<boolean>(false);
@@ -19,6 +20,7 @@ export const Header = () => {
   const { state } = useLocation();
   const { containerRef: fixedCartButtonRef, isVisible: cartIsVisible } =
     useElementOnScreen({ threshold: 0.4 });
+  const screenSize = useScreenSize();
 
   useEffect(() => {
     // When user clicks on toast, navigate home with openCart in state
@@ -43,16 +45,24 @@ export const Header = () => {
         setShowModal={setShowModal}
         showModal={showModal}
       />
-      <Menu showMenu={showMenu} onCloseMenu={() => setShowMenu(false)} />
+      {screenSize.width < 768 && (
+        <MenuMobile
+          showMenu={showMenu}
+          onCloseMenu={() => setShowMenu(false)}
+        />
+      )}
       <LogoContainer ref={fixedCartButtonRef}>
         <MenuButtonWrapper>
-          <MenuButton onClick={() => setShowMenu(true)}>
-            <icons.HiOutlineMenu color={Color.GRAY} size={25} />
-          </MenuButton>
+          {screenSize.width < 768 && (
+            <MenuButton onClick={() => setShowMenu(true)}>
+              <icons.HiOutlineMenu color={Color.GRAY} size={25} />
+            </MenuButton>
+          )}
         </MenuButtonWrapper>
         <TitleWrapper onClick={() => navigate('/')}>
           <Logo />
         </TitleWrapper>
+
         <CartButtonWrapper>
           <CartButton
             onOpenCart={() => setShowModal(true)}
@@ -72,6 +82,12 @@ const TitleWrapper = styled.div`
   svg {
     width: 10rem;
   }
+
+  @media (min-width: 768px) {
+    svg {
+      width: 15rem;
+    }
+  }
 `;
 
 const CartButtonWrapper = styled.div`
@@ -85,7 +101,6 @@ const MenuButtonWrapper = styled.div`
 `;
 
 const MenuButton = styled.div`
-  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;

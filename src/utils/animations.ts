@@ -50,8 +50,8 @@ export const modalDisappearAnimation = css`
 `;
 
 export const cartButtonSlideOutAnimation = css`
-  animation: slideout 0.5s ease-out forwards;
-  @keyframes slideout {
+  animation: slideout-mobile 0.5s ease-out forwards;
+  @keyframes slideout-mobile {
     from {
       transform: translateY(-90%) scale(1.2);
     }
@@ -59,11 +59,24 @@ export const cartButtonSlideOutAnimation = css`
       transform: translateY(0) scale(1);
     }
   }
+
+  @media (min-width: 768px) {
+    animation: slideout-desktop 0.5s ease-out forwards;
+    @keyframes slideout-desktop {
+      from {
+        transform: translateY(-90%) scale(1.2);
+      }
+      to {
+        transform: translateY(0) scale(1);
+        transform: translateX(160%);
+      }
+    }
+  }
 `;
 
 export const cartButtonSlideInAnimation = css`
-  animation: slidein 0.3s ease-in forwards;
-  @keyframes slidein {
+  animation: slidein-mobile 0.3s ease-in forwards;
+  @keyframes slidein-mobile {
     from {
       transform: translateY(90%);
     }
@@ -71,18 +84,44 @@ export const cartButtonSlideInAnimation = css`
       transform: translateY(0);
     }
   }
+
+  @media (min-width: 768px) {
+    animation: slidein-desktop 0.3s ease-in forwards;
+    @keyframes slidein-desktop {
+      from {
+        transform: translate(160%, 90%);
+      }
+      to {
+        transform: translate(0, 0);
+      }
+    }
+  }
 `;
 
 export const scrollButtonAppearAnimation = css`
-  animation: scrollAppear ease-in 0.2s;
-  @keyframes scrollAppear {
+  animation: scrollAppear-mobile ease-in 0.2s;
+  @keyframes scrollAppear-mobile {
     from {
       opacity: 0;
-      transform: translateY(-10%) scale(1.2);
+      transform: scale(1.2);
     }
     to {
       opacity: 1;
-      transform: translateY(0) scale(1);
+      transform: scale(1);
+    }
+  }
+
+  @media (min-width: 768px) {
+    animation: scrollAppear-desktop ease-in 0.2s;
+    @keyframes scrollAppear-desktop {
+      from {
+        opacity: 0;
+        transform: translate(160%) scale(1.2);
+      }
+      to {
+        opacity: 1;
+        transform: translate(160%) scale(1);
+      }
     }
   }
 `;

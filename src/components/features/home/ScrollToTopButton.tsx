@@ -45,21 +45,29 @@ const FixedButtonWrapper = styled.div<{
 }>`
   z-index: 800;
   filter: drop-shadow(0px 2px 10px rgba(0, 0, 0, 0.15));
-  bottom: 2.5rem;
-  right: 1.5rem;
+
   ${({ showButton }) =>
-    showButton
-      ? `
+    showButton &&
+    `
         position: fixed;
+        bottom: 2.5rem;
+        transform: translateX(160%);
         ${scrollButtonAppearAnimation}
-      `
-      : `
-        bottom: 1.5rem;
-    `}
+
+        @media (max-width: 768px) {
+          bottom: 2.5rem;
+          right: 1.5rem;
+          transform: translateX(0);
+        }
+      `}
   ${({ isFooterVisible }) =>
     isFooterVisible &&
     `
       position: absolute;
       bottom: 0.5rem;
+
+      @media (max-width: 768px) {
+        bottom: 0.5rem;
+      }
     `}
 `;

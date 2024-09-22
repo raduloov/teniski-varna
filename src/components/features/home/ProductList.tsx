@@ -8,6 +8,7 @@ import { Discount, useDiscounts } from '../../../hooks/useDiscounts';
 import InfiniteScroll from 'react-infinite-scroller';
 import { ActivityIndicator } from '../../common/ActivityIndicator';
 import { Color } from '../../../assets/constants';
+import { productAppearAnimation } from '../../../utils/animations';
 
 interface Props {
   products: Product[];
@@ -43,9 +44,9 @@ export const ProductList = ({
       loadMore={onLoadMore ?? (() => {})}
       hasMore={!allProductsHaveBeenFetched}
       loader={
-        <Loader>
+        <Loader key={'loader'}>
           <Text>Зареждане на още продукти...</Text>
-          <ActivityIndicator size={75} color={Color.ACCENT} />
+          <ActivityIndicator size={100} color={Color.ACCENT} />
         </Loader>
       }
       threshold={0}
@@ -72,16 +73,25 @@ export const ProductList = ({
 
 const Text = styled.p`
   font-size: 1rem;
-  color: ${Color.DARK_GRAY};
+  color: ${Color.GRAY};
   text-align: center;
 `;
 
 const Loader = styled.div`
+  width: 45%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
-  width: 100%;
+  background-color: ${Color.WHITE};
+  border-radius: 10px;
+  padding: 1rem;
+  filter: drop-shadow(0px 2px 10px rgba(0, 0, 0, 0.15));
+  ${productAppearAnimation}
+
+  @media (min-width: 768px) {
+    width: 250px;
+  }
 `;
 
 const StyledInfiniteScroll = styled(InfiniteScroll)`
@@ -89,4 +99,10 @@ const StyledInfiniteScroll = styled(InfiniteScroll)`
   flex-wrap: wrap;
   justify-content: space-between;
   gap: 1rem;
+
+  @media (min-width: 768px) {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 3rem;
+  }
 `;

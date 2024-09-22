@@ -73,4 +73,10 @@ const StyledSwiper = styled(Swiper)`
   height: 195px;
   transform: translateY(-0.5rem);
   box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.25);
+
+  @media (min-width: 768px) {
+    height: 600px;
+    border-bottom-left-radius: 30px;
+    border-bottom-right-radius: 30px;
+  }
 `;

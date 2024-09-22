@@ -96,6 +96,8 @@ export const HomeContainer = ({
 
 const ScrollToTopButtonWrapper = styled.div`
   position: relative;
+  display: flex;
+  justify-content: flex-end;
 `;
 
 export const ProductListContainer = styled.div`
