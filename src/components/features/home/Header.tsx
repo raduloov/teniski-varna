@@ -10,7 +10,7 @@ import { useElementOnScreen } from '../../../hooks/useElementOnScreen';
 import { ReactComponent as Logo } from '../../../assets/images/logo-horizontal.svg';
 import { MenuMobile } from '../menu/MenuMobile';
 import { Search } from './Search';
-import { useScreenSize } from '../../../hooks/useScreenSize';
+import { ScreenSize, useScreenSize } from '../../../hooks/useScreenSize';
 
 export const Header = () => {
   const [showMenu, setShowMenu] = useState<boolean>(false);
@@ -21,6 +21,8 @@ export const Header = () => {
   const { containerRef: fixedCartButtonRef, isVisible: cartIsVisible } =
     useElementOnScreen({ threshold: 0.4 });
   const screenSize = useScreenSize();
+
+  const isSmallScreen = screenSize !== ScreenSize.LARGE;
 
   useEffect(() => {
     // When user clicks on toast, navigate home with openCart in state
@@ -45,7 +47,7 @@ export const Header = () => {
         setShowModal={setShowModal}
         showModal={showModal}
       />
-      {screenSize.width < 768 && (
+      {isSmallScreen && (
         <MenuMobile
           showMenu={showMenu}
           onCloseMenu={() => setShowMenu(false)}
@@ -53,7 +55,7 @@ export const Header = () => {
       )}
       <LogoContainer ref={fixedCartButtonRef}>
         <MenuButtonWrapper>
-          {screenSize.width < 768 && (
+          {isSmallScreen && (
             <MenuButton onClick={() => setShowMenu(true)}>
               <icons.HiOutlineMenu color={Color.GRAY} size={25} />
             </MenuButton>

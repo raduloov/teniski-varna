@@ -136,11 +136,19 @@ const Card = styled.div`
   ${productAppearAnimation}
 
   @media (min-width: 768px) {
-    width: 250px;
+    width: 180px;
     img {
       width: 100%;
       height: 100%;
     }
+  }
+
+  @media (min-width: 1366px) {
+    width: 220px;
+  }
+
+  @media (min-width: 1600px) {
+    width: 250px;
   }
 `;
 

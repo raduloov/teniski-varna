@@ -91,7 +91,7 @@ const NavigationContainer = styled.div`
   gap: 0.5rem;
   padding: 5rem 1rem 0 1rem;
 
-  @media (min-width: 768px) {
+  @media (min-width: 1024px) {
     padding: 10rem 2rem 0 2rem;
   }
 `;

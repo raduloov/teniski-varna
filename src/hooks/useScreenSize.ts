@@ -1,6 +1,18 @@
 import { useState, useEffect } from 'react';
 
-export const useScreenSize = () => {
+export enum Breakpoint {
+  small = 356,
+  medium = 768,
+  large = 1024
+}
+
+export enum ScreenSize {
+  SMALL = 'small',
+  MEDIUM = 'medium',
+  LARGE = 'large'
+}
+
+export const useScreenSize = (): ScreenSize => {
   const [screenSize, setScreenSize] = useState({
     width: window.innerWidth,
     height: window.innerHeight
@@ -21,5 +33,16 @@ export const useScreenSize = () => {
     };
   }, []);
 
-  return screenSize;
+  const getScreenSize = (width: number): ScreenSize => {
+    switch (true) {
+      case width >= Breakpoint.large:
+        return ScreenSize.LARGE;
+      case width >= Breakpoint.medium:
+        return ScreenSize.MEDIUM;
+      default:
+        return ScreenSize.SMALL;
+    }
+  };
+
+  return getScreenSize(screenSize.width);
 };

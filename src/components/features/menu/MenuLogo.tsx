@@ -8,7 +8,7 @@ export const MenuLogo = styled(Logo)`
   transform: translateX(-50%);
   height: 100px;
 
-  @media (min-width: 768px) {
+  @media (min-width: 1024px) {
     top: 2rem;
   }
 `;

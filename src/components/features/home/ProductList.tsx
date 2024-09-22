@@ -90,6 +90,14 @@ const Loader = styled.div`
   ${productAppearAnimation}
 
   @media (min-width: 768px) {
+    width: 150px;
+  }
+
+  @media (min-width: 1366px) {
+    width: 220px;
+  }
+
+  @media (min-width: 1600px) {
     width: 250px;
   }
 `;
@@ -103,6 +111,13 @@ const StyledInfiniteScroll = styled(InfiniteScroll)`
   @media (min-width: 768px) {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
+  }
+
+  @media (min-width: 1366px) {
+    grid-gap: 1rem;
+  }
+
+  @media (min-width: 1600px) {
     grid-gap: 3rem;
   }
 `;

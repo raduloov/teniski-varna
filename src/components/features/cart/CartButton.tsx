@@ -65,7 +65,7 @@ const FixedCartWrapper = styled.div<{ isInBounds: boolean }>`
         position: fixed;
         ${cartButtonSlideOutAnimation}
         
-        @media (max-width: 768px) {
+        @media (max-width: 1024px) {
           top: 1.5rem;
           right: 1.5rem;
         }

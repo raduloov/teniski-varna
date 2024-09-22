@@ -60,7 +60,7 @@ export const cartButtonSlideOutAnimation = css`
     }
   }
 
-  @media (min-width: 768px) {
+  @media (min-width: 1024px) {
     animation: slideout-desktop 0.5s ease-out forwards;
     @keyframes slideout-desktop {
       from {
@@ -85,7 +85,7 @@ export const cartButtonSlideInAnimation = css`
     }
   }
 
-  @media (min-width: 768px) {
+  @media (min-width: 1024px) {
     animation: slidein-desktop 0.3s ease-in forwards;
     @keyframes slidein-desktop {
       from {
@@ -111,7 +111,7 @@ export const scrollButtonAppearAnimation = css`
     }
   }
 
-  @media (min-width: 768px) {
+  @media (min-width: 1024px) {
     animation: scrollAppear-desktop ease-in 0.2s;
     @keyframes scrollAppear-desktop {
       from {

@@ -9,12 +9,14 @@ import { excludeHeader } from './utils/excludeHeader';
 import styled from 'styled-components';
 import { excludeFooter } from './utils/excludeFooter';
 import { MenuDesktop } from './components/features/menu/MenuDesktop';
-import { useScreenSize } from './hooks/useScreenSize';
+import { ScreenSize, useScreenSize } from './hooks/useScreenSize';
 
 export const App = () => {
   const location = useLocation();
   const currentPath = location.pathname;
   const screenSize = useScreenSize();
+
+  const isLargeScreen = screenSize === ScreenSize.LARGE;
 
   return (
     <AppContainer>
@@ -27,7 +29,7 @@ export const App = () => {
         stacked
       />
       <DesktopLayout>
-        {screenSize.width > 768 && (
+        {isLargeScreen && (
           <div>
             <MenuDesktop />
           </div>
@@ -50,6 +52,9 @@ const StyledToast = styled(ToastContainer)`
 
 const DesktopLayout = styled.div`
   @media (min-width: 768px) {
+  }
+
+  @media (min-width: 1024px) {
     display: grid;
     grid-template-columns: 1fr auto 1fr;
     width: 100%;
@@ -57,7 +62,17 @@ const DesktopLayout = styled.div`
 `;
 
 const Content = styled.div`
-  max-width: 1200px;
+  @media (min-width: 768px) {
+    max-width: 800px;
+  }
+
+  @media (min-width: 1366px) {
+    max-width: 1000px;
+  }
+
+  @media (min-width: 1600px) {
+    max-width: 1200px;
+  }
 `;
 
 const AppContainer = styled.div`
