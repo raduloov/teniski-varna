@@ -42,5 +42,29 @@ export const useDiscounts = () => {
     }
   };
 
-  return { getDiscounts, isLoading };
+  const getActiveDiscounts = async () => {
+    setIsLoading(true);
+
+    const discountsCollectionRef = collection(db, 'discounts');
+
+    try {
+      const data = await getDocs(discountsCollectionRef);
+      const activeDiscounts: Discount[] = [];
+      data.docs.forEach((doc) => {
+        if (doc.data().active) {
+          activeDiscounts.push({ ...doc.data(), id: doc.id } as Discount);
+        }
+      });
+
+      return activeDiscounts;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (e: any) {
+      toast.error(`💥 ${e.message}`);
+      return [];
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return { getDiscounts, getActiveDiscounts, isLoading };
 };

@@ -17,7 +17,7 @@ export const App = () => {
   const screenSize = useScreenSize();
 
   const isLargeScreen = screenSize === ScreenSize.LARGE;
-  const showMenuDesktop = isLargeScreen;
+  const showMenuDesktop = isLargeScreen && currentPath !== '/admin-panel';
 
   const excludeFooterArray = ['/admin-panel'];
   if (isLargeScreen) {

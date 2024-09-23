@@ -26,10 +26,10 @@ export const ProductList = ({
   onSelectProductToEdit
 }: Props) => {
   const [activeDiscounts, setActiveDiscounts] = useState<Discount[]>([]);
-  const { getDiscounts } = useDiscounts();
+  const { getActiveDiscounts } = useDiscounts();
 
   const setDiscountsFromFirebase = async () => {
-    const discounts = await getDiscounts();
+    const discounts = await getActiveDiscounts();
     setActiveDiscounts(discounts);
   };
 

@@ -41,7 +41,7 @@ export const DetailsPage = () => {
   const { productId } = useParams();
   const { state } = useLocation();
   const navigate = useNavigate();
-  const { getDiscounts, isLoading: isFetchingDiscounts } = useDiscounts();
+  const { getActiveDiscounts, isLoading: isFetchingDiscounts } = useDiscounts();
 
   const getTShirtTypes = (product: Product) => {
     const types = [];
@@ -65,7 +65,7 @@ export const DetailsPage = () => {
 
   const setProductFromFirebase = async () => {
     const product = await getProductById(productId ?? '');
-    const activeDiscounts = await getDiscounts();
+    const activeDiscounts = await getActiveDiscounts();
 
     if (product) {
       const tShirtTypes = getTShirtTypes(product);

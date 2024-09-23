@@ -42,7 +42,7 @@ export const Cart = ({ setShowModal, showModal, cartItems }: Props) => {
   const { getProductById } = useProducts();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { getDiscounts, isLoading: isFetchingDiscounts } = useDiscounts();
+  const { getActiveDiscounts, isLoading: isFetchingDiscounts } = useDiscounts();
   const { getShipping, isLoading: isFetchingShipping } = useShipping();
   const { closing, handleClose } = useModalClose(() => setShowModal(false));
   const screenSize = useScreenSize();
@@ -55,7 +55,7 @@ export const Cart = ({ setShowModal, showModal, cartItems }: Props) => {
   };
 
   const setItemsToCart = async () => {
-    const activeDiscounts = await getDiscounts();
+    const activeDiscounts = await getActiveDiscounts();
     const localCartItems: LocalItem[] = getLocalItems();
 
     const cartItems: CartProduct[] = [];

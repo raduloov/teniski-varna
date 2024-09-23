@@ -21,4 +21,5 @@ const MenuContainer = styled.div`
   position: relative;
   display: flex;
   flex-direction: column;
+  max-width: 350px;
 `;

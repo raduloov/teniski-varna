@@ -280,11 +280,17 @@ export const getDiscountedPrice = (price: number, discount?: number) =>
 
 export const getDiscountForProduct = (
   product: Product,
-  activeDiscounts: Array<Discount>
+  activeDiscounts: Discount[]
 ): number | undefined => {
-  const discounts: Array<number> = [];
+  const discounts: number[] = [];
 
   for (const discount of activeDiscounts) {
+    if (
+      discount.type === 'global' &&
+      !discounts.includes(discount.percentage)
+    ) {
+      discounts.push(discount.percentage);
+    }
     for (const label of discount.labelIds) {
       if (
         product.labels.includes(label) &&
