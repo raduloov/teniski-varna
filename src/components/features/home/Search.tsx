@@ -31,6 +31,10 @@ export const Search = () => {
       onClear={onClear}
       value={searchQuery}
       onChange={(e) => setSearchQuery(e.target.value)}
+      additionalStyles={`
+        flex-grow: 1;
+        transition: ease-out 0.3s;
+      `}
     />
   );
 };

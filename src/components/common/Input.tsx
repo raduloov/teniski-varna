@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { IconType } from 'react-icons';
 import { Color } from '../../assets/constants';
 import { icons } from '../../assets/icons';
@@ -16,6 +16,7 @@ interface Props {
   type?: string;
   min?: number;
   max?: number;
+  additionalStyles?: string;
 }
 
 export const Input = ({
@@ -29,7 +30,8 @@ export const Input = ({
   onBlur,
   type,
   min,
-  max
+  max,
+  additionalStyles
 }: Props) => {
   const iconElement = icon
     ? React.createElement(icon, {
@@ -39,7 +41,7 @@ export const Input = ({
     : null;
 
   return (
-    <InputContainer>
+    <InputContainer additionalStyles={additionalStyles}>
       {iconElement && <IconWrapper>{iconElement}</IconWrapper>}
       <input
         value={value}
@@ -81,7 +83,7 @@ const IconWrapper = styled.div`
   padding: 5px;
 `;
 
-const InputContainer = styled.div`
+const InputContainer = styled.div<{ additionalStyles?: string }>`
   display: flex;
   padding: 0.3rem;
   background-color: ${Color.LIGHT_GRAY};
@@ -98,4 +100,8 @@ const InputContainer = styled.div`
       color: ${Color.MEDIUM_GRAY};
     }
   }
+
+  ${({ additionalStyles }) => css`
+    ${additionalStyles}
+  `}
 `;

@@ -16,11 +16,11 @@ export const App = () => {
   const currentPath = location.pathname;
   const screenSize = useScreenSize();
 
-  const isLargeScreen = screenSize === ScreenSize.LARGE;
-  const showMenuDesktop = isLargeScreen && currentPath !== '/admin-panel';
+  const isSmallScreen = screenSize === ScreenSize.SMALL;
+  const showMenuDesktop = !isSmallScreen && currentPath !== '/admin-panel';
 
   const excludeFooterArray = ['/admin-panel'];
-  if (isLargeScreen) {
+  if (!isSmallScreen) {
     excludeFooterArray.push('/products');
   }
 
@@ -59,7 +59,7 @@ const StyledToast = styled(ToastContainer)`
 `;
 
 const DesktopLayout = styled.div`
-  @media (min-width: 1024px) {
+  @media (min-width: 768px) {
     display: grid;
     grid-template-columns: 1fr auto 1fr;
     width: 100%;

@@ -75,9 +75,9 @@ const StyledSwiper = styled(Swiper)`
   box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.25);
 
   @media (min-width: 768px) {
+    transform: translateY(0);
     height: 350px;
-    border-bottom-left-radius: 30px;
-    border-bottom-right-radius: 30px;
+    border-radius: 30px;
   }
 
   @media (min-width: 1366px) {

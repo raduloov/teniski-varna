@@ -9,7 +9,7 @@ export const MenuLogo = styled(Logo)`
   height: 100px;
   cursor: pointer;
 
-  @media (min-width: 1024px) {
+  @media (min-width: 768px) {
     top: 2rem;
     left: 2rem;
     transform: translateX(0);

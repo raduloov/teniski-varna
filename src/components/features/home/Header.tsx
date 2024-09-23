@@ -22,7 +22,7 @@ export const Header = () => {
     useElementOnScreen({ threshold: 0.4 });
   const screenSize = useScreenSize();
 
-  const isSmallScreen = screenSize !== ScreenSize.LARGE;
+  const isSmallScreen = screenSize === ScreenSize.SMALL;
 
   useEffect(() => {
     // When user clicks on toast, navigate home with openCart in state
@@ -65,18 +65,38 @@ export const Header = () => {
           <Logo />
         </TitleWrapper>
 
-        <CartButtonWrapper>
+        {isSmallScreen && (
+          <CartButtonWrapper>
+            <CartButton
+              onOpenCart={() => setShowModal(true)}
+              itemsQuantity={cartItemsQuantity}
+              isInBounds={cartIsVisible}
+            />
+          </CartButtonWrapper>
+        )}
+      </LogoContainer>
+      {isSmallScreen && <Search />}
+      {!isSmallScreen && (
+        <SearchAndCartWrapper>
+          <Search />
           <CartButton
             onOpenCart={() => setShowModal(true)}
             itemsQuantity={cartItemsQuantity}
             isInBounds={cartIsVisible}
           />
-        </CartButtonWrapper>
-      </LogoContainer>
-      <Search />
+        </SearchAndCartWrapper>
+      )}
     </HeaderContainer>
   );
 };
+
+const SearchAndCartWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1.5rem;
+  min-height: 3.5rem;
+`;
 
 const TitleWrapper = styled.div`
   display: flex;
@@ -126,6 +146,10 @@ const HeaderContainer = styled.div`
   box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.25);
   z-index: 800;
   background-color: ${Color.WHITE};
+
+  @media (min-width: 768px) {
+    box-shadow: none;
+  }
 `;
 
 const LogoContainer = styled.div`
