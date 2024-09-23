@@ -51,7 +51,7 @@ const FixedButtonWrapper = styled.div<{
     `
         position: fixed;
         bottom: 2.5rem;
-        transform: translateX(160%);
+        transform: translateX(120%);
         ${scrollButtonAppearAnimation}
 
         @media (max-width: 1024px) {

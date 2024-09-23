@@ -116,11 +116,11 @@ export const scrollButtonAppearAnimation = css`
     @keyframes scrollAppear-desktop {
       from {
         opacity: 0;
-        transform: translate(160%) scale(1.2);
+        transform: translate(120%) scale(1.2);
       }
       to {
         opacity: 1;
-        transform: translate(160%) scale(1);
+        transform: translate(120%) scale(1);
       }
     }
   }
