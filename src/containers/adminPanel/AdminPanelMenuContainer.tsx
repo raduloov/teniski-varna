@@ -10,8 +10,14 @@ import { LabelsContainer } from './LabelsContainer';
 import { DiscountsMenuContainer } from './DiscountsContainer';
 import { ManageProductsContainer } from './ManageProductsContainer';
 import { UpdateShippingCostContainer } from './UpdateShippingCostContainer';
+// import { PromoCodesContainer } from './PromoCodesContainer';
+import { User } from 'firebase/auth';
 
-export const AdminPanelMenuContainer = () => {
+interface Props {
+  user: User;
+}
+
+export const AdminPanelMenuContainer = ({ user }: Props) => {
   const [showAddNewProduct, setShowAddNewProduct] = useState<boolean>(false);
   const [showManageProducts, setShowManageProducts] = useState<boolean>(false);
   const [showUpdateBannerImage, setShowUpdateBannerImage] =
@@ -20,6 +26,7 @@ export const AdminPanelMenuContainer = () => {
   const [showDiscounts, setShowDiscounts] = useState<boolean>(false);
   const [showUpdateShippingCost, setShowUpdateShippingCost] =
     useState<boolean>(false);
+  // const [showPromoCodes, setShowPromoCodes] = useState<boolean>(false);
   const { signOut } = useAuth();
 
   const isPageSelected =
@@ -29,6 +36,7 @@ export const AdminPanelMenuContainer = () => {
     showDiscounts ||
     showUpdateBannerImage ||
     showUpdateShippingCost;
+  // showPromoCodes;
 
   return (
     <Container>
@@ -36,7 +44,7 @@ export const AdminPanelMenuContainer = () => {
         <Header>
           <AdminWrapper>
             <HeaderText>Signed in as</HeaderText>
-            <BoldText>test@admin.com</BoldText>
+            <BoldText>{user.email}</BoldText>
           </AdminWrapper>
           <Button
             label={'Sign out'}
@@ -52,6 +60,7 @@ export const AdminPanelMenuContainer = () => {
         {showLabels && <LabelsContainer />}
         {showDiscounts && <DiscountsMenuContainer />}
         {showUpdateShippingCost && <UpdateShippingCostContainer />}
+        {/* {showPromoCodes && <PromoCodesContainer />} */}
         {!isPageSelected && (
           <ButtonContainer>
             <Button
@@ -78,6 +87,10 @@ export const AdminPanelMenuContainer = () => {
               label={'Update shipping cost'}
               onClick={() => setShowUpdateShippingCost(true)}
             />
+            {/* <Button
+              label={'Update promo codes'}
+              onClick={() => setShowPromoCodes(true)}
+            /> */}
           </ButtonContainer>
         )}
       </PanelContainer>
@@ -90,6 +103,7 @@ export const AdminPanelMenuContainer = () => {
             setShowLabels(false);
             setShowDiscounts(false);
             setShowUpdateShippingCost(false);
+            // setShowPromoCodes(false);
           }}
         >
           <p>Back to Menu</p>
