@@ -6,7 +6,8 @@ import { IconButton } from './IconButton';
 
 export enum ModalEnterAnimation {
   SLIDE_DOWN = 'enter-slide-down',
-  SLIDE_RIGHT = 'enter-slide-right'
+  SLIDE_RIGHT = 'enter-slide-right',
+  SLIDE_LEFT = 'enter-slide-left'
 }
 
 export enum ModalExitAnimation {
@@ -175,6 +176,15 @@ const ModalOverlayCont = styled.div<{
     }
   }
 
+  @keyframes enter-slide-left {
+    0% {
+      right: -100%;
+    }
+    100% {
+      right: 0%;
+    }
+  }
+
   @keyframes exit-slide-left {
     0% {
       left: 0%;
@@ -186,10 +196,10 @@ const ModalOverlayCont = styled.div<{
 
   @keyframes exit-slide-right {
     0% {
-      left: 50%;
+      right: 0%;
     }
     100% {
-      left: 200%;
+      right: -200%;
     }
   }
 `;

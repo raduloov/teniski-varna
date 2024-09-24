@@ -115,7 +115,7 @@ export const Cart = ({ setShowModal, showModal, cartItems }: Props) => {
       {showModal && (
         <Modal
           onClose={handleClose}
-          enterAnimation={ModalEnterAnimation.SLIDE_DOWN}
+          enterAnimation={ModalEnterAnimation.SLIDE_LEFT}
           exitAnimation={ModalExitAnimation.SLIDE_RIGHT}
           closing={closing}
           backButton
@@ -123,8 +123,8 @@ export const Cart = ({ setShowModal, showModal, cartItems }: Props) => {
             ${
               isLargeScreen
                 ? `
-                left: 50%;
-                transform: translate(-50%);
+                min-width: 30%;
+                height: 100vh;
               `
                 : `
                 width: 100%;
