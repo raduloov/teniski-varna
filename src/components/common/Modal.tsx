@@ -112,6 +112,8 @@ const BackDropCont = styled.div<{ closing: boolean }>`
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.75);
   z-index: 900;
+  // hacky way to prevent background scrolling on iOS
+  touch-action: none;
   animation: ${({ closing }) =>
     closing
       ? 'disappear 0.5s ease-out forwards'
@@ -147,6 +149,8 @@ const ModalOverlayCont = styled.div<{
   background-color: white;
   border-radius: 4px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+  // hacky way to prevent background scrolling on iOS
+  touch-action: none;
   transition: all 0.5s ease-out;
   animation: ${({ closing, enterAnimation, exitAnimation }) =>
     closing

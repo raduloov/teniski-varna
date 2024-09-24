@@ -140,7 +140,7 @@ export const Cart = ({ setShowModal, showModal, cartItems }: Props) => {
               </ActivityIndicatorWrapper>
             ) : (
               <>
-                <CartContainer>
+                <CartContainer disableScroll={cartItems.length < 3}>
                   <>
                     {cartItems.length > 0 &&
                       cartItems.map((product) => (
@@ -197,15 +197,17 @@ const Container = styled.div`
 
 const CartHeader = styled.h1`
   position: absolute;
-  color: #000000;
+  color: ${Color.BLACK};
   background-color: transparent;
   font-size: 1.25rem;
   font-weight: 500;
   top: 6.5%;
   right: calc(50% + -32px);
+  // hacky way to prevent background scrolling on iOS
+  touch-action: none;
 `;
 
-const CartContainer = styled.div`
+const CartContainer = styled.div<{ disableScroll: boolean }>`
   padding: 2rem;
   display: flex;
   height: 100%;
@@ -214,15 +216,17 @@ const CartContainer = styled.div`
   align-items: center;
   margin-top: 1rem;
   gap: 1rem;
+  padding-bottom: 400px;
   overflow-y: auto;
+  // hacky way to fix background scrolling on iOS
+  ${({ disableScroll }) => disableScroll && `touch-action: none;`}
 `;
 
 const CartFooter = styled.div`
-  margin-top: auto;
+  position: fixed;
   background-color: #ffffff;
   z-index: 12;
   bottom: 0;
-  left: 0;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -232,6 +236,7 @@ const CartFooter = styled.div`
   border-top-right-radius: 2.5rem;
   border-top-left-radius: 2.5rem;
   box-shadow: 0px -2px 10px rgba(0, 0, 0, 0.15);
+  touch-action: none;
 `;
 
 const RemainingAmount = styled.span`

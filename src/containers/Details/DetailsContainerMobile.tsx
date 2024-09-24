@@ -19,7 +19,6 @@ import { ColorSelector } from '../../components/features/details/ColorSelector';
 import { TShirtColor } from '../adminPanel/utils';
 import { ActivityIndicator } from '../../components/common/ActivityIndicator';
 import { translateTypeToBulgarian } from '../../components/features/cart/utils';
-import { useNavigate } from 'react-router';
 import { Modal } from '../../components/common/Modal';
 import { Cart } from '../../components/features/cart/Cart';
 import { CartButton } from '../../components/features/cart/CartButton';
@@ -81,7 +80,6 @@ export const DetailsContainerMobile = ({
 }: Props) => {
   const cartItems = useAppSelector((state) => state.cart);
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
 
   const { closing: sizeInfoClosing, handleClose: handleCloseSizeInfo } =
     useModalClose(() => onShowSizeInfo());
@@ -116,7 +114,10 @@ export const DetailsContainerMobile = ({
     );
 
     toast.success(`🎉 ${product.title} беше успешно добавен в кошницата.`, {
-      onClick: () => navigate('/', { state: { openCart: true } })
+      onClick: () => {
+        onShowCart();
+        toast.dismiss();
+      }
     });
   };
 
