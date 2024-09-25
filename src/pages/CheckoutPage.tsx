@@ -1,7 +1,19 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import * as MyPOSEmbedded from 'mypos-embedded-checkout';
+import { Input } from '../components/common/Input';
+import { usePromoCodes } from '../hooks/usePromoCodes';
 
 export const CheckoutPage = () => {
+  const [promoCode, setPromoCode] = useState<string>('');
+
+  const { checkPromoCode } = usePromoCodes();
+
+  const checkPromoCodeValidity = async () => {
+    const code = await checkPromoCode(promoCode);
+
+    console.log('promo code: ', code);
+  };
+
   const testOID = Math.random().toString(36).substr(2, 9);
   //change to guid or uuid later
 
@@ -55,9 +67,14 @@ export const CheckoutPage = () => {
 
   return (
     <div>
+      <Input
+        value={promoCode}
+        placeholder={'Промо код'}
+        onChange={(e) => setPromoCode(e.target.value)}
+        onEnterKey={checkPromoCodeValidity}
+      />
       <h1>Checkout</h1>
       <div id="embeddedCheckout"></div>
     </div>
   );
 };
-
