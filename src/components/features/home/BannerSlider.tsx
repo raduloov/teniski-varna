@@ -10,7 +10,7 @@ import { Banner, FileType, useBanners } from '../../../hooks/useBanners';
 export const BannerSlider = () => {
   const [banners, setBanners] = useState<Banner[]>([]);
   const [fileHasLoaded, setFileHasLoaded] = useState<boolean>(false);
-  const { getBanners, isFetchingBanners } = useBanners();
+  const { getBanners } = useBanners();
 
   const setBannersFromFirebase = async () => {
     const banners = await getBanners();
@@ -33,7 +33,7 @@ export const BannerSlider = () => {
       {banners.map((banner) => (
         <SwiperSlide key={banner.id}>
           <FileWrapper>
-            {(!fileHasLoaded || isFetchingBanners) && (
+            {!fileHasLoaded && (
               <ActivityIndicator size={75} color={Color.ACCENT} />
             )}
             {banner.fileType === FileType.IMAGE ? (
@@ -48,6 +48,7 @@ export const BannerSlider = () => {
             ) : (
               <Video
                 src={banner.fileUrl}
+                loaded={fileHasLoaded}
                 autoPlay
                 muted
                 loop
@@ -71,8 +72,9 @@ const FileWrapper = styled.div`
   cursor: pointer;
 `;
 
-const Video = styled.video`
+const Video = styled.video<{ loaded: boolean }>`
   width: 100%;
+  ${({ loaded }) => !loaded && 'display: none;'}
 `;
 
 const Image = styled.img<{ loaded: boolean }>`
