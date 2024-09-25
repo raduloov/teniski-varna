@@ -3,10 +3,16 @@ import { useState } from 'react';
 import { db } from '../firebase/firebaseConfig';
 import { toast } from 'react-toastify';
 
+export enum FileType {
+  IMAGE = 'image',
+  VIDEO = 'video'
+}
+
 export interface Banner {
   id: string;
   name: string;
-  imageUrl: string;
+  fileType: FileType;
+  fileUrl: string;
   redirectUrl: string;
   index: number;
 }

@@ -13,15 +13,15 @@ import {
 } from '@firebase/firestore';
 import { db, storage } from '../../firebase/firebaseConfig';
 import { ImageInput } from '../../components/common/ImageInput';
-import { supportedImageTypes } from './utils';
-import { Banner, useBanners } from '../../hooks/useBanners';
+import { supportedImageTypes, supportedVideoTypes } from './utils';
+import { Banner, FileType, useBanners } from '../../hooks/useBanners';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { v4 as uuid4 } from 'uuid';
 import { EdittableAndSelectableItems } from '../../components/common/EdittableAndSelectableItems';
 
 export const UpdateBannerImageContainer = () => {
   const [banners, setBanners] = useState<Banner[]>([]);
-  const [image, setImage] = useState<File>();
+  const [file, setFile] = useState<File>();
   const [bannerLink, setBannerLink] = useState<string>('');
   const [newBannerIndex, setNewBannerIndex] = useState<number>(0);
   const [bannerIdToEdit, setBannerIdToEdit] = useState<string | null>(null);
@@ -59,7 +59,7 @@ export const UpdateBannerImageContainer = () => {
         }
       }
 
-      toast.success('🎉 Labels updated successfully!');
+      toast.success('🎉 Banners updated successfully!');
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       setIsLoading(false);
@@ -70,35 +70,42 @@ export const UpdateBannerImageContainer = () => {
     }
   };
 
-  const uploadImage = async (image: File) => {
-    const bannerId = uuid4();
-    const storageRef = ref(storage, `bannerImages/${bannerId}`);
-    const snapshot = await uploadBytes(storageRef, image as File);
-    const imageUrl = await getDownloadURL(snapshot.ref);
+  const uploadFile = async (file: File) => {
+    const fileType = file.type.split('/')[0];
+    const isVideo = fileType === FileType.VIDEO;
 
-    return { bannerId, imageUrl };
+    const bannerId = uuid4();
+    const storageRef = ref(
+      storage,
+      `${isVideo ? 'bannerVideos' : 'bannerImages'}/${bannerId}`
+    );
+    const snapshot = await uploadBytes(storageRef, file as File);
+    const fileUrl = await getDownloadURL(snapshot.ref);
+
+    return { bannerId, fileUrl, fileType };
   };
 
   const handleAddNewBanner = async () => {
-    if (!image) {
+    if (!file) {
       return;
     }
 
     setIsLoading(true);
 
-    const { bannerId, imageUrl } = await uploadImage(image);
+    const { bannerId, fileUrl, fileType } = await uploadFile(file);
 
     const newBanner = {
       id: bannerId,
-      name: image.name,
-      imageUrl: '',
+      name: file.name,
+      fileType,
+      fileUrl: '',
       redirectUrl: bannerLink,
       index: newBannerIndex
     };
 
     const newBanners: Banner[] = [];
 
-    newBanner.imageUrl = imageUrl;
+    newBanner.fileUrl = fileUrl;
 
     // if banner with the same index exists, increment all labels with index >= newLabelIndex
     if (banners.some((banner) => banner.index === newBannerIndex)) {
@@ -136,14 +143,14 @@ export const UpdateBannerImageContainer = () => {
       );
     }
 
-    bannerToEdit.name = image ? image.name : bannerToEdit.name;
+    bannerToEdit.name = file ? file.name : bannerToEdit.name;
     bannerToEdit.index =
       newBannerIndex > banners.length - 1 ? banners.length - 1 : newBannerIndex;
     bannerToEdit.redirectUrl = bannerLink;
 
-    if (image) {
-      const { imageUrl } = await uploadImage(image);
-      bannerToEdit.imageUrl = imageUrl;
+    if (file) {
+      const { fileUrl } = await uploadFile(file);
+      bannerToEdit.fileUrl = fileUrl;
     }
 
     const newBanners: Banner[] = [];
@@ -190,7 +197,7 @@ export const UpdateBannerImageContainer = () => {
   };
 
   const resetForm = () => {
-    setImage(undefined);
+    setFile(undefined);
     setBannerIdToEdit(null);
     setNewBannerIndex(0);
     setBannerLink('');
@@ -215,10 +222,10 @@ export const UpdateBannerImageContainer = () => {
       <Text>{actionButtonLabel}</Text>
       <InputContainer>
         <ImageInput
-          fileName={image?.name}
-          supportedTypes={supportedImageTypes}
+          fileName={file?.name}
+          supportedTypes={[...supportedImageTypes, ...supportedVideoTypes]}
           onChange={(e) => {
-            e.target.files && setImage(e.target.files[0]);
+            e.target.files && setFile(e.target.files[0]);
           }}
         />
         <LinkAndIndexContainer>
@@ -246,7 +253,7 @@ export const UpdateBannerImageContainer = () => {
       <ButtonContainer>
         <Button
           label={actionButtonLabel}
-          disabled={!bannerIdToEdit && image === undefined}
+          disabled={!bannerIdToEdit && file === undefined}
           loading={isLoading}
           onClick={handleActionButtonFunction}
         />

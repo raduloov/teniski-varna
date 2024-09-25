@@ -5,11 +5,11 @@ import { Autoplay } from 'swiper/modules';
 import 'swiper/css';
 import { Color } from '../../../assets/constants';
 import { ActivityIndicator } from '../../common/ActivityIndicator';
-import { Banner, useBanners } from '../../../hooks/useBanners';
+import { Banner, FileType, useBanners } from '../../../hooks/useBanners';
 
 export const BannerSlider = () => {
   const [banners, setBanners] = useState<Banner[]>([]);
-  const [imageHasLoaded, setImageHasLoaded] = useState<boolean>(false);
+  const [fileHasLoaded, setFileHasLoaded] = useState<boolean>(false);
   const { getBanners, isFetchingBanners } = useBanners();
 
   const setBannersFromFirebase = async () => {
@@ -27,36 +27,47 @@ export const BannerSlider = () => {
   return (
     <StyledSwiper
       modules={[Autoplay]}
-      autoplay={{ delay: 2500, disableOnInteraction: true }}
+      autoplay={{ delay: 3000, disableOnInteraction: true }}
+      loop
     >
       {banners.map((banner) => (
         <SwiperSlide key={banner.id}>
-          <ImageWrapper>
-            {!imageHasLoaded ||
-              (isFetchingBanners && (
-                <ActivityIndicator size={75} color={Color.ACCENT} />
-              ))}
-            <Image
-              src={banner.imageUrl}
-              loaded={imageHasLoaded}
-              onLoad={() => {
-                setImageHasLoaded(true);
-              }}
-              onClick={() => navigateToBannerLink(banner.redirectUrl)}
-            />
-          </ImageWrapper>
+          <FileWrapper>
+            {(!fileHasLoaded || isFetchingBanners) && (
+              <ActivityIndicator size={75} color={Color.ACCENT} />
+            )}
+            {banner.fileType === FileType.IMAGE ? (
+              <Image
+                src={banner.fileUrl}
+                loaded={fileHasLoaded}
+                onLoad={() => {
+                  setFileHasLoaded(true);
+                }}
+                onClick={() => navigateToBannerLink(banner.redirectUrl)}
+              />
+            ) : (
+              <video
+                src={banner.fileUrl}
+                autoPlay
+                muted
+                loop
+                onClick={() => navigateToBannerLink(banner.redirectUrl)}
+              ></video>
+            )}
+          </FileWrapper>
         </SwiperSlide>
       ))}
     </StyledSwiper>
   );
 };
 
-const ImageWrapper = styled.div`
+const FileWrapper = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
 `;
 
 const Image = styled.img<{ loaded: boolean }>`

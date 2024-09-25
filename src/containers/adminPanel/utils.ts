@@ -1,5 +1,5 @@
 import { Product } from '../../domain/models/ProductDTO';
-import { Discount } from '../../hooks/useDiscounts';
+import { Discount, DiscountType } from '../../hooks/useDiscounts';
 
 export enum TShirtColor {
   WHITE = 'white',
@@ -246,6 +246,7 @@ export const defaultImageDetails: ImageDetails = {
 };
 
 export const supportedImageTypes = ['image/jpeg', 'image/png'];
+export const supportedVideoTypes = ['video/mp4'];
 
 export const availableTShirtColors = [
   TShirtColor.WHITE,
@@ -286,7 +287,7 @@ export const getDiscountForProduct = (
 
   for (const discount of activeDiscounts) {
     if (
-      discount.type === 'global' &&
+      discount.type === DiscountType.GLOBAL &&
       !discounts.includes(discount.percentage)
     ) {
       discounts.push(discount.percentage);
