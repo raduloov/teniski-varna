@@ -203,6 +203,7 @@ export const LabelsContainer = () => {
       <EdittableAndSelectableItems
         items={labels}
         isFetchingItems={isFetchingLabels}
+        // @ts-ignore
         handleStartEditingItem={handleStartEditingLabel}
       />
       <Text>{actionButtonLabel}</Text>

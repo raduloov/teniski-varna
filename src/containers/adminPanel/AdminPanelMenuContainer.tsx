@@ -10,7 +10,7 @@ import { LabelsContainer } from './LabelsContainer';
 import { DiscountsMenuContainer } from './DiscountsContainer';
 import { ManageProductsContainer } from './ManageProductsContainer';
 import { UpdateShippingCostContainer } from './UpdateShippingCostContainer';
-// import { PromoCodesContainer } from './PromoCodesContainer';
+import { PromoCodesContainer } from './PromoCodesContainer';
 import { User } from 'firebase/auth';
 
 interface Props {
@@ -26,7 +26,7 @@ export const AdminPanelMenuContainer = ({ user }: Props) => {
   const [showDiscounts, setShowDiscounts] = useState<boolean>(false);
   const [showUpdateShippingCost, setShowUpdateShippingCost] =
     useState<boolean>(false);
-  // const [showPromoCodes, setShowPromoCodes] = useState<boolean>(false);
+  const [showPromoCodes, setShowPromoCodes] = useState<boolean>(false);
   const { signOut } = useAuth();
 
   const isPageSelected =
@@ -35,8 +35,8 @@ export const AdminPanelMenuContainer = ({ user }: Props) => {
     showLabels ||
     showDiscounts ||
     showUpdateBannerImage ||
-    showUpdateShippingCost;
-  // showPromoCodes;
+    showUpdateShippingCost ||
+    showPromoCodes;
 
   return (
     <Container>
@@ -60,7 +60,7 @@ export const AdminPanelMenuContainer = ({ user }: Props) => {
         {showLabels && <LabelsContainer />}
         {showDiscounts && <DiscountsMenuContainer />}
         {showUpdateShippingCost && <UpdateShippingCostContainer />}
-        {/* {showPromoCodes && <PromoCodesContainer />} */}
+        {showPromoCodes && <PromoCodesContainer />}
         {!isPageSelected && (
           <ButtonContainer>
             <Button
@@ -80,17 +80,17 @@ export const AdminPanelMenuContainer = ({ user }: Props) => {
               onClick={() => setShowDiscounts(true)}
             />
             <Button
-              label={'Update banners'}
+              label={'Banners'}
               onClick={() => setShowUpdateBannerImage(true)}
             />
             <Button
-              label={'Update shipping cost'}
+              label={'Shipping cost'}
               onClick={() => setShowUpdateShippingCost(true)}
             />
-            {/* <Button
-              label={'Update promo codes'}
+            <Button
+              label={'Promo codes'}
               onClick={() => setShowPromoCodes(true)}
-            /> */}
+            />
           </ButtonContainer>
         )}
       </PanelContainer>
@@ -103,7 +103,7 @@ export const AdminPanelMenuContainer = ({ user }: Props) => {
             setShowLabels(false);
             setShowDiscounts(false);
             setShowUpdateShippingCost(false);
-            // setShowPromoCodes(false);
+            setShowPromoCodes(false);
           }}
         >
           <p>Back to Menu</p>

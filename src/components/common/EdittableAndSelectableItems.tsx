@@ -6,11 +6,12 @@ import { icons } from '../../assets/icons';
 import { IconButton } from './IconButton';
 import { ActivityIndicator } from './ActivityIndicator';
 import { Banner } from '../../hooks/useBanners';
+import { PromoCode } from '../../hooks/usePromoCodes';
 
 interface Props {
-  items: Label[] | Banner[];
+  items: Label[] | Banner[] | PromoCode[];
   isFetchingItems: boolean;
-  handleStartEditingItem?: (item: Label | Banner) => void;
+  handleStartEditingItem?: (item: Label | Banner | PromoCode) => void;
   handleSelectItem?: (itemId: string) => void;
   selectedItemIds?: string[];
   /**

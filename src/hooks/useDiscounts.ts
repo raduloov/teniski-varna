@@ -20,10 +20,10 @@ export interface Discount {
 export const useDiscounts = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
+  const discountsCollectionRef = collection(db, 'discounts');
+
   const getDiscounts = async () => {
     setIsLoading(true);
-
-    const discountsCollectionRef = collection(db, 'discounts');
 
     try {
       const data = await getDocs(discountsCollectionRef);
@@ -44,8 +44,6 @@ export const useDiscounts = () => {
 
   const getActiveDiscounts = async () => {
     setIsLoading(true);
-
-    const discountsCollectionRef = collection(db, 'discounts');
 
     try {
       const data = await getDocs(discountsCollectionRef);
