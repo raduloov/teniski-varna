@@ -223,7 +223,6 @@ const CartContainer = styled.div<{ disableScroll: boolean }>`
 `;
 
 const CartFooter = styled.div`
-  position: fixed;
   background-color: #ffffff;
   z-index: 12;
   bottom: 0;
@@ -237,6 +236,10 @@ const CartFooter = styled.div`
   border-top-left-radius: 2.5rem;
   box-shadow: 0px -2px 10px rgba(0, 0, 0, 0.15);
   touch-action: none;
+
+  @media (max-width: 768px) {
+    position: fixed;
+  }
 `;
 
 const RemainingAmount = styled.span`
