@@ -46,13 +46,14 @@ export const BannerSlider = () => {
                 onClick={() => navigateToBannerLink(banner.redirectUrl)}
               />
             ) : (
-              <video
+              <Video
                 src={banner.fileUrl}
                 autoPlay
                 muted
                 loop
+                playsInline
                 onClick={() => navigateToBannerLink(banner.redirectUrl)}
-              ></video>
+              />
             )}
           </FileWrapper>
         </SwiperSlide>
@@ -70,10 +71,13 @@ const FileWrapper = styled.div`
   cursor: pointer;
 `;
 
+const Video = styled.video`
+  width: 100%;
+`;
+
 const Image = styled.img<{ loaded: boolean }>`
   width: 100%;
   height: 100%;
-  cursor: pointer;
   ${({ loaded }) => !loaded && 'display: none;'}
 `;
 
