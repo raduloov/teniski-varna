@@ -4,13 +4,23 @@ import { Input } from '../components/common/Input';
 import { usePromoCodes } from '../hooks/usePromoCodes';
 import { v4 as uuid4 } from 'uuid';
 import { useLocation } from 'react-router';
-import { cartItemsMapperToMYPOSObject } from '../domain/mappers/cartProductMapper';
+import {
+  cartItemsMapperToMYPOSObject,
+  CartProduct
+} from '../domain/mappers/cartProductMapper';
 
 export const CheckoutPage = () => {
   const { state } = useLocation();
   const [promoCode, setPromoCode] = useState<string>('');
   const { checkPromoCode } = usePromoCodes();
+  console.log('state', state.cartItems);
   const myPosCartItems = cartItemsMapperToMYPOSObject(state.cartItems);
+  const cartItemsNote = state.cartItems
+    ?.map(
+      (item: CartProduct) =>
+        `${item.color}, ${item.type}, ${item.title}, ${item.size}, ${item.description}`
+    )
+    .join(', ');
   const [myPosPriceTotal, setMyPosPriceTotal] = useState<number>(
     +myPosCartItems
       ?.reduce((acc, item) => acc + item.price * item.quantity, 0)
@@ -42,7 +52,8 @@ export const CheckoutPage = () => {
       !isShippingFree
         ? { article: 'Доставка', quantity: 1, price: 5, currency: 'BGN' }
         : ''
-    ]
+    ],
+    Note: cartItemsNote
   };
 
   const callbackParams = {
