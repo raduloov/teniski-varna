@@ -170,7 +170,9 @@ export const Cart = ({ setShowModal, showModal, cartItems }: Props) => {
                   </CartPriceContainer>
                   <Button
                     label={'Купи'}
-                    onClick={() => navigate('checkout')}
+                    onClick={() =>
+                      navigate('checkout', { state: { cartItems } })
+                    }
                   ></Button>
                 </CartFooter>
               </>

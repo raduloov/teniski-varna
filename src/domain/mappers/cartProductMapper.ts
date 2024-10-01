@@ -14,6 +14,13 @@ export interface CartProduct {
   type: TShirtType;
 }
 
+export interface MYPOSProduct {
+  article: string;
+  quantity: number;
+  price: number;
+  currency: string;
+}
+
 export const mapProductToCartProduct = (
   product: Product,
   color: TShirtColor,
@@ -33,3 +40,15 @@ export const mapProductToCartProduct = (
   quantity,
   type: selectedType
 });
+
+export const cartItemsMapperToMYPOSObject = (
+  cartItems: CartProduct[]
+): MYPOSProduct[] =>
+  cartItems.map(
+    (item: CartProduct): MYPOSProduct => ({
+      article: item.title,
+      quantity: item.quantity,
+      price: item.price,
+      currency: 'BGN'
+    })
+  );
