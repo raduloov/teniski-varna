@@ -18,14 +18,14 @@ const pages = [
     path: '/favorites'
   },
   {
-    name: 'Контакти',
-    icon: icons.FaPhone,
-    path: '/contact'
-  },
-  {
     name: 'За нас',
     icon: icons.FaInfoCircle,
     path: '/about'
+  },
+  {
+    name: 'Контакти',
+    icon: icons.FaPhone,
+    path: '/contact'
   },
   {
     name: 'FAQ',
@@ -122,6 +122,7 @@ const CartButton = styled.div`
 
 const StyledLink = styled(Link)<{ currentPage: boolean }>`
   display: flex;
+  align-items: center;
   gap: 0.5rem;
   padding: 0.5rem;
   font-size: 1.5rem;

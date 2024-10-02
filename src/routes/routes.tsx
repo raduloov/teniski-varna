@@ -8,7 +8,8 @@ import { FAQPage } from '../pages/FAQPage';
 import { AboutPage } from '../pages/AboutPage';
 import { ContactPage } from '../pages/ContactPage';
 import { FavoritesPage } from '../pages/FavoritesPage';
-import { PoliciesPage } from '../pages/PoliciesPage';
+import { TermsAndConditionsPage } from '../pages/TermsAndConditionsPage';
+import { PrivacyPolicyPage } from '../pages/PrivacyPolicyPage';
 
 export const AppRoutes = () => {
   return (
@@ -21,7 +22,11 @@ export const AppRoutes = () => {
       <Route path="/contact" element={<ContactPage />} />
       <Route path="/faq" element={<FAQPage />} />
       <Route path="/favorites" element={<FavoritesPage />} />
-      <Route path="/policies" element={<PoliciesPage />} />
+      <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+      <Route
+        path="/terms-and-conditions"
+        element={<TermsAndConditionsPage />}
+      />
     </Routes>
   );
 };

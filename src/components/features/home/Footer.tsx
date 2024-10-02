@@ -15,7 +15,9 @@ const socialMediaLinks = {
 const navigationItems = [
   { name: 'Начало', path: '/' },
   { name: 'Любими', path: '/favorites' },
-  { name: 'За нас', path: '/about' }
+  { name: 'За нас', path: '/about' },
+  { name: 'Общи условия', path: '/terms-and-conditions' },
+  { name: 'Политика за Личните Данни', path: '/privacy-policy' }
 ];
 
 const NavigationItems = () => {
