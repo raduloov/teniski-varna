@@ -57,11 +57,13 @@ export const CheckoutPage = () => {
   };
 
   const callbackParams = {
+    // eslint-disable-next-line
     onSuccess: function (data: any) {
       console.log('success callback');
       console.log(data);
     },
 
+    // eslint-disable-next-line
     onError: function (data: any) {
       console.log('error');
       console.log(data);
