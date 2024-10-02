@@ -27,6 +27,7 @@ export const AppRoutes = () => {
         path="/terms-and-conditions"
         element={<TermsAndConditionsPage />}
       />
+      <Route path="*" element={<HomePage />} />
     </Routes>
   );
 };
