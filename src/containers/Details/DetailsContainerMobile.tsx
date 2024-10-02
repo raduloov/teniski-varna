@@ -19,13 +19,19 @@ import { ColorSelector } from '../../components/features/details/ColorSelector';
 import { TShirtColor } from '../adminPanel/utils';
 import { ActivityIndicator } from '../../components/common/ActivityIndicator';
 import { translateTypeToBulgarian } from '../../components/features/cart/utils';
-import { Modal } from '../../components/common/Modal';
+import {
+  Modal,
+  ModalEnterAnimation,
+  ModalExitAnimation
+} from '../../components/common/Modal';
 import { Cart } from '../../components/features/cart/Cart';
 import { CartButton } from '../../components/features/cart/CartButton';
 import { Footer } from '../../components/features/home/Footer';
 import { ReactComponent as ShippingButton } from '../../assets/images/shipping.svg';
 import { ReactComponent as MaterialsButton } from '../../assets/images/materials.svg';
 import { useModalClose } from '../../hooks/useModalClose';
+import { MaterialsInfoModalContainer } from '../info/MaterialsInfoModalContainer';
+import { ShippingInfoModalContainer } from '../info/ShippingInfoModalContainer';
 
 interface Props {
   product: Product;
@@ -253,8 +259,10 @@ export const DetailsContainerMobile = ({
         <Modal
           closing={sizeInfoClosing}
           onClose={handleCloseSizeInfo}
+          enterAnimation={ModalEnterAnimation.SLIDE_DOWN_CENTER}
+          exitAnimation={ModalExitAnimation.SLIDE_RIGHT_CENTER}
           additionalStyles={`
-            width: 90%;    
+            width: 90%;
           `}
         >
           <InfoModalWrapper>
@@ -263,22 +271,21 @@ export const DetailsContainerMobile = ({
         </Modal>
       )}
       {showShippingInfo && (
-        <Modal closing={shippingInfoClosing} onClose={handleCloseShippingInfo}>
-          <InfoModalWrapper>
-            <h1>Shipping info</h1>
-            <p>Waiting for Tomi to provide copy</p>
-          </InfoModalWrapper>
+        <Modal
+          closing={shippingInfoClosing}
+          onClose={handleCloseShippingInfo}
+          backButton
+        >
+          <ShippingInfoModalContainer />
         </Modal>
       )}
       {showMaterialsInfo && (
         <Modal
           closing={materialsInfoClosing}
           onClose={handleCloseMaterialsInfo}
+          backButton
         >
-          <InfoModalWrapper>
-            <h1>Materials info</h1>
-            <p>Waiting for Tomi to provide copy</p>
-          </InfoModalWrapper>
+          <MaterialsInfoModalContainer />
         </Modal>
       )}
     </>

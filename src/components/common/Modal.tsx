@@ -7,12 +7,14 @@ import { IconButton } from './IconButton';
 export enum ModalEnterAnimation {
   SLIDE_DOWN = 'enter-slide-down',
   SLIDE_RIGHT = 'enter-slide-right',
-  SLIDE_LEFT = 'enter-slide-left'
+  SLIDE_LEFT = 'enter-slide-left',
+  SLIDE_DOWN_CENTER = 'enter-slide-down-center'
 }
 
 export enum ModalExitAnimation {
   SLIDE_RIGHT = 'exit-slide-right',
-  SLIDE_LEFT = 'exit-slide-left'
+  SLIDE_LEFT = 'exit-slide-left',
+  SLIDE_RIGHT_CENTER = 'exit-slide-right-center'
 }
 
 const portalElement = document.getElementById('overlays') as HTMLElement;
@@ -189,6 +191,19 @@ const ModalOverlayCont = styled.div<{
     }
   }
 
+  @keyframes enter-slide-down-center {
+    0% {
+      top: -100%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    100% {
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+  }
+
   @keyframes exit-slide-left {
     0% {
       left: 0%;
@@ -204,6 +219,19 @@ const ModalOverlayCont = styled.div<{
     }
     100% {
       right: -200%;
+    }
+  }
+
+  @keyframes exit-slide-right-center {
+    0% {
+      top: 50%;
+      right: 0%;
+      transform: translate(-50%, -50%);
+    }
+    100% {
+      top: 50%;
+      right: -200%;
+      transform: translate(-50%, -50%);
     }
   }
 `;

@@ -17,7 +17,11 @@ import { ColorSelector } from '../../components/features/details/ColorSelector';
 import { TShirtColor } from '../adminPanel/utils';
 import { ActivityIndicator } from '../../components/common/ActivityIndicator';
 import { translateTypeToBulgarian } from '../../components/features/cart/utils';
-import { Modal } from '../../components/common/Modal';
+import {
+  Modal,
+  ModalEnterAnimation,
+  ModalExitAnimation
+} from '../../components/common/Modal';
 import { Cart } from '../../components/features/cart/Cart';
 // import { ReactComponent as ShippingButton } from '../../assets/images/shipping.svg';
 // import { ReactComponent as MaterialsButton } from '../../assets/images/materials.svg';
@@ -236,8 +240,10 @@ export const DetailsContainerDesktop = ({
         <Modal
           closing={sizeInfoClosing}
           onClose={handleCloseSizeInfo}
+          enterAnimation={ModalEnterAnimation.SLIDE_DOWN_CENTER}
+          exitAnimation={ModalExitAnimation.SLIDE_RIGHT_CENTER}
           additionalStyles={`
-            width: 90%;    
+            width: 50%;
           `}
         >
           <InfoModalWrapper>
