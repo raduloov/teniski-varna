@@ -68,9 +68,6 @@ const Wrapper = styled.div`
   padding: 0.5rem;
   padding-top: 1.5rem;
   color: ${Color.DARK_GRAY};
-
-  img {
-    max-width: 100%;
-    max-height: 100%;
-  }
+  max-height: 85vh;
+  overflow-y: scroll;
 `;
