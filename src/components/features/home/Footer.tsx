@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Color } from '../../../assets/constants';
 import { ReactComponent as Logo } from '../../../assets/images/logo.svg';
 import { icons } from '../../../assets/icons';
-import { useNavigate } from 'react-router';
+import { useCustomNavigate } from '../../../hooks/useCustomNavigate';
 
 const socialMediaLinks = {
   facebook: 'https://www.facebook.com/teniskitevarna',
@@ -21,7 +21,7 @@ const navigationItems = [
 ];
 
 const NavigationItems = () => {
-  const navigate = useNavigate();
+  const navigate = useCustomNavigate();
 
   return (
     <>

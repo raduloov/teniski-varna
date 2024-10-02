@@ -1,11 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { MenuLinks } from './MenuLinks';
 import { MenuLogo } from './MenuLogo';
+import { useCustomNavigate } from '../../../hooks/useCustomNavigate';
 
 export const MenuDesktop = () => {
-  const navigate = useNavigate();
+  const navigate = useCustomNavigate();
   const location = useLocation();
   const currentPage = location.pathname;
 

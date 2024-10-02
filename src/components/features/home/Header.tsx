@@ -4,19 +4,20 @@ import { icons } from '../../../assets/icons';
 import { Color } from '../../../assets/constants';
 import { Cart } from '../cart/Cart';
 import { useAppSelector } from '../../../hooks/useRedux';
-import { useLocation, useNavigate } from 'react-router';
+import { useLocation } from 'react-router';
 import { CartButton } from '../cart/CartButton';
 import { useElementOnScreen } from '../../../hooks/useElementOnScreen';
 import { ReactComponent as Logo } from '../../../assets/images/logo-horizontal.svg';
 import { MenuMobile } from '../menu/MenuMobile';
 import { Search } from './Search';
 import { ScreenSize, useScreenSize } from '../../../hooks/useScreenSize';
+import { useCustomNavigate } from '../../../hooks/useCustomNavigate';
 
 export const Header = () => {
   const [showMenu, setShowMenu] = useState<boolean>(false);
   const [showModal, setShowModal] = useState<boolean>(false);
   const cartItems = useAppSelector((state) => state.cart);
-  const navigate = useNavigate();
+  const navigate = useCustomNavigate();
   const { state } = useLocation();
   const { containerRef: fixedCartButtonRef, isVisible: cartIsVisible } =
     useElementOnScreen({ threshold: 0.4 });

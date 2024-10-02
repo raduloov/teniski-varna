@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router';
+import { useLocation, useParams } from 'react-router';
 import { useProducts } from '../hooks/useProducts';
 import {
   ImagesKids,
@@ -21,6 +21,7 @@ import {
 } from '../containers/adminPanel/utils';
 import { useDiscounts } from '../hooks/useDiscounts';
 import { DetailsContainer } from '../containers/Details';
+import { useCustomNavigate } from '../hooks/useCustomNavigate';
 
 export const DetailsPage = () => {
   const [product, setProduct] = useState<Product>();
@@ -40,7 +41,7 @@ export const DetailsPage = () => {
   const { getProductById, isLoading: isFetchingProduct } = useProducts();
   const { productId } = useParams();
   const { state } = useLocation();
-  const navigate = useNavigate();
+  const navigate = useCustomNavigate();
   const { getActiveDiscounts, isLoading: isFetchingDiscounts } = useDiscounts();
 
   const getTShirtTypes = (product: Product) => {
@@ -88,6 +89,7 @@ export const DetailsPage = () => {
     setProductFromFirebase();
   }, []);
 
+  // @ts-ignore
   const goBack = () => navigate(-1);
 
   const increaseQuantity = () => setSelectedQuantity((q) => (q += 1));

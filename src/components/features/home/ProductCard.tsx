@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router';
 import styled from 'styled-components';
 import { Color } from '../../../assets/constants';
 import { icons } from '../../../assets/icons';
@@ -7,6 +6,7 @@ import { Product } from '../../../domain/models/ProductDTO';
 import { IconButton } from '../../common/IconButton';
 import { getDiscountedPrice } from '../../../containers/adminPanel/utils';
 import { productAppearAnimation } from '../../../utils/animations';
+import { useCustomNavigate } from '../../../hooks/useCustomNavigate';
 
 interface Props {
   product: Product;
@@ -19,7 +19,7 @@ export const ProductCard = ({
   discount,
   onSelectProductToEdit
 }: Props) => {
-  const navigate = useNavigate();
+  const navigate = useCustomNavigate();
   const [favorites, setFavorites] = useState(
     JSON.parse(localStorage.getItem('Favorites') || '[]')
   );

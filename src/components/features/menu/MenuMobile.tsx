@@ -5,10 +5,11 @@ import {
   ModalExitAnimation
 } from '../../common/Modal';
 import styled from 'styled-components';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { useModalClose } from '../../../hooks/useModalClose';
 import { MenuLinks } from './MenuLinks';
 import { MenuLogo } from './MenuLogo';
+import { useCustomNavigate } from '../../../hooks/useCustomNavigate';
 
 interface Props {
   showMenu: boolean;
@@ -17,7 +18,7 @@ interface Props {
 
 export const MenuMobile = ({ showMenu, onCloseMenu }: Props) => {
   const { closing, handleClose } = useModalClose(onCloseMenu);
-  const navigate = useNavigate();
+  const navigate = useCustomNavigate();
   const location = useLocation();
   const currentPage = location.pathname;
 

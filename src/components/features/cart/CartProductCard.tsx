@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router';
 import styled from 'styled-components';
 import { Color } from '../../../assets/constants';
 import { cartActions } from '../../../store/cartSlice';
@@ -9,6 +8,7 @@ import { useAppDispatch } from '../../../hooks/useRedux';
 import { translateColorToBulgarian, translateTypeToBulgarian } from './utils';
 import { RiCloseFill } from 'react-icons/ri';
 import { ActivityIndicator } from '../../common/ActivityIndicator';
+import { useCustomNavigate } from '../../../hooks/useCustomNavigate';
 
 interface Props {
   product: CartProduct;
@@ -16,7 +16,7 @@ interface Props {
 
 export const CartProductCard = ({ product }: Props) => {
   const [imageHasLoaded, setImageHasLoaded] = useState(false);
-  const navigate = useNavigate();
+  const navigate = useCustomNavigate();
   const dispatch = useAppDispatch();
 
   const navigateToDetails = (productId: string) => {

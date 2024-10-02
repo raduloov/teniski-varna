@@ -20,13 +20,13 @@ import {
   getDiscountForProduct,
   TShirtColor
 } from '../../../containers/adminPanel/utils';
-import { useNavigate } from 'react-router';
 import { useDiscounts } from '../../../hooks/useDiscounts';
 import { ActivityIndicator } from '../../common/ActivityIndicator';
 import { Color } from '../../../assets/constants';
 import { ShippingData, useShipping } from '../../../hooks/useShipping';
 import { useModalClose } from '../../../hooks/useModalClose';
 import { ScreenSize, useScreenSize } from '../../../hooks/useScreenSize';
+import { useCustomNavigate } from '../../../hooks/useCustomNavigate';
 
 interface Props {
   showModal: boolean;
@@ -41,7 +41,7 @@ export const Cart = ({ setShowModal, showModal, cartItems }: Props) => {
   });
   const { getProductById } = useProducts();
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
+  const navigate = useCustomNavigate();
   const { getActiveDiscounts, isLoading: isFetchingDiscounts } = useDiscounts();
   const { getShipping, isLoading: isFetchingShipping } = useShipping();
   const { closing, handleClose } = useModalClose(() => setShowModal(false));
