@@ -1,18 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import * as MyPOSEmbedded from 'mypos-embedded-checkout';
-import { Input } from '../components/common/Input';
-import { usePromoCodes } from '../hooks/usePromoCodes';
 import { v4 as uuid4 } from 'uuid';
 import { useLocation } from 'react-router';
 import {
   cartItemsMapperToMYPOSObject,
   CartProduct
 } from '../domain/mappers/cartProductMapper';
+import { CheckoutContainer } from '../containers/CheckoutContainer';
 
 export const CheckoutPage = () => {
   const { state } = useLocation();
-  const [promoCode, setPromoCode] = useState<string>('');
-  const { checkPromoCode } = usePromoCodes();
+  const [showMyPos, setShowMyPos] = useState<boolean>(false);
   console.log('state', state.cartItems);
   const myPosCartItems = cartItemsMapperToMYPOSObject(state.cartItems);
   const cartItemsNote = state.cartItems
@@ -27,13 +25,6 @@ export const CheckoutPage = () => {
       .toFixed(2) || 0
   );
   const isShippingFree = myPosPriceTotal >= 100;
-
-  const checkPromoCodeValidity = async () => {
-    const code = await checkPromoCode(promoCode);
-    if (!code) return;
-    setMyPosPriceTotal((prev) => prev - (prev * code.percentage) / 100);
-    console.log('promo code: ', code);
-  };
 
   const paymentParams = {
     Amount: isShippingFree ? myPosPriceTotal : myPosPriceTotal + 5,
@@ -80,13 +71,10 @@ export const CheckoutPage = () => {
 
   return (
     <div>
-      <Input
-        value={promoCode}
-        placeholder={'Промо код'}
-        onChange={(e) => setPromoCode(e.target.value)}
-        onEnterKey={checkPromoCodeValidity}
-      />
-      <div id="embeddedCheckout"></div>
+      {!showMyPos && (
+        <CheckoutContainer onGoToCheckout={() => setShowMyPos(true)} />
+      )}
+      {showMyPos && <div id="embeddedCheckout"></div>}
     </div>
   );
 };

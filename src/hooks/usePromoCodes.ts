@@ -44,12 +44,14 @@ export const usePromoCodes = () => {
         id: doc.id
       })) as PromoCode[];
 
+      const trimmedPromoCode = promoCode.trim();
+
       const promoCodeExists = promoCodes.some(
-        (code) => code.name === promoCode
+        (code) => code.name === trimmedPromoCode
       );
 
       if (promoCodeExists) {
-        return promoCodes.find((code) => code.name === promoCode);
+        return promoCodes.find((code) => code.name === trimmedPromoCode);
       }
 
       return null;

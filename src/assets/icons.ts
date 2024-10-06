@@ -24,7 +24,8 @@ import {
   FaMapMarkerAlt,
   FaAt,
   FaInfoCircle,
-  FaShoppingBag
+  FaShoppingBag,
+  FaTimes
 } from 'react-icons/fa';
 import { RiCloseFill } from 'react-icons/ri';
 import {
@@ -67,5 +68,6 @@ export const icons = {
   FaPhone,
   FaMapMarkerAlt,
   FaAt,
-  FaShoppingBag
+  FaShoppingBag,
+  FaTimes
 };
