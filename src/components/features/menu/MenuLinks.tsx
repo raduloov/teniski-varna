@@ -69,7 +69,7 @@ export const MenuLinks = ({ currentPage, onClick }: MenuLinkProps) => {
           </CartButton>
         ) : (
           <StyledLink
-            currentPage={currentPage === page.path}
+            $currentPage={currentPage === page.path}
             to={page.path}
             onClick={onClick}
             key={page.path}
@@ -120,7 +120,8 @@ const CartButton = styled.div`
   }
 `;
 
-const StyledLink = styled(Link)<{ currentPage: boolean }>`
+// currentPage prefixed with $ to avoid conflict with the prop name
+const StyledLink = styled(Link)<{ $currentPage: boolean }>`
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -135,8 +136,8 @@ const StyledLink = styled(Link)<{ currentPage: boolean }>`
     background-color: ${Color.LIGHT_GRAY};
   }
 
-  ${({ currentPage }) =>
-    currentPage &&
+  ${({ $currentPage }) =>
+    $currentPage &&
     `
       background-color: ${Color.GRAY};
       color: ${Color.WHITE};

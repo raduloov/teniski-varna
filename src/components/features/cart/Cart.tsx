@@ -144,7 +144,10 @@ export const Cart = ({ setShowModal, showModal, cartItems }: Props) => {
                   <>
                     {cartItems.length > 0 &&
                       cartItems.map((product) => (
-                        <CartProductCard key={product.id} product={product} />
+                        <CartProductCard
+                          key={`${product.id}-${product.size}`}
+                          product={product}
+                        />
                       ))}
                   </>
                 </CartContainer>
@@ -174,6 +177,7 @@ export const Cart = ({ setShowModal, showModal, cartItems }: Props) => {
                       navigate('checkout', { state: { cartItems } });
                       handleClose();
                     }}
+                    disabled={cartItems.length === 0}
                   ></Button>
                 </CartFooter>
               </>
