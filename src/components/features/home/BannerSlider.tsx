@@ -27,7 +27,7 @@ export const BannerSlider = () => {
   return (
     <StyledSwiper
       modules={[Autoplay]}
-      autoplay={{ delay: 3000, disableOnInteraction: true }}
+      autoplay={{ delay: 4000, disableOnInteraction: true }}
       loop
     >
       {banners.map((banner) => (
