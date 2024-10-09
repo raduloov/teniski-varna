@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { icons } from '../../../assets/icons';
 import { Color } from '../../../assets/constants';
 import { Cart } from '../cart/Cart';
 import { useAppSelector } from '../../../hooks/useRedux';
-import { useLocation } from 'react-router';
 import { CartButton } from '../cart/CartButton';
 import { useElementOnScreen } from '../../../hooks/useElementOnScreen';
 import { ReactComponent as Logo } from '../../../assets/images/logo-horizontal.svg';
@@ -18,23 +17,11 @@ export const Header = () => {
   const [showModal, setShowModal] = useState<boolean>(false);
   const cartItems = useAppSelector((state) => state.cart);
   const navigate = useCustomNavigate();
-  const { state } = useLocation();
   const { containerRef: fixedCartButtonRef, isVisible: cartIsVisible } =
     useElementOnScreen({ threshold: 0.4 });
   const screenSize = useScreenSize();
 
   const isSmallScreen = screenSize === ScreenSize.SMALL;
-
-  useEffect(() => {
-    // When user clicks on toast, navigate home with openCart in state
-    // TODO: Maybe refactor this to use a global state
-    if (state) {
-      setShowModal(true);
-    }
-
-    // Reset the state so that the modal doesn't open again
-    window.history.replaceState({}, '');
-  }, []);
 
   const cartItemsQuantity = cartItems.reduce(
     (total, item) => total + item.quantity,

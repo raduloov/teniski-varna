@@ -31,7 +31,7 @@ import { useCustomNavigate } from '../../../hooks/useCustomNavigate';
 interface Props {
   showModal: boolean;
   setShowModal: (showModal: boolean) => void;
-  cartItems: Array<CartProduct>;
+  cartItems: CartProduct[];
 }
 
 export const Cart = ({ setShowModal, showModal, cartItems }: Props) => {
@@ -174,7 +174,7 @@ export const Cart = ({ setShowModal, showModal, cartItems }: Props) => {
                   <Button
                     label={'Купи'}
                     onClick={() => {
-                      navigate('checkout', { state: { cartItems } });
+                      navigate('/checkout', { state: { cartItems } });
                       handleClose();
                     }}
                     disabled={cartItems.length === 0}
