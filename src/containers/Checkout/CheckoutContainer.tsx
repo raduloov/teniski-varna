@@ -1,11 +1,16 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { usePromoCodes } from '../hooks/usePromoCodes';
-import { Input } from '../components/common/Input';
-import { Color } from '../assets/constants';
-import { icons } from '../assets/icons';
-import { ActivityIndicator } from '../components/common/ActivityIndicator';
-import { Button } from '../components/common/Button';
+import { usePromoCodes } from '../../hooks/usePromoCodes';
+import { Input } from '../../components/common/Input';
+import { Color } from '../../assets/constants';
+import { icons } from '../../assets/icons';
+import { ActivityIndicator } from '../../components/common/ActivityIndicator';
+import { Button } from '../../components/common/Button';
+import {
+  CheckoutField,
+  getCustomerDataFromLocalStorage,
+  saveCustomerDataToLocalStorage
+} from './utils';
 
 enum DeliveryOption {
   PERSONAL_ADDRESS = 'personalAddress',
@@ -17,14 +22,30 @@ interface Props {
 }
 
 export const CheckoutContainer = ({ onGoToCheckout }: Props) => {
-  const [customerFirstName, setCustomerFirstName] = useState<string>('');
-  const [customerLastName, setCustomerLastName] = useState<string>('');
-  const [customerPhone, setCustomerPhone] = useState<string>('');
-  const [customerEmail, setCustomerEmail] = useState<string>('');
-  const [customerAddress, setCustomerAddress] = useState<string>('');
-  const [customerSpeedyOffice, setCustomerSpeedyOffice] = useState<string>('');
+  const {
+    firstName,
+    lastName,
+    phone,
+    email,
+    address,
+    speedyOffice,
+    deliveryOption
+  } = getCustomerDataFromLocalStorage();
+
+  const [customerFirstName, setCustomerFirstName] = useState<string>(
+    firstName ?? ''
+  );
+  const [customerLastName, setCustomerLastName] = useState<string>(
+    lastName ?? ''
+  );
+  const [customerPhone, setCustomerPhone] = useState<string>(phone ?? '');
+  const [customerEmail, setCustomerEmail] = useState<string>(email ?? '');
+  const [customerAddress, setCustomerAddress] = useState<string>(address ?? '');
+  const [customerSpeedyOffice, setCustomerSpeedyOffice] = useState<string>(
+    speedyOffice ?? ''
+  );
   const [selectedDeliveryOption, setSelectedDeliveryOption] =
-    useState<DeliveryOption>(DeliveryOption.PERSONAL_ADDRESS);
+    useState<DeliveryOption>(deliveryOption ?? DeliveryOption.PERSONAL_ADDRESS);
   const [promoCode, setPromoCode] = useState<string>('');
   const [isPromoCodeValid, setIsPromoCodeValid] = useState<boolean | null>(
     null
@@ -37,9 +58,17 @@ export const CheckoutContainer = ({ onGoToCheckout }: Props) => {
     if (typeof event === 'string') {
       if (event === DeliveryOption.PERSONAL_ADDRESS) {
         setSelectedDeliveryOption(DeliveryOption.PERSONAL_ADDRESS);
+        saveCustomerDataToLocalStorage(
+          CheckoutField.DELIVERY_OPTION,
+          DeliveryOption.PERSONAL_ADDRESS
+        );
       }
       if (event === DeliveryOption.SPEEDY_OFFICE) {
         setSelectedDeliveryOption(DeliveryOption.SPEEDY_OFFICE);
+        saveCustomerDataToLocalStorage(
+          CheckoutField.DELIVERY_OPTION,
+          DeliveryOption.SPEEDY_OFFICE
+        );
       }
     } else {
       setSelectedDeliveryOption(event.target.value as DeliveryOption);
@@ -69,6 +98,12 @@ export const CheckoutContainer = ({ onGoToCheckout }: Props) => {
           value={customerFirstName}
           placeholder={'Име'}
           onChange={(e) => setCustomerFirstName(e.target.value)}
+          onBlur={() =>
+            saveCustomerDataToLocalStorage(
+              CheckoutField.CUSTOMER_FIRST_NAME,
+              customerFirstName
+            )
+          }
         />
       </InputWrapper>
       <InputWrapper>
@@ -77,6 +112,12 @@ export const CheckoutContainer = ({ onGoToCheckout }: Props) => {
           value={customerLastName}
           placeholder={'Фамилия'}
           onChange={(e) => setCustomerLastName(e.target.value)}
+          onBlur={() =>
+            saveCustomerDataToLocalStorage(
+              CheckoutField.CUSTOMER_LAST_NAME,
+              customerLastName
+            )
+          }
         />
       </InputWrapper>
       <InputWrapper>
@@ -86,6 +127,12 @@ export const CheckoutContainer = ({ onGoToCheckout }: Props) => {
           placeholder={'08XX XXX XXX'}
           type={'number'}
           onChange={(e) => setCustomerPhone(e.target.value)}
+          onBlur={() =>
+            saveCustomerDataToLocalStorage(
+              CheckoutField.CUSTOMER_PHONE,
+              customerPhone
+            )
+          }
         />
       </InputWrapper>
       <InputWrapper>
@@ -94,6 +141,12 @@ export const CheckoutContainer = ({ onGoToCheckout }: Props) => {
           value={customerEmail}
           placeholder={'name@email.com'}
           onChange={(e) => setCustomerEmail(e.target.value)}
+          onBlur={() =>
+            saveCustomerDataToLocalStorage(
+              CheckoutField.CUSTOMER_EMAIL,
+              customerEmail
+            )
+          }
         />
       </InputWrapper>
       <Divider />
@@ -132,6 +185,12 @@ export const CheckoutContainer = ({ onGoToCheckout }: Props) => {
               'улица, номер, етаж, вход, апартамент, град, пощенски код'
             }
             onChange={(e) => setCustomerAddress(e.target.value)}
+            onBlur={() =>
+              saveCustomerDataToLocalStorage(
+                CheckoutField.CUSTOMER_ADDRESS,
+                customerAddress
+              )
+            }
           />
         </InputWrapper>
       )}
@@ -141,6 +200,12 @@ export const CheckoutContainer = ({ onGoToCheckout }: Props) => {
             value={customerSpeedyOffice}
             placeholder={'Офис на Спиди'}
             onChange={(e) => setCustomerSpeedyOffice(e.target.value)}
+            onBlur={() =>
+              saveCustomerDataToLocalStorage(
+                CheckoutField.CUSTOMER_SPEEDY_OFFICE,
+                customerSpeedyOffice
+              )
+            }
           />
         </InputWrapper>
       )}

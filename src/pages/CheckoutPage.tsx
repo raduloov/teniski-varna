@@ -6,7 +6,7 @@ import {
   cartItemsMapperToMYPOSObject,
   CartProduct
 } from '../domain/mappers/cartProductMapper';
-import { CheckoutContainer } from '../containers/CheckoutContainer';
+import { CheckoutContainer } from '../containers/Checkout/CheckoutContainer';
 
 export const CheckoutPage = () => {
   const { state } = useLocation();
