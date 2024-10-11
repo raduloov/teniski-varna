@@ -1,3 +1,6 @@
+import { CartProduct } from '../../domain/mappers/cartProductMapper';
+import { PromoCode } from '../../hooks/usePromoCodes';
+
 export enum CheckoutField {
   CUSTOMER_FIRST_NAME = 'firstName',
   CUSTOMER_LAST_NAME = 'lastName',
@@ -23,3 +26,33 @@ export const saveCustomerDataToLocalStorage = (
 
 export const getCustomerDataFromLocalStorage = () =>
   JSON.parse(localStorage.getItem('customerData') || '{}');
+
+export const getMyPosNote = (
+  cartItems: CartProduct[],
+  promoCode: PromoCode | null
+) =>
+  cartItems
+    .map(
+      (item: CartProduct, index) =>
+        `Product ${index + 1}: ${item.title} - x${item.quantity}, ${
+          item.type
+        }, ${item.size}, ${item.color};`
+    )
+    .join('\n')
+    .concat(
+      promoCode
+        ? `\nPromo code: ${promoCode.name} - ${promoCode.percentage}`
+        : ''
+    );
+
+export const getTotalPrice = (items: CartProduct[], promoCode?: number) => {
+  const totalPrice = Number(
+    items.reduce((acc, item) => acc + item.price * item.quantity, 0).toFixed(2)
+  );
+
+  if (promoCode) {
+    return totalPrice - totalPrice * (promoCode / 100);
+  }
+
+  return totalPrice;
+};

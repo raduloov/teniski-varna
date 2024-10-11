@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { usePromoCodes } from '../../hooks/usePromoCodes';
+import { PromoCode, usePromoCodes } from '../../hooks/usePromoCodes';
 import { Input } from '../../components/common/Input';
 import { Color } from '../../assets/constants';
 import { icons } from '../../assets/icons';
@@ -19,9 +19,13 @@ enum DeliveryOption {
 
 interface Props {
   onGoToCheckout: () => void;
+  onApplyPromoCode: (promoCode: PromoCode | null) => void;
 }
 
-export const CheckoutContainer = ({ onGoToCheckout }: Props) => {
+export const CheckoutContainer = ({
+  onGoToCheckout,
+  onApplyPromoCode
+}: Props) => {
   const {
     firstName,
     lastName,
@@ -78,6 +82,7 @@ export const CheckoutContainer = ({ onGoToCheckout }: Props) => {
   const checkPromoCodeValidity = async () => {
     const code = await checkPromoCode(promoCode);
     setIsPromoCodeValid(!!code);
+    onApplyPromoCode(code ?? null);
   };
 
   const isAllDataAvailable =
@@ -227,7 +232,7 @@ export const CheckoutContainer = ({ onGoToCheckout }: Props) => {
             <ActivityIndicator size={20} color={Color.DARK_GRAY} />
           )}
           {isPromoCodeValid === null && !isCheckingPromoCode && (
-            <Text>Провери валидност</Text>
+            <Text>Потвърди промо код</Text>
           )}
           {isPromoCodeValid === false && !isCheckingPromoCode && (
             <>
@@ -237,7 +242,7 @@ export const CheckoutContainer = ({ onGoToCheckout }: Props) => {
           )}
           {isPromoCodeValid === true && !isCheckingPromoCode && (
             <>
-              <Text>Промо кодът е валиден</Text>
+              <Text>Промо кодът е добавен</Text>
               <icons.FaCheck size={20} color={Color.WHITE} />
             </>
           )}
