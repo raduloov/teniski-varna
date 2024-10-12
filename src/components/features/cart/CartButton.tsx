@@ -6,6 +6,7 @@ import {
   cartButtonSlideInAnimation,
   cartButtonSlideOutAnimation
 } from '../../../utils/animations';
+import { useLocation } from 'react-router';
 
 interface Props {
   isInBounds?: boolean;
@@ -18,8 +19,14 @@ export const CartButton = ({
   itemsQuantity,
   isInBounds = false
 }: Props) => {
+  const location = useLocation();
+  const currentPath = location.pathname;
+
   return (
-    <FixedCartWrapper isInBounds={isInBounds}>
+    <FixedCartWrapper
+      isInBounds={isInBounds}
+      isStatic={currentPath === '/checkout'}
+    >
       <CartContainer onClick={onOpenCart}>
         <icons.FaShoppingBag color={Color.GRAY} size={25} />
         <CartItemTick>{itemsQuantity}</CartItemTick>
@@ -56,11 +63,15 @@ const CartItemTick = styled.div`
   border-radius: 50%;
 `;
 
-const FixedCartWrapper = styled.div<{ isInBounds: boolean }>`
+const FixedCartWrapper = styled.div<{ isInBounds: boolean; isStatic: boolean }>`
   z-index: 800;
   filter: drop-shadow(0px 2px 10px rgba(0, 0, 0, 0.15));
-  ${({ isInBounds }) =>
-    !isInBounds
+  ${({ isInBounds, isStatic }) => {
+    if (isStatic) {
+      return ``;
+    }
+
+    return !isInBounds
       ? `
         position: fixed;
         ${cartButtonSlideOutAnimation}
@@ -72,5 +83,6 @@ const FixedCartWrapper = styled.div<{ isInBounds: boolean }>`
       `
       : `
         ${cartButtonSlideInAnimation}
-    `}
+    `;
+  }}
 `;
