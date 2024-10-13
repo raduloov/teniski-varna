@@ -18,11 +18,13 @@ enum DeliveryOption {
 }
 
 interface Props {
+  onGoBack: () => void;
   onGoToCheckout: () => void;
   onApplyPromoCode: (promoCode: PromoCode | null) => void;
 }
 
 export const CheckoutContainer = ({
+  onGoBack,
   onGoToCheckout,
   onApplyPromoCode
 }: Props) => {
@@ -96,6 +98,10 @@ export const CheckoutContainer = ({
 
   return (
     <Wrapper>
+      <BackButton onClick={onGoBack}>
+        <icons.FaChevronLeft />
+        <p>Обратно към Обобщение</p>
+      </BackButton>
       <LargeText>Лични данни</LargeText>
       <InputWrapper>
         <Text>Име</Text>
@@ -257,6 +263,17 @@ export const CheckoutContainer = ({
     </Wrapper>
   );
 };
+
+const BackButton = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: ${Color.DARK_GRAY};
+  cursor: pointer;
+  &:hover {
+    text-decoration: underline;
+  }
+`;
 
 const PromoCodeButton = styled.div<{
   isValid: boolean | null;

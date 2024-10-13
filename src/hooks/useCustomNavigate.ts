@@ -1,11 +1,8 @@
 import { NavigateOptions, To, useNavigate } from 'react-router';
+import { scrollToTop } from '../utils/scrollToTop';
 
 export const useCustomNavigate = () => {
   const navigate = useNavigate();
-
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
 
   return (to: To, options?: NavigateOptions) => {
     scrollToTop();

@@ -1,36 +1,26 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Color } from '../../../assets/constants';
-import { cartActions } from '../../../store/cartSlice';
-import { QuantitySelector } from '../details/QuantitySelector';
 import { CartProduct } from '../../../domain/mappers/cartProductMapper';
-import { useAppDispatch } from '../../../hooks/useRedux';
-import { translateColorToBulgarian, translateTypeToBulgarian } from './utils';
-import { RiCloseFill } from 'react-icons/ri';
 import { ActivityIndicator } from '../../common/ActivityIndicator';
 import { useCustomNavigate } from '../../../hooks/useCustomNavigate';
+import {
+  translateColorToBulgarian,
+  translateTypeToBulgarian
+} from '../cart/utils';
 
 interface Props {
   product: CartProduct;
 }
 
-export const CartProductCard = ({ product }: Props) => {
+export const SummaryItemCard = ({ product }: Props) => {
   const [imageHasLoaded, setImageHasLoaded] = useState(false);
   const navigate = useCustomNavigate();
-  const dispatch = useAppDispatch();
 
   const navigateToDetails = (productId: string) => {
     navigate(`/products/${productId}`, {
       state: { color: product.color, type: product.type }
     });
-  };
-
-  const increaseQuantity = () => {
-    dispatch(cartActions.addToCart({ product }));
-  };
-
-  const decreaseQuantity = () => {
-    dispatch(cartActions.removeFromCart({ product }));
   };
 
   return (
@@ -46,16 +36,8 @@ export const CartProductCard = ({ product }: Props) => {
         />
       </ImageWrapper>
       <ProductDetails>
-        <RemoveButton
-          onClick={(e) => {
-            e.stopPropagation();
-            dispatch(cartActions.removeFromCart({ product, remove: true }));
-          }}
-        >
-          <RiCloseFill color={Color.GRAY} size={24} />
-        </RemoveButton>
-        <h1>{product.title}</h1>
-        <Row>
+        <Column>
+          <h1>{product.title}</h1>
           <TextRow>
             <Text>Цвят:</Text>
             <BoldText>{translateColorToBulgarian(product.color)}</BoldText>
@@ -64,25 +46,14 @@ export const CartProductCard = ({ product }: Props) => {
             <Text>Модел:</Text>
             <BoldText>{translateTypeToBulgarian(product.type)}</BoldText>
           </TextRow>
-        </Row>
-        <TextRow>
-          <Text>Размер:</Text>
-          <BoldText>{product.size}</BoldText>
-        </TextRow>
-        <PriceAndQuantityWrapper>
+          <TextRow>
+            <Text>Размер:</Text>
+            <BoldText>{product.size}</BoldText>
+          </TextRow>
+        </Column>
+        <PriceWrapper>
           <Price>{product.price}лв</Price>
-          <QuantitySelector
-            quantity={product.quantity}
-            onIncreaseQuantity={(e?: React.MouseEvent) => {
-              e?.stopPropagation();
-              increaseQuantity();
-            }}
-            onDecreaseQuantity={(e?: React.MouseEvent) => {
-              e?.stopPropagation();
-              decreaseQuantity();
-            }}
-          />
-        </PriceAndQuantityWrapper>
+        </PriceWrapper>
       </ProductDetails>
     </Card>
   );
@@ -98,23 +69,10 @@ const Image = styled.img<{ loaded: boolean }>`
   ${({ loaded }) => !loaded && 'display: none;'}
 `;
 
-const RemoveButton = styled.div`
-  position: absolute;
-  top: 4px;
-  right: 4px;
-  cursor: pointer;
-`;
-
 const Text = styled.p`
   color: ${Color.GRAY};
   font-size: 0.9rem;
 `;
-
-const Row = styled.div`
-  display: flex;
-  justify-content: space-between;
-`;
-
 const TextRow = styled.div`
   display: flex;
   gap: 5px;
@@ -131,10 +89,11 @@ const Price = styled.p`
   font-size: 1.25rem;
 `;
 
-const PriceAndQuantityWrapper = styled.div`
+const PriceWrapper = styled.div`
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-end;
+  margin-right: 1rem;
 `;
 
 const Card = styled.div`
@@ -148,10 +107,6 @@ const Card = styled.div`
   border-radius: 10px;
   padding: 0.5rem;
   filter: drop-shadow(0px 2px 10px rgba(0, 0, 0, 0.15));
-  :hover {
-    transform: scale(1.05);
-    filter: drop-shadow(0px 10px 20px rgba(0, 0, 0, 0.3));
-  }
   transition: ease-out 0.2s;
   img {
     width: 100px;
@@ -162,9 +117,15 @@ const Card = styled.div`
   }
 `;
 
-const ProductDetails = styled.div`
+const Column = styled.div`
   display: flex;
   flex-direction: column;
+  gap: 0.5rem;
+`;
+
+const ProductDetails = styled.div`
+  display: flex;
+  justify-content: space-between;
   gap: 0.5rem;
   width: 100%;
   margin-left: 1rem;

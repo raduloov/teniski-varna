@@ -12,7 +12,6 @@ import {
 } from '../../../domain/mappers/cartProductMapper';
 import { useAppDispatch } from '../../../hooks/useRedux';
 import { cartActions, LocalItem } from '../../../store/cartSlice';
-import { CartProductCard } from './CartProductCard';
 import { useProducts } from '../../../hooks/useProducts';
 import { getLocalItems } from '../../../store/utils';
 import {
@@ -27,6 +26,7 @@ import { ShippingData, useShipping } from '../../../hooks/useShipping';
 import { useModalClose } from '../../../hooks/useModalClose';
 import { ScreenSize, useScreenSize } from '../../../hooks/useScreenSize';
 import { useCustomNavigate } from '../../../hooks/useCustomNavigate';
+import { CartProductCard } from './CartProductCard';
 
 interface Props {
   showModal: boolean;
@@ -140,17 +140,15 @@ export const Cart = ({ setShowModal, showModal, cartItems }: Props) => {
               </ActivityIndicatorWrapper>
             ) : (
               <>
-                <CartContainer disableScroll={cartItems.length < 3}>
-                  <>
-                    {cartItems.length > 0 &&
-                      cartItems.map((product) => (
-                        <CartProductCard
-                          key={`${product.id}-${product.size}`}
-                          product={product}
-                        />
-                      ))}
-                  </>
-                </CartContainer>
+                <CartItemsContainer disableScroll={cartItems.length < 3}>
+                  {cartItems.length > 0 &&
+                    cartItems.map((product) => (
+                      <CartProductCard
+                        key={`${product.id}-${product.size}`}
+                        product={product}
+                      />
+                    ))}
+                </CartItemsContainer>
                 <CartFooter>
                   <CartPriceContainer>
                     Тениски:<p>{cartPrice.toFixed(2)}лв</p>
@@ -167,7 +165,7 @@ export const Cart = ({ setShowModal, showModal, cartItems }: Props) => {
                       и доставката е безплатна
                     </FreeShippingText>
                   )}
-                  <CartDivider></CartDivider>
+                  <CartDivider />
                   <CartPriceContainer>
                     Общо: <p>{totalPrice.toFixed(2)}лв</p>
                   </CartPriceContainer>
@@ -214,7 +212,7 @@ const CartHeader = styled.h1`
   touch-action: none;
 `;
 
-const CartContainer = styled.div<{ disableScroll: boolean }>`
+const CartItemsContainer = styled.div<{ disableScroll: boolean }>`
   padding: 2rem;
   display: flex;
   height: 100%;
@@ -264,7 +262,7 @@ const CartPriceContainer = styled.div`
   p {
     margin-left: auto;
     font-weight: 600;
-    color: #000000;
+    color: ${Color.BLACK};
   }
 `;
 

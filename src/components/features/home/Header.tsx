@@ -89,6 +89,7 @@ const SearchAndCartWrapper = styled.div`
 const TitleWrapper = styled.div`
   display: flex;
   justify-content: center;
+  cursor: pointer;
   svg {
     width: 10rem;
   }

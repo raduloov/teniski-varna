@@ -2,22 +2,35 @@ import React, { useEffect, useState } from 'react';
 import * as MyPOSEmbedded from 'mypos-embedded-checkout';
 import { v4 as uuid4 } from 'uuid';
 import { useLocation } from 'react-router';
-import { cartItemsMapperToMYPOSObject } from '../domain/mappers/cartProductMapper';
+import {
+  cartItemsMapperToMYPOSObject,
+  CartProduct
+} from '../domain/mappers/cartProductMapper';
 import { CheckoutContainer } from '../containers/Checkout/CheckoutContainer';
-import { getMyPosNote, getTotalPrice } from '../containers/Checkout/utils';
+import {
+  getDiscountedPrice,
+  getMyPosNote,
+  getTotalPrice
+} from '../containers/Checkout/utils';
 import { ShippingData, useShipping } from '../hooks/useShipping';
 import { toast } from 'react-toastify';
 import styled from 'styled-components';
 import { icons } from '../assets/icons';
 import { Color } from '../assets/constants';
 import { PromoCode } from '../hooks/usePromoCodes';
+import { scrollToTop } from '../utils/scrollToTop';
+import { SummaryContainer } from '../containers/Checkout/SummaryContainer';
 
 export const CheckoutPage = () => {
+  const [showSummary, setShowSummary] = useState<boolean>(true);
   const [showMyPos, setShowMyPos] = useState<boolean>(false);
   const [shipping, setShipping] = useState<ShippingData>({
     shippingCost: 0,
     minimumAmount: 0
   });
+  const [cartItems, setCartItems] = useState<CartProduct[]>([]);
+  const [totalPice, setTotalPrice] = useState<number>(0);
+  const [finalPrice, setFinalPrice] = useState<number>();
   const [promoCode, setPromoCode] = useState<PromoCode | null>(null);
   const { state } = useLocation();
   const { getShipping, isLoading: isFetchingShipping } = useShipping();
@@ -25,6 +38,11 @@ export const CheckoutPage = () => {
   const setShippingFromFirebase = async () => {
     const shippingData = await getShipping();
     setShipping(shippingData);
+  };
+
+  const onContinue = () => {
+    setShowSummary(false);
+    scrollToTop();
   };
 
   const callbackParams = {
@@ -48,13 +66,23 @@ export const CheckoutPage = () => {
 
     try {
       setShippingFromFirebase();
+      setCartItems(state.cartItems);
 
       const myPosCartItems = cartItemsMapperToMYPOSObject(state.cartItems);
       const myPosNote = getMyPosNote(state.cartItems, promoCode);
-      const myPosTotalPrice = getTotalPrice(
-        state.cartItems,
-        promoCode?.percentage
-      );
+      let myPosTotalPrice = getTotalPrice(state.cartItems);
+      setTotalPrice(myPosTotalPrice);
+
+      if (promoCode) {
+        const discountedPrice = getDiscountedPrice(
+          myPosTotalPrice,
+          promoCode.percentage
+        );
+        myPosTotalPrice = discountedPrice;
+        setFinalPrice(discountedPrice);
+      } else {
+        setFinalPrice(undefined);
+      }
 
       const isShippingFree = myPosTotalPrice > shipping.minimumAmount;
       const amount = isShippingFree
@@ -103,12 +131,23 @@ export const CheckoutPage = () => {
     } catch (error: any) {
       toast.error(`💥 Нещо се обърка :( ${error.message}`);
     }
-  }, [showMyPos, promoCode, state]);
+  }, [showMyPos, promoCode, state, finalPrice]);
 
   return (
     <>
-      {!showMyPos && (
+      {showSummary && !showMyPos && (
+        <SummaryContainer
+          cartItems={cartItems}
+          totalPice={totalPice}
+          finalPrice={finalPrice}
+          isValidPromoCodeSet={!!promoCode}
+          onApplyPromoCode={(promoCode) => setPromoCode(promoCode)}
+          onContinue={onContinue}
+        />
+      )}
+      {!showMyPos && !showSummary && (
         <CheckoutContainer
+          onGoBack={() => setShowSummary(true)}
           onGoToCheckout={() => setShowMyPos(true)}
           onApplyPromoCode={(promoCode) => setPromoCode(promoCode)}
         />
