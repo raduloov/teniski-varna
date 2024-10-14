@@ -14,9 +14,9 @@ export const SummaryItemsContainer = ({ cartItems }: Props) => {
   return (
     <Wrapper disableScroll={cartItems.length < 3}>
       {cartItems.length > 0 &&
-        flattenedItems.map((product) => (
+        flattenedItems.map((product, index) => (
           <SummaryItemCard
-            key={`${product.id}-${product.size}`}
+            key={`${product.id}-${product.size}-${index}`}
             product={product}
           />
         ))}

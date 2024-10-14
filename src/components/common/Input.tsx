@@ -16,6 +16,7 @@ interface Props {
   type?: string;
   min?: number;
   max?: number;
+  centered?: boolean;
   additionalStyles?: string;
 }
 
@@ -31,6 +32,7 @@ export const Input = ({
   type,
   min,
   max,
+  centered,
   additionalStyles
 }: Props) => {
   const iconElement = icon
@@ -58,6 +60,7 @@ export const Input = ({
         type={type}
         min={min}
         max={max}
+        style={{ textAlign: centered ? 'center' : 'left' }}
       />
       {clearIcon && (
         <ClearWrapper onClick={onClear}>
