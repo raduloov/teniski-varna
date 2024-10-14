@@ -23,3 +23,5 @@ const port = process.env.API_PORT_DEV;
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
+
+export default app;
