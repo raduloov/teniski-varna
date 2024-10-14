@@ -8,6 +8,7 @@ import { PromoCode, usePromoCodes } from '../../hooks/usePromoCodes';
 import { icons } from '../../assets/icons';
 import { ActivityIndicator } from '../../components/common/ActivityIndicator';
 import { Input } from '../../components/common/Input';
+import { ScreenSize, useScreenSize } from '../../hooks/useScreenSize';
 
 interface Props {
   cartItems: CartProduct[];
@@ -31,6 +32,8 @@ export const SummaryContainer = ({
     null
   );
   const { checkPromoCode, isLoading: isCheckingPromoCode } = usePromoCodes();
+  const screenSize = useScreenSize();
+  const isSmallScreen = screenSize === ScreenSize.SMALL;
 
   const checkPromoCodeValidity = async () => {
     const code = await checkPromoCode(promoCode);
@@ -40,16 +43,22 @@ export const SummaryContainer = ({
 
   return (
     <SummaryWrapper>
-      <SummaryTitle>Обобщение</SummaryTitle>
+      <LargeText>Обобщение</LargeText>
       <SummaryItemsContainer cartItems={cartItems} />
       <Divider />
-      <PriceAndPromoCodeWrapper>
+      <PromoCodeWrapper>
+        <LargeText>Промо код</LargeText>
         <InputWrapper>
           <Input
             value={promoCode}
-            placeholder={'Промо код'}
-            onChange={(e) => setPromoCode(e.target.value)}
+            placeholder={'PROMOCODE'}
+            onChange={(e) => setPromoCode(e.target.value.toUpperCase())}
             onEnterKey={checkPromoCodeValidity}
+            centered
+            additionalStyles={`
+              font-size: 26px;
+              padding: 8px;
+            `}
           />
           <PromoCodeButton
             isValid={isPromoCodeValid}
@@ -60,7 +69,7 @@ export const SummaryContainer = ({
               <ActivityIndicator size={20} color={Color.DARK_GRAY} />
             )}
             {isPromoCodeValid === null && !isCheckingPromoCode && (
-              <Text>Потвърди промо код</Text>
+              <Text>Приложи промо код</Text>
             )}
             {isPromoCodeValid === false && !isCheckingPromoCode && (
               <>
@@ -70,23 +79,29 @@ export const SummaryContainer = ({
             )}
             {isPromoCodeValid === true && !isCheckingPromoCode && (
               <>
-                <Text>Промо кодът е добавен</Text>
+                <Text>Промо кодът е приложен</Text>
                 <icons.FaCheck size={20} color={Color.WHITE} />
               </>
             )}
           </PromoCodeButton>
         </InputWrapper>
-        <PriceWrapper>
-          {isValidPromoCodeSet && (
-            <DiscountedPrice>{totalPice.toFixed(2)}лв</DiscountedPrice>
-          )}
-          <Price discounted={isValidPromoCodeSet}>
-            {(finalPrice ?? totalPice).toFixed(2)}лв
-          </Price>
-        </PriceWrapper>
-      </PriceAndPromoCodeWrapper>
+      </PromoCodeWrapper>
       <Divider />
-      <Button label={'Продължи'} onClick={onContinue} />
+      <PriceAndCtaWrapper isSmallScreen={isSmallScreen}>
+        <PriceWrapper>
+          <MediumText>Общо:</MediumText>
+          <Column>
+            {isValidPromoCodeSet && (
+              <DiscountedPrice>{totalPice.toFixed(2)}лв</DiscountedPrice>
+            )}
+            <Price discounted={isValidPromoCodeSet}>
+              {(finalPrice ?? totalPice).toFixed(2)}лв
+            </Price>
+          </Column>
+        </PriceWrapper>
+        {isSmallScreen && <Divider />}
+        <Button label={'Продължи'} onClick={onContinue} />
+      </PriceAndCtaWrapper>
     </SummaryWrapper>
   );
 };
@@ -120,15 +135,46 @@ const Text = styled.p`
   margin-left: 5px;
 `;
 
+const MediumText = styled.p`
+  font-size: 20px;
+  font-weight: 500;
+`;
+
+const Column = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
 const InputWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
+  margin-top: 20px;
+
+  @media (min-width: 1366px) {
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+  }
 `;
 
 const PriceWrapper = styled.div`
-  justify-self: flex-end;
-  align-self: flex-end;
+  display: flex;
+  align-items: last baseline;
+  gap: 10px;
+  justify-self: center;
+`;
+
+const PriceAndCtaWrapper = styled.div<{ isSmallScreen: boolean }>`
+  display: grid;
+  grid-template-columns: 1fr 5fr;
+  gap: 50px;
+
+  ${({ isSmallScreen }) =>
+    isSmallScreen &&
+    `
+      grid-template-columns: 1fr;
+      gap: 0;
+    `}
 `;
 
 const DiscountedPrice = styled.p`
@@ -142,11 +188,8 @@ const Price = styled.p<{ discounted: boolean }>`
   color: ${({ discounted }) => (discounted ? Color.RED : Color.BLACK)};
 `;
 
-const PriceAndPromoCodeWrapper = styled.div`
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 10px;
-  width: 100%;
+const PromoCodeWrapper = styled.div`
+  /* margin-top: 20px; */
 `;
 
 const Divider = styled.div`
@@ -156,7 +199,7 @@ const Divider = styled.div`
   margin: 20px 0;
 `;
 
-const SummaryTitle = styled.p`
+const LargeText = styled.p`
   font-size: 24px;
   font-weight: bold;
   color: ${Color.DARK_GRAY};
