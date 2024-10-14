@@ -1,6 +1,7 @@
 {
-  "name": "teniski-varna",
+  "name": "teniski-varna-app",
   "version": "0.1.0",
+  "author": "Yavor Radulov",
   "private": true,
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.1",
