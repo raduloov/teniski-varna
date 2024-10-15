@@ -7,6 +7,17 @@ const {
   REACT_APP_SPEEDY_PASSWORD
 } = process.env;
 
+export interface SpeedyCity {
+  name: string;
+  nameEn: string;
+}
+
+export interface SpeedyOffice {
+  name: string;
+  city: string;
+  address: string;
+}
+
 export const useSpeedy = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -45,7 +56,6 @@ export const useSpeedy = () => {
         }
       });
       const data = await response.json();
-      console.log('data', data);
       return data;
     } catch (e) {
       toast.error(`💥 ${e.message}`);
@@ -54,8 +64,8 @@ export const useSpeedy = () => {
     }
   };
 
-  const listOfficesByCity = async (cityName: string) => {
-    const url = `${REACT_APP_TENISKI_API_BASE_URL}/speedy/listOfficesByCity`;
+  const findOfficesByCity = async (cityName: string) => {
+    const url = `${REACT_APP_TENISKI_API_BASE_URL}/speedy/findOfficesByCity`;
 
     setIsLoading(true);
 
@@ -68,6 +78,7 @@ export const useSpeedy = () => {
         }
       });
       const data = await response.json();
+      console.log('data', data);
       return data;
     } catch (e) {
       toast.error(`💥 ${e.message}`);
@@ -76,5 +87,5 @@ export const useSpeedy = () => {
     }
   };
 
-  return { listOffices, findCitiesByName, listOfficesByCity, isLoading };
+  return { listOffices, findCitiesByName, findOfficesByCity, isLoading };
 };

@@ -10,6 +10,7 @@ import {
   saveCustomerDataToLocalStorage
 } from './utils';
 import { DeliveryOption, SpeedyOfficeSelector } from './SpeedyOfficeSelector';
+import { SpeedyCity, SpeedyOffice } from '../../hooks/useSpeedy';
 
 interface Props {
   onGoBack: () => void;
@@ -17,15 +18,8 @@ interface Props {
 }
 
 export const CheckoutContainer = ({ onGoBack, onGoToCheckout }: Props) => {
-  const {
-    firstName,
-    lastName,
-    phone,
-    email,
-    address,
-    speedyOffice,
-    deliveryOption
-  } = getCustomerDataFromLocalStorage();
+  const { firstName, lastName, phone, email, address, deliveryOption } =
+    getCustomerDataFromLocalStorage();
 
   const [customerFirstName, setCustomerFirstName] = useState<string>(
     firstName ?? ''
@@ -36,9 +30,9 @@ export const CheckoutContainer = ({ onGoBack, onGoToCheckout }: Props) => {
   const [customerPhone, setCustomerPhone] = useState<string>(phone ?? '');
   const [customerEmail, setCustomerEmail] = useState<string>(email ?? '');
   const [customerAddress, setCustomerAddress] = useState<string>(address ?? '');
-  const [customerSpeedyOffice, setCustomerSpeedyOffice] = useState<string>(
-    speedyOffice ?? ''
-  );
+  const [selectedCity, setSelectedCity] = useState<SpeedyCity | null>(null);
+  const [selectedSpeedyOffice, setSelectedSpeedyOffice] =
+    useState<SpeedyOffice | null>(null);
   const [selectedDeliveryOption, setSelectedDeliveryOption] =
     useState<DeliveryOption>(deliveryOption ?? DeliveryOption.PERSONAL_ADDRESS);
 
@@ -72,7 +66,7 @@ export const CheckoutContainer = ({ onGoBack, onGoToCheckout }: Props) => {
     customerEmail &&
     (selectedDeliveryOption === DeliveryOption.PERSONAL_ADDRESS
       ? customerAddress
-      : customerSpeedyOffice);
+      : selectedSpeedyOffice);
 
   return (
     <Wrapper>
@@ -170,8 +164,9 @@ export const CheckoutContainer = ({ onGoBack, onGoToCheckout }: Props) => {
         selectedDeliveryOption={selectedDeliveryOption}
         customerAddress={customerAddress}
         setCustomerAddress={setCustomerAddress}
-        customerSpeedyOffice={customerSpeedyOffice}
-        setCustomerSpeedyOffice={setCustomerSpeedyOffice}
+        selectedCity={selectedCity}
+        setSelectedCity={setSelectedCity}
+        setSelectedSpeedyOffice={setSelectedSpeedyOffice}
       />
       <Divider />
       <Button
