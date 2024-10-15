@@ -18,7 +18,7 @@ export const findCitiesByName = async (req: Request, res: Response) => {
     `${SPEEDY_BASE_URL}/location/site?userName=${username}&password=${password}&countryId=100&name=${searchterm}`
   );
   const data = await response.json();
-  const mappedCities = data.map((city: any) => ({
+  const mappedCities = data.sites.map((city: any) => ({
     name: city.name,
     nameEn: city.nameEn
   }));
