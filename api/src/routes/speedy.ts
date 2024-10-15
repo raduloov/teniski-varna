@@ -2,13 +2,13 @@ import { Router } from 'express';
 import {
   listOffices,
   findCitiesByName,
-  listOfficesByCity
+  findOfficesByCity
 } from '../controllers/speedy';
 
 const router = Router();
 
 router.get('/listOffices', listOffices);
 router.get('/findCitiesByName', findCitiesByName);
-router.get('/listOfficesByCity', listOfficesByCity);
+router.get('/findOfficesByCity', findOfficesByCity);
 
 export default router;

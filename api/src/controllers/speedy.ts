@@ -25,12 +25,15 @@ export const findCitiesByName = async (req: Request, res: Response) => {
   res.json(mappedCities);
 };
 
-export const listOfficesByCity = async (req: Request, res: Response) => {
+export const findOfficesByCity = async (req: Request, res: Response) => {
   const { username, password, cityname } = req.headers;
 
   const response = await fetch(
     `${SPEEDY_BASE_URL}/location/office/nearest-offices?userName=${username}&password=${password}&countryId=100&siteName=${cityname}`
   );
   const data = await response.json();
-  res.json(data);
+  const mappedOffices = data.offices.map(
+    (office: any) => office.address.localAddressString
+  );
+  res.json(mappedOffices);
 };
