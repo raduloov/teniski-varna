@@ -22,10 +22,10 @@ export const listCities = async (req: Request, res: Response) => {
 };
 
 export const listOfficesByCity = async (req: Request, res: Response) => {
-  const { username, password, cityName } = req.headers;
+  const { username, password, cityname } = req.headers;
 
   const response = await fetch(
-    `${SPEEDY_BASE_URL}/location/office/nearest-offices?userName=${username}&password=${password}&countryId=100&siteName=${cityName}`
+    `${SPEEDY_BASE_URL}/location/office/nearest-offices?userName=${username}&password=${password}&countryId=100&siteName=${cityname}`
   );
   const data = await response.json();
   res.json(data);
