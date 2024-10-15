@@ -45,12 +45,12 @@ export const getMyPosNote = (
         : ''
     );
 
-export const getTotalPrice = (items: CartProduct[]) => {
+export const getTotalPrice = (items: CartProduct[], shipping?: number) => {
   const totalPrice = Number(
     items.reduce((acc, item) => acc + item.price * item.quantity, 0)
   );
 
-  return totalPrice;
+  return shipping ? totalPrice + shipping : totalPrice;
 };
 
 export const getDiscountedPrice = (price: number, discount?: number) =>

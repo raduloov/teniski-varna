@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { Color } from '../../assets/constants';
 import { SummaryItemsContainer } from '../../components/features/summary/SummaryItemsContainer';
@@ -9,34 +9,41 @@ import { icons } from '../../assets/icons';
 import { ActivityIndicator } from '../../components/common/ActivityIndicator';
 import { Input } from '../../components/common/Input';
 import { ScreenSize, useScreenSize } from '../../hooks/useScreenSize';
+import { ShippingData } from '../../hooks/useShipping';
 
 interface Props {
   cartItems: CartProduct[];
-  totalPice: number;
+  totalPrice: number;
   finalPrice?: number;
-  isValidPromoCodeSet: boolean;
+  shipping: ShippingData;
+  enteredPromoCode: string;
+  setEnteredPromoCode: (promoCode: string) => void;
+  isPromoCodeValid: boolean | null;
+  setIsPromoCodeValid: (isValid: boolean | null) => void;
   onApplyPromoCode: (promoCode: PromoCode | null) => void;
   onContinue: () => void;
 }
 
 export const SummaryContainer = ({
   cartItems,
-  totalPice,
+  totalPrice,
   finalPrice,
-  isValidPromoCodeSet,
+  shipping,
+  enteredPromoCode,
+  setEnteredPromoCode,
+  isPromoCodeValid,
+  setIsPromoCodeValid,
   onApplyPromoCode,
   onContinue
 }: Props) => {
-  const [promoCode, setPromoCode] = useState<string>('');
-  const [isPromoCodeValid, setIsPromoCodeValid] = useState<boolean | null>(
-    null
-  );
   const { checkPromoCode, isLoading: isCheckingPromoCode } = usePromoCodes();
   const screenSize = useScreenSize();
+
   const isSmallScreen = screenSize === ScreenSize.SMALL;
+  const isFreeShipping = totalPrice >= shipping.minimumAmount;
 
   const checkPromoCodeValidity = async () => {
-    const code = await checkPromoCode(promoCode);
+    const code = await checkPromoCode(enteredPromoCode);
     setIsPromoCodeValid(!!code);
     onApplyPromoCode(code ?? null);
   };
@@ -45,14 +52,23 @@ export const SummaryContainer = ({
     <SummaryWrapper>
       <LargeText>Обобщение</LargeText>
       <SummaryItemsContainer cartItems={cartItems} />
+      {!isFreeShipping && (
+        <FreeShippingText>
+          Поръчай за още{' '}
+          <RemainingAmount>
+            {shipping.minimumAmount - totalPrice}лв
+          </RemainingAmount>{' '}
+          и доставката е безплатна
+        </FreeShippingText>
+      )}
       <Divider />
       <PromoCodeWrapper>
         <LargeText>Промо код</LargeText>
         <InputWrapper>
           <Input
-            value={promoCode}
+            value={enteredPromoCode}
             placeholder={'PROMOCODE'}
-            onChange={(e) => setPromoCode(e.target.value.toUpperCase())}
+            onChange={(e) => setEnteredPromoCode(e.target.value.toUpperCase())}
             onEnterKey={checkPromoCodeValidity}
             centered
             additionalStyles={`
@@ -91,13 +107,14 @@ export const SummaryContainer = ({
         <PriceWrapper>
           <MediumText>Общо:</MediumText>
           <Column>
-            {isValidPromoCodeSet && (
-              <DiscountedPrice>{totalPice.toFixed(2)}лв</DiscountedPrice>
+            {isPromoCodeValid && (
+              <DiscountedPrice>{totalPrice.toFixed(2)}лв</DiscountedPrice>
             )}
-            <Price discounted={isValidPromoCodeSet}>
-              {(finalPrice ?? totalPice).toFixed(2)}лв
+            <Price discounted={!!isPromoCodeValid}>
+              {(finalPrice ?? totalPrice).toFixed(2)}лв
             </Price>
           </Column>
+          {!isFreeShipping && <p>({shipping.shippingCost}лв доставка)</p>}
         </PriceWrapper>
         {isSmallScreen && <Divider />}
         <Button label={'Продължи'} onClick={onContinue} />
@@ -105,6 +122,16 @@ export const SummaryContainer = ({
     </SummaryWrapper>
   );
 };
+
+const RemainingAmount = styled.span`
+  font-weight: 600;
+  color: ${Color.RED};
+`;
+
+const FreeShippingText = styled.p`
+  font-size: 0.9rem;
+  color: ${Color.DARK_GRAY};
+`;
 
 const PromoCodeButton = styled.div<{
   isValid: boolean | null;
@@ -161,12 +188,12 @@ const PriceWrapper = styled.div`
   display: flex;
   align-items: last baseline;
   gap: 10px;
-  justify-self: center;
+  justify-self: flex-start;
 `;
 
 const PriceAndCtaWrapper = styled.div<{ isSmallScreen: boolean }>`
   display: grid;
-  grid-template-columns: 1fr 5fr;
+  grid-template-columns: 1fr 1fr;
   gap: 50px;
 
   ${({ isSmallScreen }) =>

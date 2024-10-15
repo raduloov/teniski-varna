@@ -46,6 +46,10 @@ export const CheckoutPage = () => {
   const [totalPice, setTotalPrice] = useState<number>(0);
   const [finalPrice, setFinalPrice] = useState<number>();
   const [promoCode, setPromoCode] = useState<PromoCode | null>(null);
+  const [enteredPromoCode, setEnteredPromoCode] = useState<string>('');
+  const [isPromoCodeValid, setIsPromoCodeValid] = useState<boolean | null>(
+    null
+  );
   const { getProductById, isLoading: isFetchingProduct } = useProducts();
   const { getActiveDiscounts, isLoading: isFetchingDiscount } = useDiscounts();
   const { state } = useLocation();
@@ -207,9 +211,13 @@ export const CheckoutPage = () => {
       {!isLoading && showSummary && !showMyPos && (
         <SummaryContainer
           cartItems={items}
-          totalPice={totalPice}
+          totalPrice={totalPice}
           finalPrice={finalPrice}
-          isValidPromoCodeSet={!!promoCode}
+          shipping={shipping}
+          enteredPromoCode={enteredPromoCode}
+          setEnteredPromoCode={setEnteredPromoCode}
+          isPromoCodeValid={isPromoCodeValid}
+          setIsPromoCodeValid={setIsPromoCodeValid}
           onApplyPromoCode={(promoCode) => applyPromoCode(promoCode)}
           onContinue={onContinueToDelivery}
         />
