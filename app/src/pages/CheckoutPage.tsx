@@ -149,7 +149,6 @@ export const CheckoutPage = () => {
         <CheckoutContainer
           onGoBack={() => setShowSummary(true)}
           onGoToCheckout={() => setShowMyPos(true)}
-          onApplyPromoCode={(promoCode) => setPromoCode(promoCode)}
         />
       )}
       {showMyPos && (

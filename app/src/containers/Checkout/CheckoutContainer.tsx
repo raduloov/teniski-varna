@@ -1,16 +1,15 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { PromoCode, usePromoCodes } from '../../hooks/usePromoCodes';
 import { Input } from '../../components/common/Input';
 import { Color } from '../../assets/constants';
 import { icons } from '../../assets/icons';
-import { ActivityIndicator } from '../../components/common/ActivityIndicator';
 import { Button } from '../../components/common/Button';
 import {
   CheckoutField,
   getCustomerDataFromLocalStorage,
   saveCustomerDataToLocalStorage
 } from './utils';
+import { useSpeedy } from '../../hooks/useSpeedy';
 
 enum DeliveryOption {
   PERSONAL_ADDRESS = 'personalAddress',
@@ -20,14 +19,9 @@ enum DeliveryOption {
 interface Props {
   onGoBack: () => void;
   onGoToCheckout: () => void;
-  onApplyPromoCode: (promoCode: PromoCode | null) => void;
 }
 
-export const CheckoutContainer = ({
-  onGoBack,
-  onGoToCheckout,
-  onApplyPromoCode
-}: Props) => {
+export const CheckoutContainer = ({ onGoBack, onGoToCheckout }: Props) => {
   const {
     firstName,
     lastName,
@@ -52,11 +46,21 @@ export const CheckoutContainer = ({
   );
   const [selectedDeliveryOption, setSelectedDeliveryOption] =
     useState<DeliveryOption>(deliveryOption ?? DeliveryOption.PERSONAL_ADDRESS);
-  const [promoCode, setPromoCode] = useState<string>('');
-  const [isPromoCodeValid, setIsPromoCodeValid] = useState<boolean | null>(
-    null
-  );
-  const { checkPromoCode, isLoading: isCheckingPromoCode } = usePromoCodes();
+  const [speedyOffices, setSpeedyOffices] = useState<any[]>([]);
+  const { listOfficesByCity, isLoading } = useSpeedy();
+
+  console.log('speedyOffices', speedyOffices);
+
+  const loadOffices = async () => {
+    if (selectedDeliveryOption === DeliveryOption.SPEEDY_OFFICE) {
+      const offices = await listOfficesByCity('34');
+      setSpeedyOffices(offices);
+    }
+  };
+
+  useEffect(() => {
+    loadOffices();
+  }, []);
 
   const handleOptionChange = (
     event: React.ChangeEvent<HTMLInputElement> | DeliveryOption
@@ -79,12 +83,6 @@ export const CheckoutContainer = ({
     } else {
       setSelectedDeliveryOption(event.target.value as DeliveryOption);
     }
-  };
-
-  const checkPromoCodeValidity = async () => {
-    const code = await checkPromoCode(promoCode);
-    setIsPromoCodeValid(!!code);
-    onApplyPromoCode(code ?? null);
   };
 
   const isAllDataAvailable =
@@ -221,40 +219,6 @@ export const CheckoutContainer = ({
         </InputWrapper>
       )}
       <Divider />
-      <LargeText>Промо код</LargeText>
-      <InputWrapper>
-        <Input
-          value={promoCode}
-          placeholder={'Промо код'}
-          onChange={(e) => setPromoCode(e.target.value)}
-          onEnterKey={checkPromoCodeValidity}
-        />
-        <PromoCodeButton
-          isValid={isPromoCodeValid}
-          isLoading={isCheckingPromoCode}
-          onClick={checkPromoCodeValidity}
-        >
-          {isCheckingPromoCode && (
-            <ActivityIndicator size={20} color={Color.DARK_GRAY} />
-          )}
-          {isPromoCodeValid === null && !isCheckingPromoCode && (
-            <Text>Потвърди промо код</Text>
-          )}
-          {isPromoCodeValid === false && !isCheckingPromoCode && (
-            <>
-              <Text>Промо кодът не е валиден</Text>
-              <icons.FaTimes size={20} color={Color.WHITE} />
-            </>
-          )}
-          {isPromoCodeValid === true && !isCheckingPromoCode && (
-            <>
-              <Text>Промо кодът е добавен</Text>
-              <icons.FaCheck size={20} color={Color.WHITE} />
-            </>
-          )}
-        </PromoCodeButton>
-      </InputWrapper>
-      <Divider />
       <Button
         label={'Продължи към плащане'}
         disabled={!isAllDataAvailable}
@@ -272,29 +236,6 @@ const BackButton = styled.div`
   cursor: pointer;
   &:hover {
     text-decoration: underline;
-  }
-`;
-
-const PromoCodeButton = styled.div<{
-  isValid: boolean | null;
-  isLoading: boolean;
-}>`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 2rem;
-  gap: 5px;
-  padding: 0.3rem;
-  background-color: ${({ isValid, isLoading }) => {
-    if (isLoading) return Color.LIGHT_GRAY;
-    if (isValid === null) return Color.LIGHT_GRAY;
-    if (isValid === true) return Color.GREEN_CHECK;
-    if (isValid === false) return Color.LIGHT_RED;
-  }};
-  color: ${({ isValid }) => (isValid === null ? Color.DARK_GRAY : 'white')};
-  cursor: pointer;
-  &:hover {
-    filter: brightness(0.9);
   }
 `;
 
