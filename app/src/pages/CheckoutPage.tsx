@@ -20,6 +20,7 @@ import { Color } from '../assets/constants';
 import { PromoCode } from '../hooks/usePromoCodes';
 import { scrollToTop } from '../utils/scrollToTop';
 import { SummaryContainer } from '../containers/Checkout/SummaryContainer';
+import { useCustomNavigate } from '../hooks/useCustomNavigate';
 
 export const CheckoutPage = () => {
   const [showSummary, setShowSummary] = useState<boolean>(true);
@@ -33,6 +34,7 @@ export const CheckoutPage = () => {
   const [finalPrice, setFinalPrice] = useState<number>();
   const [promoCode, setPromoCode] = useState<PromoCode | null>(null);
   const { state } = useLocation();
+  const navigate = useCustomNavigate();
   const { getShipping, isLoading: isFetchingShipping } = useShipping();
 
   const setShippingFromFirebase = async () => {
@@ -61,7 +63,7 @@ export const CheckoutPage = () => {
 
   useEffect(() => {
     if (!state || !state.cartItems || isFetchingShipping) {
-      return;
+      return navigate('/');
     }
 
     try {
