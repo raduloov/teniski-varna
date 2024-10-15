@@ -37,6 +37,7 @@ export const findOfficesByCity = async (req: Request, res: Response) => {
   const data = await response.json();
   const mappedOffices = data.offices.map((office: any) => ({
     name: office.name,
+    city: office.address.siteName,
     address: office.address.localAddressString
   }));
   res.json(mappedOffices);
