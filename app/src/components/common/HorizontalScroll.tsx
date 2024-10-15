@@ -4,7 +4,7 @@ import { Button, ButtonSize, ButtonType } from './Button';
 import { Label } from '../../hooks/useLabels';
 
 interface Props {
-  labels: Array<Label>;
+  labels: Label[];
   selected?: Label;
   onSelectLabel: (label: Label) => void;
 }

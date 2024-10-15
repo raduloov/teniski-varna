@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Input } from '../../components/common/Input';
 import { Color } from '../../assets/constants';
@@ -9,12 +9,7 @@ import {
   getCustomerDataFromLocalStorage,
   saveCustomerDataToLocalStorage
 } from './utils';
-import { useSpeedy } from '../../hooks/useSpeedy';
-
-enum DeliveryOption {
-  PERSONAL_ADDRESS = 'personalAddress',
-  SPEEDY_OFFICE = 'speedyOffice'
-}
+import { DeliveryOption, SpeedyOfficeSelector } from './SpeedyOfficeSelector';
 
 interface Props {
   onGoBack: () => void;
@@ -46,21 +41,6 @@ export const CheckoutContainer = ({ onGoBack, onGoToCheckout }: Props) => {
   );
   const [selectedDeliveryOption, setSelectedDeliveryOption] =
     useState<DeliveryOption>(deliveryOption ?? DeliveryOption.PERSONAL_ADDRESS);
-  const [speedyOffices, setSpeedyOffices] = useState<any[]>([]);
-  const { listOfficesByCity, isLoading } = useSpeedy();
-
-  console.log('speedyOffices', speedyOffices);
-
-  const loadOffices = async () => {
-    if (selectedDeliveryOption === DeliveryOption.SPEEDY_OFFICE) {
-      const offices = await listOfficesByCity('34');
-      setSpeedyOffices(offices);
-    }
-  };
-
-  useEffect(() => {
-    loadOffices();
-  }, []);
 
   const handleOptionChange = (
     event: React.ChangeEvent<HTMLInputElement> | DeliveryOption
@@ -186,38 +166,13 @@ export const CheckoutContainer = ({ onGoBack, onGoToCheckout }: Props) => {
           <Text>Офис на Спиди</Text>
         </RadioOption>
       </RadioButtonsWrapper>
-      {selectedDeliveryOption === DeliveryOption.PERSONAL_ADDRESS && (
-        <InputWrapper>
-          <Input
-            value={customerAddress}
-            placeholder={
-              'улица, номер, етаж, вход, апартамент, град, пощенски код'
-            }
-            onChange={(e) => setCustomerAddress(e.target.value)}
-            onBlur={() =>
-              saveCustomerDataToLocalStorage(
-                CheckoutField.CUSTOMER_ADDRESS,
-                customerAddress
-              )
-            }
-          />
-        </InputWrapper>
-      )}
-      {selectedDeliveryOption === DeliveryOption.SPEEDY_OFFICE && (
-        <InputWrapper>
-          <Input
-            value={customerSpeedyOffice}
-            placeholder={'Офис на Спиди'}
-            onChange={(e) => setCustomerSpeedyOffice(e.target.value)}
-            onBlur={() =>
-              saveCustomerDataToLocalStorage(
-                CheckoutField.CUSTOMER_SPEEDY_OFFICE,
-                customerSpeedyOffice
-              )
-            }
-          />
-        </InputWrapper>
-      )}
+      <SpeedyOfficeSelector
+        selectedDeliveryOption={selectedDeliveryOption}
+        customerAddress={customerAddress}
+        setCustomerAddress={setCustomerAddress}
+        customerSpeedyOffice={customerSpeedyOffice}
+        setCustomerSpeedyOffice={setCustomerSpeedyOffice}
+      />
       <Divider />
       <Button
         label={'Продължи към плащане'}

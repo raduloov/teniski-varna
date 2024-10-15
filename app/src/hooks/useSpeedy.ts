@@ -31,8 +31,8 @@ export const useSpeedy = () => {
     }
   };
 
-  const findCitiesByName = async () => {
-    const url = `${REACT_APP_TENISKI_API_BASE_URL}/speedy/listCities`;
+  const findCitiesByName = async (searchTerm: string) => {
+    const url = `${REACT_APP_TENISKI_API_BASE_URL}/speedy/findCitiesByName`;
 
     setIsLoading(true);
 
@@ -40,7 +40,8 @@ export const useSpeedy = () => {
       const response = await fetch(url, {
         headers: {
           username: REACT_APP_SPEEDY_USERNAME ?? '',
-          password: REACT_APP_SPEEDY_PASSWORD ?? ''
+          password: REACT_APP_SPEEDY_PASSWORD ?? '',
+          searchterm: searchTerm
         }
       });
       const data = await response.json();
