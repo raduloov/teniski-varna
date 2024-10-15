@@ -11,11 +11,11 @@ export const listOffices = async (req: Request, res: Response) => {
   res.json(data);
 };
 
-export const listCities = async (req: Request, res: Response) => {
-  const { username, password } = req.headers;
+export const findCitiesByName = async (req: Request, res: Response) => {
+  const { username, password, searchterm } = req.headers;
 
   const response = await fetch(
-    `${SPEEDY_BASE_URL}/location/site?userName=${username}&password=${password}&countryId=100`
+    `${SPEEDY_BASE_URL}/location/site?userName=${username}&password=${password}&countryId=100&name=${searchterm}`
   );
   const data = await response.json();
   res.json(data);
