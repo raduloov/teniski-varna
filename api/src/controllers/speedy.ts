@@ -32,8 +32,9 @@ export const findOfficesByCity = async (req: Request, res: Response) => {
     `${SPEEDY_BASE_URL}/location/office/nearest-offices?userName=${username}&password=${password}&countryId=100&siteName=${cityname}`
   );
   const data = await response.json();
-  const mappedOffices = data.offices.map(
-    (office: any) => office.address.localAddressString
-  );
+  const mappedOffices = data.offices.map((office: any) => ({
+    name: office.name,
+    address: office.address.localAddressString
+  }));
   res.json(mappedOffices);
 };
