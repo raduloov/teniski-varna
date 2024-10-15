@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { SPEEDY_BASE_URL } from '../config';
+import { translateText } from '../utils/translateText';
 
 export const listOffices = async (req: Request, res: Response) => {
   const { username, password } = req.headers;
@@ -28,8 +29,10 @@ export const findCitiesByName = async (req: Request, res: Response) => {
 export const findOfficesByCity = async (req: Request, res: Response) => {
   const { username, password, cityname } = req.headers;
 
+  const cityName = translateText(cityname as string);
+
   const response = await fetch(
-    `${SPEEDY_BASE_URL}/location/office/nearest-offices?userName=${username}&password=${password}&countryId=100&siteName=${cityname}`
+    `${SPEEDY_BASE_URL}/location/office?userName=${username}&password=${password}&countryId=100&siteName=${cityName}`
   );
   const data = await response.json();
   const mappedOffices = data.offices.map((office: any) => ({
