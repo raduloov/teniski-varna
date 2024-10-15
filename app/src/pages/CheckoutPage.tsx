@@ -4,7 +4,9 @@ import { v4 as uuid4 } from 'uuid';
 import { useLocation } from 'react-router';
 import {
   cartItemsMapperToMYPOSObject,
-  CartProduct
+  CartProduct,
+  mapProductToCartProduct,
+  MYPOSProduct as MyPosProduct
 } from '../domain/mappers/cartProductMapper';
 import { CheckoutContainer } from '../containers/Checkout/CheckoutContainer';
 import {
@@ -21,6 +23,14 @@ import { PromoCode } from '../hooks/usePromoCodes';
 import { scrollToTop } from '../utils/scrollToTop';
 import { SummaryContainer } from '../containers/Checkout/SummaryContainer';
 import { useCustomNavigate } from '../hooks/useCustomNavigate';
+import { flattenItems } from '../components/features/summary/utils';
+import {
+  getDiscountForProduct,
+  TShirtColor
+} from '../containers/adminPanel/utils';
+import { useProducts } from '../hooks/useProducts';
+import { useDiscounts } from '../hooks/useDiscounts';
+import { ActivityIndicator } from '../components/common/ActivityIndicator';
 
 export const CheckoutPage = () => {
   const [showSummary, setShowSummary] = useState<boolean>(true);
@@ -29,22 +39,129 @@ export const CheckoutPage = () => {
     shippingCost: 0,
     minimumAmount: 0
   });
-  const [cartItems, setCartItems] = useState<CartProduct[]>([]);
+  const [items, setItems] = useState<CartProduct[]>([]);
+  const [myPosItems, setMyPosItems] = useState<CartProduct | MyPosProduct[]>(
+    []
+  );
   const [totalPice, setTotalPrice] = useState<number>(0);
   const [finalPrice, setFinalPrice] = useState<number>();
   const [promoCode, setPromoCode] = useState<PromoCode | null>(null);
+  const { getProductById, isLoading: isFetchingProduct } = useProducts();
+  const { getActiveDiscounts, isLoading: isFetchingDiscount } = useDiscounts();
   const { state } = useLocation();
   const navigate = useCustomNavigate();
-  const { getShipping, isLoading: isFetchingShipping } = useShipping();
+  const { getShipping } = useShipping();
 
   const setShippingFromFirebase = async () => {
     const shippingData = await getShipping();
     setShipping(shippingData);
   };
 
-  const onContinue = () => {
+  const createSummary = async () => {
+    const flattenedItems = flattenItems(state.cartItems);
+    const activeDiscounts = await getActiveDiscounts();
+
+    const mappedItems: CartProduct[] = [];
+
+    for (const item of flattenedItems) {
+      const product = await getProductById(item.id);
+
+      if (product) {
+        const discount = getDiscountForProduct(product, activeDiscounts);
+        const discountedPrice = getDiscountedPrice(product.price, discount);
+
+        const mappedProduct = mapProductToCartProduct(
+          product,
+          item.color as TShirtColor,
+          item.image,
+          1,
+          item.size,
+          item.type,
+          discountedPrice
+        );
+
+        mappedItems.push(mappedProduct);
+      }
+    }
+
+    const myPosCartItems = cartItemsMapperToMYPOSObject(mappedItems);
+    const myPosTotalPrice = getTotalPrice(mappedItems);
+
+    const isShippingFree = myPosTotalPrice > shipping.minimumAmount;
+    const amount = isShippingFree
+      ? myPosTotalPrice
+      : myPosTotalPrice + shipping.shippingCost;
+    const cartItems = isShippingFree
+      ? myPosCartItems
+      : [
+          ...myPosCartItems,
+          {
+            article: 'Доставка',
+            quantity: 1,
+            price: shipping.shippingCost,
+            currency: 'BGN'
+          }
+        ];
+
+    setItems(mappedItems);
+    setMyPosItems(cartItems);
+    setTotalPrice(myPosTotalPrice);
+    setFinalPrice(amount);
+  };
+
+  const createMyPos = async () => {
+    const myPosNote = getMyPosNote(items, promoCode);
+
+    const paymentParams = {
+      Amount: finalPrice ?? totalPice,
+      Currency: 'BGN',
+      OrderID: uuid4(),
+      SID: process.env.REACT_APP_MYPOS_SID,
+      WalletNumber: process.env.REACT_APP_MYPOS_WALLET_NUMBER,
+      KeyIndex: 1,
+      URL_OK: window.location.href,
+      URL_Cancel: window.location.href,
+      URL_Notify: window.location.href,
+      CardTokenRequest: 0,
+      PaymentParametersRequired: 3,
+      items: myPosItems,
+      Note: myPosNote
+    };
+
+    console.log('paymentParams', paymentParams);
+
+    if (showMyPos) {
+      MyPOSEmbedded.createPayment(
+        'embeddedCheckout',
+        paymentParams,
+        callbackParams
+      );
+    }
+  };
+
+  const onContinueToDelivery = () => {
     setShowSummary(false);
     scrollToTop();
+  };
+
+  const onContinueToMyPos = () => {
+    createMyPos();
+    scrollToTop();
+    setShowMyPos(true);
+  };
+
+  const applyPromoCode = (promoCode: PromoCode | null) => {
+    setPromoCode(promoCode);
+
+    if (promoCode) {
+      const discountedPrice = getDiscountedPrice(
+        totalPice,
+        promoCode.percentage
+      );
+      setFinalPrice(discountedPrice);
+    } else {
+      setFinalPrice(undefined);
+    }
   };
 
   const callbackParams = {
@@ -62,98 +179,48 @@ export const CheckoutPage = () => {
   };
 
   useEffect(() => {
-    if (!state || !state.cartItems || isFetchingShipping) {
+    if (!state || !state.cartItems) {
       return navigate('/');
     }
 
+    // resetState();
+
     try {
       setShippingFromFirebase();
-      setCartItems(state.cartItems);
+      createSummary();
 
-      const myPosCartItems = cartItemsMapperToMYPOSObject(state.cartItems);
-      const myPosNote = getMyPosNote(state.cartItems, promoCode);
-      let myPosTotalPrice = getTotalPrice(state.cartItems);
-      setTotalPrice(myPosTotalPrice);
-
-      if (promoCode) {
-        const discountedPrice = getDiscountedPrice(
-          myPosTotalPrice,
-          promoCode.percentage
-        );
-        myPosTotalPrice = discountedPrice;
-        setFinalPrice(discountedPrice);
-      } else {
-        setFinalPrice(undefined);
-      }
-
-      const isShippingFree = myPosTotalPrice > shipping.minimumAmount;
-      const amount = isShippingFree
-        ? myPosTotalPrice
-        : myPosTotalPrice + shipping.shippingCost;
-      const cartItems = isShippingFree
-        ? myPosCartItems
-        : [
-            ...myPosCartItems,
-            {
-              article: 'Доставка',
-              quantity: 1,
-              price: shipping.shippingCost,
-              currency: 'BGN'
-            }
-          ];
-
-      const paymentParams = {
-        Amount: amount,
-        Currency: 'BGN',
-        OrderID: uuid4(),
-        SID: process.env.REACT_APP_MYPOS_SID,
-        WalletNumber: process.env.REACT_APP_MYPOS_WALLET_NUMBER,
-        KeyIndex: 1,
-        URL_OK: window.location.href,
-        URL_Cancel: window.location.href,
-        URL_Notify: window.location.href,
-        CardTokenRequest: 0,
-        PaymentParametersRequired: 3,
-        // do we need cartItems here?
-        cartItems,
-        Note: myPosNote
-      };
-
-      console.log('paymentParams', paymentParams);
-      console.log('amount', amount);
-
-      if (showMyPos) {
-        MyPOSEmbedded.createPayment(
-          'embeddedCheckout',
-          paymentParams,
-          callbackParams
-        );
-      }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       toast.error(`💥 Нещо се обърка :( ${error.message}`);
     }
-  }, [showMyPos, promoCode, state, finalPrice]);
+  }, [state]);
+
+  const isLoading = isFetchingProduct || isFetchingDiscount;
 
   return (
     <>
-      {showSummary && !showMyPos && (
+      {isLoading && (
+        <LoadingWrapper>
+          <ActivityIndicator size={100} color={Color.ACCENT} />
+        </LoadingWrapper>
+      )}
+      {!isLoading && showSummary && !showMyPos && (
         <SummaryContainer
-          cartItems={cartItems}
+          cartItems={items}
           totalPice={totalPice}
           finalPrice={finalPrice}
           isValidPromoCodeSet={!!promoCode}
-          onApplyPromoCode={(promoCode) => setPromoCode(promoCode)}
-          onContinue={onContinue}
+          onApplyPromoCode={(promoCode) => applyPromoCode(promoCode)}
+          onContinue={onContinueToDelivery}
         />
       )}
-      {!showMyPos && !showSummary && (
+      {!isLoading && !showMyPos && !showSummary && (
         <CheckoutContainer
           onGoBack={() => setShowSummary(true)}
-          onGoToCheckout={() => setShowMyPos(true)}
+          onContinueToMyPos={onContinueToMyPos}
         />
       )}
-      {showMyPos && (
+      {!isLoading && showMyPos && (
         <MyPosWrapper>
           <BackButton onClick={() => setShowMyPos(false)}>
             <icons.FaChevronLeft />
@@ -165,6 +232,13 @@ export const CheckoutPage = () => {
     </>
   );
 };
+
+const LoadingWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50vh;
+`;
 
 const BackButton = styled.div`
   display: flex;

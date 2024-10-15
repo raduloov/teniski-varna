@@ -14,10 +14,10 @@ import { SpeedyCity, SpeedyOffice } from '../../hooks/useSpeedy';
 
 interface Props {
   onGoBack: () => void;
-  onGoToCheckout: () => void;
+  onContinueToMyPos: () => void;
 }
 
-export const CheckoutContainer = ({ onGoBack, onGoToCheckout }: Props) => {
+export const CheckoutContainer = ({ onGoBack, onContinueToMyPos }: Props) => {
   const { firstName, lastName, phone, email, address, deliveryOption } =
     getCustomerDataFromLocalStorage();
 
@@ -172,7 +172,7 @@ export const CheckoutContainer = ({ onGoBack, onGoToCheckout }: Props) => {
       <Button
         label={'Продължи към плащане'}
         disabled={!isAllDataAvailable}
-        onClick={onGoToCheckout}
+        onClick={onContinueToMyPos}
       />
     </Wrapper>
   );

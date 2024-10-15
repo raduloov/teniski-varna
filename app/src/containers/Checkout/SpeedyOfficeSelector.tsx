@@ -81,12 +81,13 @@ export const SpeedyOfficeSelector = ({
             onInputChange={(value) => setSearchTerm(value)}
             onChange={(value) => setSelectedCity(value)}
           />
-          {isLoading ? (
+          {isLoading && selectedCity && (
             <ActivityIndicatorWrapper>
               <ActivityIndicator size={45} color={Color.ACCENT} />
               <p>Търсим офиси около вас...</p>
             </ActivityIndicatorWrapper>
-          ) : (
+          )}
+          {!isLoading && selectedCity && (
             <Select
               options={speedyOffices}
               getOptionLabel={(option: SpeedyOffice) => option.address}

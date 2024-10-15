@@ -41,7 +41,7 @@ export const getMyPosNote = (
     .join('\n')
     .concat(
       promoCode
-        ? `\nPromo code: ${promoCode.name} - ${promoCode.percentage}`
+        ? `\nPromo code: ${promoCode.name} - ${promoCode.percentage}%`
         : ''
     );
 
