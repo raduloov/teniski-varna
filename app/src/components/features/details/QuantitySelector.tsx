@@ -41,7 +41,7 @@ const Button = styled.button<ButtonProps>`
   justify-content: center;
   align-items: center;
   background: transparent;
-  padding: 0 20px 0 20px;
+  padding: 0 20px;
   font-size: 20px;
   font-weight: bold;
   color: ${(props) => props.color ?? Color.BLACK};
@@ -50,9 +50,8 @@ const Button = styled.button<ButtonProps>`
 
 const Wrapper = styled.div`
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  width: 120px;
   border-radius: 15px;
   background: ${Color.LIGHT_GRAY};
   padding: 8px 0 8px 0;
