@@ -59,7 +59,7 @@ export const UpdateBannerImageContainer = () => {
         }
       }
 
-      toast.success('🎉 Banners updated successfully!');
+      toast.success('Banners updated successfully!');
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       setIsLoading(false);
@@ -178,7 +178,7 @@ export const UpdateBannerImageContainer = () => {
       await deleteDoc(doc(db, 'banners', bannerId));
       // TODO: Remove image from storage
 
-      toast.success('🎉 Banner deleted successfully!');
+      toast.success('Banner deleted successfully!');
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       setIsDeletingBanner(false);

@@ -46,7 +46,7 @@ export const UpdateShippingCostContainer = () => {
       return toast.error(`💥 ${e.message}`);
     } finally {
       setIsLoading(false);
-      toast.success('🎉 Shipping cost updated successfully!');
+      toast.success('Shipping cost updated successfully!');
     }
   };
 

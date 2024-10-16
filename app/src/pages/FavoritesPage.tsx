@@ -14,7 +14,10 @@ export const FavoritesPage = () => {
       {localStorageProducts.length === 0 ? (
         <EmptyProductList />
       ) : (
-        <ProductList products={localStorageProducts} />
+        <ProductList
+          products={localStorageProducts}
+          allProductsHaveBeenFetched
+        />
       )}
     </ProductListContainer>
   );

@@ -112,7 +112,10 @@ export const DetailsContainerDesktop = ({
       })
     );
 
-    toast.success(`🎉 ${product.title} беше успешно добавен в кошницата.`, {
+    toast.success(`${product.title} беше успешно добавен в кошницата.`, {
+      icon: (
+        <PartyIcon src={require('../../assets/images/partyPopperIcon.png')} />
+      ),
       onClick: () => {
         onShowCart();
         toast.dismiss();
@@ -291,6 +294,10 @@ export const DetailsContainerDesktop = ({
 //   gap: 10px;
 //   margin-top: 20px;
 // `;
+
+const PartyIcon = styled.img`
+  width: 24px;
+`;
 
 const SizeChartButton = styled.img`
   cursor: pointer;

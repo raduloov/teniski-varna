@@ -119,7 +119,10 @@ export const DetailsContainerMobile = ({
       })
     );
 
-    toast.success(`🎉 ${product.title} беше успешно добавен в кошницата.`, {
+    toast.success(`${product.title} беше успешно добавен в кошницата.`, {
+      icon: (
+        <PartyIcon src={require('../../assets/images/partyPopperIcon.png')} />
+      ),
       onClick: () => {
         onShowCart();
         toast.dismiss();
@@ -291,6 +294,10 @@ export const DetailsContainerMobile = ({
     </>
   );
 };
+
+const PartyIcon = styled.img`
+  width: 24px;
+`;
 
 const FullWidthButton = styled.div`
   width: 100%;

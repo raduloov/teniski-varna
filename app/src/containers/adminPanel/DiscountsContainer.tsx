@@ -162,7 +162,7 @@ export const DiscountsMenuContainer = () => {
 
     try {
       await addDoc(collection(db, 'discounts'), newDiscount);
-      toast.success('🎉 Discount added successfully!');
+      toast.success('Discount added successfully!');
       setDiscountsFromFirebase();
       resetForm();
       setIsLoading(false);
@@ -255,7 +255,7 @@ export const DiscountsMenuContainer = () => {
 
     try {
       await deleteDoc(doc(db, 'discounts', discountId));
-      toast.success('🎉 Discount deleted successfully!');
+      toast.success('Discount deleted successfully!');
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       setIsDeleteingDiscount(false);

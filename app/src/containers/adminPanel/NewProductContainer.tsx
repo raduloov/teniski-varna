@@ -203,7 +203,7 @@ export const NewProductContainer = () => {
       await createProduct();
 
       resetForm();
-      return toast.success('🎉 Product added successfully!');
+      return toast.success('Product added successfully!');
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       return toast.error(`💥 ${e.message}`);

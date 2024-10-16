@@ -252,7 +252,7 @@ export const UpdateProductContainer = ({
       await updateProduct();
       handleBackToAllProducts();
 
-      return toast.success('🎉 Product updated successfully!');
+      return toast.success('Product updated successfully!');
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       return toast.error(`💥 ${e.message}`);
@@ -273,7 +273,7 @@ export const UpdateProductContainer = ({
         await deleteObject(image);
       });
 
-      toast.success('🎉 Product deleted successfully!');
+      toast.success('Product deleted successfully!');
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       setIsDeletingProduct(false);

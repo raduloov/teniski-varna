@@ -114,7 +114,7 @@ export const PromoCodesContainer = () => {
     try {
       await deleteDoc(doc(db, 'promoCodes', promoCodeId));
 
-      toast.success('🎉 Promo code deleted successfully!');
+      toast.success('Promo code deleted successfully!');
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       setIsDeletingPromoCode(false);

@@ -7,6 +7,7 @@ import { IconButton } from '../../common/IconButton';
 import { getDiscountedPrice } from '../../../containers/adminPanel/utils';
 import { productAppearAnimation } from '../../../utils/animations';
 import { useCustomNavigate } from '../../../hooks/useCustomNavigate';
+import { toast } from 'react-toastify';
 
 interface Props {
   product: Product;
@@ -42,12 +43,24 @@ export const ProductCard = ({
       );
       localStorage.setItem('Favorites', JSON.stringify(newFavorites));
       setFavorites(newFavorites);
+      toast.success('Продуктът беше премахнат от любими', {
+        icon: (
+          <ToastIcon
+            src={require('../../../assets/images/brokenHeartIcon.png')}
+          />
+        )
+      });
     } else {
       localStorage.setItem(
         'Favorites',
         JSON.stringify([...favoritesArray, product])
       );
       setFavorites([...favoritesArray, product]);
+      toast.success('Продуктът беше добавен в любими', {
+        icon: (
+          <ToastIcon src={require('../../../assets/images/redHeartIcon.png')} />
+        )
+      });
     }
   };
 
@@ -80,6 +93,10 @@ export const ProductCard = ({
     </Card>
   );
 };
+
+const ToastIcon = styled.img`
+  width: 24px;
+`;
 
 const PriceWrapper = styled.div`
   display: flex;

@@ -59,7 +59,7 @@ export const LabelsContainer = () => {
         }
       }
 
-      toast.success('🎉 Labels updated successfully!');
+      toast.success('Labels updated successfully!');
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       setIsLoading(false);
@@ -166,7 +166,7 @@ export const LabelsContainer = () => {
           });
         }
       }
-      toast.success('🎉 Label deleted successfully!');
+      toast.success('Label deleted successfully!');
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       setIsDeletingLabel(false);
