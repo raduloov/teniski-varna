@@ -10,6 +10,7 @@ import { ActivityIndicator } from '../../components/common/ActivityIndicator';
 import { Input } from '../../components/common/Input';
 import { ScreenSize, useScreenSize } from '../../hooks/useScreenSize';
 import { ShippingData } from '../../hooks/useShipping';
+import { RemainingForFreeShipping } from '../../components/features/checkout/RemainingForFreeShipping';
 
 interface Props {
   cartItems: CartProduct[];
@@ -53,13 +54,10 @@ export const SummaryContainer = ({
       <LargeText>Обобщение</LargeText>
       <SummaryItemsContainer cartItems={cartItems} />
       {!isFreeShipping && (
-        <FreeShippingText>
-          Поръчай за още{' '}
-          <RemainingAmount>
-            {shipping.minimumAmount - totalPrice}лв
-          </RemainingAmount>{' '}
-          и доставката е безплатна
-        </FreeShippingText>
+        <RemainingForFreeShipping
+          totalPrice={totalPrice}
+          minimumAmount={shipping.minimumAmount}
+        />
       )}
       <Divider />
       <PromoCodeWrapper>
@@ -128,16 +126,6 @@ export const SummaryContainer = ({
     </SummaryWrapper>
   );
 };
-
-const RemainingAmount = styled.span`
-  font-weight: 600;
-  color: ${Color.RED};
-`;
-
-const FreeShippingText = styled.p`
-  font-size: 0.9rem;
-  color: ${Color.DARK_GRAY};
-`;
 
 const PromoCodeButton = styled.div<{
   isValid: boolean | null;

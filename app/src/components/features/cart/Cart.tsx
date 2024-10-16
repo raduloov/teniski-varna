@@ -27,6 +27,7 @@ import { useModalClose } from '../../../hooks/useModalClose';
 import { ScreenSize, useScreenSize } from '../../../hooks/useScreenSize';
 import { useCustomNavigate } from '../../../hooks/useCustomNavigate';
 import { CartProductCard } from './CartProductCard';
+import { RemainingForFreeShipping } from '../checkout/RemainingForFreeShipping';
 
 interface Props {
   showModal: boolean;
@@ -157,13 +158,10 @@ export const Cart = ({ setShowModal, showModal, cartItems }: Props) => {
                     Доставка:<p>{shippingPrice}лв</p>
                   </CartPriceContainer>
                   {!isFreeShipping && (
-                    <FreeShippingText>
-                      Поръчай за още{' '}
-                      <RemainingAmount>
-                        {shipping.minimumAmount - cartPrice}лв
-                      </RemainingAmount>{' '}
-                      и доставката е безплатна
-                    </FreeShippingText>
+                    <RemainingForFreeShipping
+                      totalPrice={totalPrice}
+                      minimumAmount={shipping.minimumAmount}
+                    />
                   )}
                   <CartDivider />
                   <CartPriceContainer>
@@ -245,16 +243,6 @@ const CartFooter = styled.div`
   @media (max-width: 768px) {
     position: fixed;
   }
-`;
-
-const RemainingAmount = styled.span`
-  font-weight: 600;
-  color: ${Color.RED};
-`;
-
-const FreeShippingText = styled.p`
-  font-size: 0.8rem;
-  color: ${Color.DARK_GRAY};
 `;
 
 const CartPriceContainer = styled.div`
