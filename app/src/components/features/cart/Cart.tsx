@@ -92,13 +92,15 @@ export const Cart = ({ setShowModal, showModal, cartItems }: Props) => {
       }
     }
 
+    console.log(cartItems);
+
     dispatch(cartActions.fillCart(cartItems));
   };
 
   useEffect(() => {
     setShippingFromFirebase();
     setItemsToCart();
-  }, []);
+  }, [showModal]);
 
   const cartPrice = cartItems.reduce((acc, product) => {
     return acc + product.price * product.quantity;
