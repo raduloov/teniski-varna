@@ -9,8 +9,11 @@ import {
   getCustomerDataFromLocalStorage,
   OrderShippingInfo,
   saveCustomerDataToLocalStorage
-} from './utils';
-import { DeliveryOption, SpeedyOfficeSelector } from './SpeedyOfficeSelector';
+} from '../../components/features/checkout/utils';
+import {
+  DeliveryOption,
+  SpeedyOfficeSelector
+} from '../../components/features/checkout/SpeedyOfficeSelector';
 import { SpeedyCity, SpeedyOffice } from '../../hooks/useSpeedy';
 
 const MemoizedInput = React.memo(Input);
@@ -23,8 +26,15 @@ interface Props {
 }
 
 export const CheckoutContainer = ({ onGoBack, onContinueToMyPos }: Props) => {
-  const { firstName, lastName, phone, email, address, deliveryOption } =
-    getCustomerDataFromLocalStorage();
+  const {
+    firstName,
+    lastName,
+    phone,
+    email,
+    address,
+    deliveryOption,
+    saveData
+  } = getCustomerDataFromLocalStorage();
 
   const [customerFirstName, setCustomerFirstName] = useState<string>(
     firstName ?? ''
@@ -40,32 +50,54 @@ export const CheckoutContainer = ({ onGoBack, onContinueToMyPos }: Props) => {
     useState<SpeedyOffice | null>(null);
   const [selectedDeliveryOption, setSelectedDeliveryOption] =
     useState<DeliveryOption>(deliveryOption ?? DeliveryOption.PERSONAL_ADDRESS);
+  const [isSaveCustomerDataChecked, setIsSaveCustomerDataChecked] =
+    useState<boolean>(!!saveData);
 
   const handleOptionChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement> | DeliveryOption) => {
-      if (typeof event === 'string') {
-        if (event === DeliveryOption.PERSONAL_ADDRESS) {
-          setSelectedDeliveryOption(DeliveryOption.PERSONAL_ADDRESS);
-          saveCustomerDataToLocalStorage(
-            CheckoutField.DELIVERY_OPTION,
-            DeliveryOption.PERSONAL_ADDRESS
-          );
-        }
-        if (event === DeliveryOption.SPEEDY_OFFICE) {
-          setSelectedDeliveryOption(DeliveryOption.SPEEDY_OFFICE);
-          saveCustomerDataToLocalStorage(
-            CheckoutField.DELIVERY_OPTION,
-            DeliveryOption.SPEEDY_OFFICE
-          );
-        }
-      } else {
+      if (typeof event !== 'string') {
         setSelectedDeliveryOption(event.target.value as DeliveryOption);
+      }
+
+      if (event === DeliveryOption.PERSONAL_ADDRESS) {
+        setSelectedDeliveryOption(DeliveryOption.PERSONAL_ADDRESS);
+      }
+
+      if (event === DeliveryOption.SPEEDY_OFFICE) {
+        setSelectedDeliveryOption(DeliveryOption.SPEEDY_OFFICE);
       }
     },
     []
   );
 
+  const handleSaveCustomerDataChange = () => {
+    setIsSaveCustomerDataChecked((state) => !state);
+  };
+
   const handleContinueToMyPos = () => {
+    if (isSaveCustomerDataChecked) {
+      saveCustomerDataToLocalStorage([
+        { field: CheckoutField.CUSTOMER_FIRST_NAME, value: customerFirstName },
+        { field: CheckoutField.CUSTOMER_LAST_NAME, value: customerLastName },
+        { field: CheckoutField.CUSTOMER_PHONE, value: customerPhone },
+        { field: CheckoutField.CUSTOMER_EMAIL, value: customerEmail },
+        {
+          field: CheckoutField.CUSTOMER_ADDRESS,
+          value: customerAddress
+        },
+        {
+          field: CheckoutField.DELIVERY_OPTION,
+          value: selectedDeliveryOption
+        },
+        {
+          field: CheckoutField.SAVE_DATA,
+          value: isSaveCustomerDataChecked.toString()
+        }
+      ]);
+    } else {
+      localStorage.removeItem('customerData');
+    }
+
     onContinueToMyPos({
       firstName: customerFirstName,
       lastName: customerLastName,
@@ -86,7 +118,7 @@ export const CheckoutContainer = ({ onGoBack, onContinueToMyPos }: Props) => {
     () =>
       customerFirstName &&
       customerLastName &&
-      customerPhone &&
+      customerPhone.length >= 10 &&
       customerEmail &&
       (selectedDeliveryOption === DeliveryOption.PERSONAL_ADDRESS
         ? customerAddress
@@ -115,12 +147,6 @@ export const CheckoutContainer = ({ onGoBack, onContinueToMyPos }: Props) => {
           value={customerFirstName}
           placeholder={'Име'}
           onChange={(e) => setCustomerFirstName(e.target.value)}
-          onBlur={() =>
-            saveCustomerDataToLocalStorage(
-              CheckoutField.CUSTOMER_FIRST_NAME,
-              customerFirstName
-            )
-          }
         />
       </InputWrapper>
       <InputWrapper>
@@ -129,12 +155,6 @@ export const CheckoutContainer = ({ onGoBack, onContinueToMyPos }: Props) => {
           value={customerLastName}
           placeholder={'Фамилия'}
           onChange={(e) => setCustomerLastName(e.target.value)}
-          onBlur={() =>
-            saveCustomerDataToLocalStorage(
-              CheckoutField.CUSTOMER_LAST_NAME,
-              customerLastName
-            )
-          }
         />
       </InputWrapper>
       <InputWrapper>
@@ -144,12 +164,6 @@ export const CheckoutContainer = ({ onGoBack, onContinueToMyPos }: Props) => {
           placeholder={'08XXXXXXXX'}
           type={'number'}
           onChange={(e) => setCustomerPhone(e.target.value)}
-          onBlur={() =>
-            saveCustomerDataToLocalStorage(
-              CheckoutField.CUSTOMER_PHONE,
-              customerPhone
-            )
-          }
         />
       </InputWrapper>
       <InputWrapper>
@@ -158,12 +172,6 @@ export const CheckoutContainer = ({ onGoBack, onContinueToMyPos }: Props) => {
           value={customerEmail}
           placeholder={'name@email.com'}
           onChange={(e) => setCustomerEmail(e.target.value)}
-          onBlur={() =>
-            saveCustomerDataToLocalStorage(
-              CheckoutField.CUSTOMER_EMAIL,
-              customerEmail
-            )
-          }
         />
       </InputWrapper>
       <Divider />
@@ -208,9 +216,26 @@ export const CheckoutContainer = ({ onGoBack, onContinueToMyPos }: Props) => {
         disabled={!isAllDataAvailable}
         onClick={handleContinueToMyPos}
       />
+      <SaveCustomerDataCheckboxWrapper onClick={handleSaveCustomerDataChange}>
+        <input
+          type={'checkbox'}
+          checked={isSaveCustomerDataChecked}
+          style={{ cursor: 'pointer' }}
+        />
+        <p>Запази данните ми за доставка в този браузър за следващият път</p>
+      </SaveCustomerDataCheckboxWrapper>
     </Wrapper>
   );
 };
+
+const SaveCustomerDataCheckboxWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: ${Color.DARK_GRAY};
+  font-size: 14px;
+  cursor: pointer;
+`;
 
 const BackButton = styled.div`
   display: flex;

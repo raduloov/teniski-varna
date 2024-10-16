@@ -1,5 +1,5 @@
-import { CartProduct } from '../../domain/mappers/cartProductMapper';
-import { PromoCode } from '../../hooks/usePromoCodes';
+import { CartProduct } from '../../../domain/mappers/cartProductMapper';
+import { PromoCode } from '../../../hooks/usePromoCodes';
 
 export interface OrderShippingInfo {
   firstName: string;
@@ -17,20 +17,22 @@ export enum CheckoutField {
   CUSTOMER_EMAIL = 'email',
   CUSTOMER_ADDRESS = 'address',
   CUSTOMER_SPEEDY_OFFICE = 'speedyOffice',
-  DELIVERY_OPTION = 'deliveryOption'
+  DELIVERY_OPTION = 'deliveryOption',
+  SAVE_DATA = 'saveData'
 }
 
 export const saveCustomerDataToLocalStorage = (
-  field: CheckoutField,
-  value: string
+  customerData: { field: CheckoutField; value: string }[]
 ) => {
-  localStorage.setItem(
-    'customerData',
-    JSON.stringify({
-      ...JSON.parse(localStorage.getItem('customerData') || '{}'),
-      [field]: value
-    })
-  );
+  for (const { field, value } of customerData) {
+    localStorage.setItem(
+      'customerData',
+      JSON.stringify({
+        ...JSON.parse(localStorage.getItem('customerData') || '{}'),
+        [field]: value
+      })
+    );
+  }
 };
 
 export const getCustomerDataFromLocalStorage = () =>

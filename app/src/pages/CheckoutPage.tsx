@@ -13,7 +13,7 @@ import {
   getMyPosNote,
   getTotalPrice,
   OrderShippingInfo
-} from '../containers/Checkout/utils';
+} from '../components/features/checkout/utils';
 import { ShippingData, useShipping } from '../hooks/useShipping';
 import { toast } from 'react-toastify';
 import styled from 'styled-components';

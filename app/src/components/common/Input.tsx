@@ -60,7 +60,9 @@ export const Input = ({
         type={type}
         min={min}
         max={max}
-        style={{ textAlign: centered ? 'center' : 'left' }}
+        style={{
+          textAlign: centered ? 'center' : 'left'
+        }}
       />
       {clearIcon && (
         <ClearWrapper onClick={onClear}>

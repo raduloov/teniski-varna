@@ -1,13 +1,12 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { SpeedyCity, SpeedyOffice, useSpeedy } from '../../hooks/useSpeedy';
+import { SpeedyCity, SpeedyOffice, useSpeedy } from '../../../hooks/useSpeedy';
 import styled from 'styled-components';
-import { Input } from '../../components/common/Input';
-import { CheckoutField, saveCustomerDataToLocalStorage } from './utils';
-import { translateTextForSpeedyQuery } from '../../utils/translateText';
+import { Input } from '../../common/Input';
+import { translateTextForSpeedyQuery } from '../../../utils/translateText';
 import { AsyncPaginate } from 'react-select-async-paginate';
 import Select from 'react-select';
-import { ActivityIndicator } from '../../components/common/ActivityIndicator';
-import { Color } from '../../assets/constants';
+import { ActivityIndicator } from '../../common/ActivityIndicator';
+import { Color } from '../../../assets/constants';
 
 export enum DeliveryOption {
   PERSONAL_ADDRESS = 'personalAddress',
@@ -69,12 +68,6 @@ export const SpeedyOfficeSelector = ({
               'улица, номер, етаж, вход, апартамент, град, пощенски код'
             }
             onChange={(e) => setCustomerAddress(e.target.value)}
-            onBlur={() =>
-              saveCustomerDataToLocalStorage(
-                CheckoutField.CUSTOMER_ADDRESS,
-                customerAddress
-              )
-            }
           />
         </InputWrapper>
       )}
