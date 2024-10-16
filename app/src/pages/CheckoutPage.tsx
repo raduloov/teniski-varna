@@ -184,7 +184,7 @@ export const CheckoutPage = () => {
   };
 
   useEffect(() => {
-    if (!cartItems) {
+    if (cartItems.length === 0) {
       return navigate('/');
     }
 
