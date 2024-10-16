@@ -7,6 +7,7 @@ import { Button } from '../../components/common/Button';
 import {
   CheckoutField,
   getCustomerDataFromLocalStorage,
+  OrderShippingInfo,
   saveCustomerDataToLocalStorage
 } from './utils';
 import { DeliveryOption, SpeedyOfficeSelector } from './SpeedyOfficeSelector';
@@ -18,7 +19,7 @@ const MemoizedSpeedyOfficeSelector = React.memo(SpeedyOfficeSelector);
 
 interface Props {
   onGoBack: () => void;
-  onContinueToMyPos: () => void;
+  onContinueToMyPos: (orderShippingInfo: OrderShippingInfo) => void;
 }
 
 export const CheckoutContainer = ({ onGoBack, onContinueToMyPos }: Props) => {
@@ -63,6 +64,23 @@ export const CheckoutContainer = ({ onGoBack, onContinueToMyPos }: Props) => {
     },
     []
   );
+
+  const handleContinueToMyPos = () => {
+    onContinueToMyPos({
+      firstName: customerFirstName,
+      lastName: customerLastName,
+      email: customerEmail,
+      phone: customerPhone,
+      personalAddress:
+        deliveryOption === DeliveryOption.PERSONAL_ADDRESS
+          ? customerAddress
+          : undefined,
+      speedyOffice:
+        deliveryOption === DeliveryOption.SPEEDY_OFFICE
+          ? `${selectedSpeedyOffice?.city}, ${selectedSpeedyOffice?.address}`
+          : undefined
+    });
+  };
 
   const isAllDataAvailable = useMemo(
     () =>
@@ -188,7 +206,7 @@ export const CheckoutContainer = ({ onGoBack, onContinueToMyPos }: Props) => {
       <MemoizedButton
         label={'Продължи към плащане'}
         disabled={!isAllDataAvailable}
-        onClick={onContinueToMyPos}
+        onClick={handleContinueToMyPos}
       />
     </Wrapper>
   );

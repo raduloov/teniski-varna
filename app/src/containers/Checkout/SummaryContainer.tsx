@@ -108,7 +108,13 @@ export const SummaryContainer = ({
           <MediumText>Общо:</MediumText>
           <Column>
             {isPromoCodeValid && (
-              <DiscountedPrice>{totalPrice.toFixed(2)}лв</DiscountedPrice>
+              <DiscountedPrice>
+                {(isFreeShipping
+                  ? totalPrice
+                  : totalPrice + shipping.shippingCost
+                ).toFixed(2)}
+                лв
+              </DiscountedPrice>
             )}
             <Price discounted={!!isPromoCodeValid}>
               {(finalPrice ?? totalPrice).toFixed(2)}лв

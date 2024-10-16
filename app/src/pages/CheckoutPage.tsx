@@ -11,7 +11,8 @@ import { CheckoutContainer } from '../containers/Checkout/CheckoutContainer';
 import {
   getDiscountedPrice,
   getMyPosNote,
-  getTotalPrice
+  getTotalPrice,
+  OrderShippingInfo
 } from '../containers/Checkout/utils';
 import { ShippingData, useShipping } from '../hooks/useShipping';
 import { toast } from 'react-toastify';
@@ -43,7 +44,7 @@ export const CheckoutPage = () => {
   const [myPosItems, setMyPosItems] = useState<CartProduct | MyPosProduct[]>(
     []
   );
-  const [totalPice, setTotalPrice] = useState<number>(0);
+  const [totalPrice, setTotalPrice] = useState<number>(0);
   const [finalPrice, setFinalPrice] = useState<number>();
   const [promoCode, setPromoCode] = useState<PromoCode | null>(null);
   const [enteredPromoCode, setEnteredPromoCode] = useState<string>('');
@@ -56,6 +57,8 @@ export const CheckoutPage = () => {
   const { getActiveDiscounts, isLoading: isFetchingDiscount } = useDiscounts();
   const navigate = useCustomNavigate();
   const { getShipping } = useShipping();
+
+  const isFreeShipping = totalPrice >= shipping.minimumAmount;
 
   const setShippingFromFirebase = async () => {
     const shippingData = await getShipping();
@@ -92,7 +95,7 @@ export const CheckoutPage = () => {
     const myPosCartItems = cartItemsMapperToMYPOSObject(mappedItems);
     const myPosTotalPrice = getTotalPrice(mappedItems);
 
-    const isShippingFree = myPosTotalPrice > shipping.minimumAmount;
+    const isShippingFree = myPosTotalPrice >= shipping.minimumAmount;
     const amount = isShippingFree
       ? myPosTotalPrice
       : myPosTotalPrice + shipping.shippingCost;
@@ -114,11 +117,11 @@ export const CheckoutPage = () => {
     setFinalPrice(amount);
   };
 
-  const createMyPos = async () => {
-    const myPosNote = getMyPosNote(items, promoCode);
+  const createMyPos = async (orderShippingInfo: OrderShippingInfo) => {
+    const myPosNote = getMyPosNote(items, promoCode, orderShippingInfo);
 
     const paymentParams = {
-      Amount: finalPrice ?? totalPice,
+      Amount: finalPrice ?? totalPrice,
       Currency: 'BGN',
       OrderID: uuid4(),
       SID: process.env.REACT_APP_MYPOS_SID,
@@ -149,8 +152,8 @@ export const CheckoutPage = () => {
     scrollToTop();
   };
 
-  const onContinueToMyPos = () => {
-    createMyPos();
+  const onContinueToMyPos = (orderShippingInfo: OrderShippingInfo) => {
+    createMyPos(orderShippingInfo);
     scrollToTop();
     setShowMyPos(true);
   };
@@ -160,10 +163,14 @@ export const CheckoutPage = () => {
 
     if (promoCode) {
       const discountedPrice = getDiscountedPrice(
-        totalPice,
+        totalPrice,
         promoCode.percentage
       );
-      setFinalPrice(discountedPrice);
+      setFinalPrice(
+        isFreeShipping
+          ? discountedPrice
+          : discountedPrice + shipping.shippingCost
+      );
     } else {
       setFinalPrice(undefined);
     }
@@ -210,7 +217,7 @@ export const CheckoutPage = () => {
       {!isLoading && showSummary && !showMyPos && (
         <SummaryContainer
           cartItems={items}
-          totalPrice={totalPice}
+          totalPrice={totalPrice}
           finalPrice={finalPrice}
           shipping={shipping}
           enteredPromoCode={enteredPromoCode}
