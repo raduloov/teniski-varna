@@ -15,20 +15,15 @@ export const listOffices = async (req: Request, res: Response) => {
 export const findCitiesByName = async (req: Request, res: Response) => {
   const { username, password, searchterm } = req.headers;
 
-  try {
-    const response = await fetch(
-      `${SPEEDY_BASE_URL}/location/site?userName=${username}&password=${password}&countryId=100&name=${searchterm}`
-    );
-    const data = await response.json();
-    console.log('data', data);
-    const mappedCities = data.sites.map((city: any) => ({
-      name: city.name,
-      nameEn: city.nameEn
-    }));
-    res.json(mappedCities);
-  } catch (e: any) {
-    res.status(400).json({ message: e.message });
-  }
+  const response = await fetch(
+    `${SPEEDY_BASE_URL}/location/site?userName=${username}&password=${password}&countryId=100&name=${searchterm}`
+  );
+  const data = await response.json();
+  const mappedCities = data.sites.map((city: any) => ({
+    name: city.name,
+    nameEn: city.nameEn
+  }));
+  res.json(mappedCities);
 };
 
 export const findOfficesByCity = async (req: Request, res: Response) => {
