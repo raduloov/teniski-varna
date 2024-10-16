@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { Input } from '../../components/common/Input';
 import { Color } from '../../assets/constants';
@@ -11,6 +11,10 @@ import {
 } from './utils';
 import { DeliveryOption, SpeedyOfficeSelector } from './SpeedyOfficeSelector';
 import { SpeedyCity, SpeedyOffice } from '../../hooks/useSpeedy';
+
+const MemoizedInput = React.memo(Input);
+const MemoizedButton = React.memo(Button);
+const MemoizedSpeedyOfficeSelector = React.memo(SpeedyOfficeSelector);
 
 interface Props {
   onGoBack: () => void;
@@ -36,37 +40,49 @@ export const CheckoutContainer = ({ onGoBack, onContinueToMyPos }: Props) => {
   const [selectedDeliveryOption, setSelectedDeliveryOption] =
     useState<DeliveryOption>(deliveryOption ?? DeliveryOption.PERSONAL_ADDRESS);
 
-  const handleOptionChange = (
-    event: React.ChangeEvent<HTMLInputElement> | DeliveryOption
-  ) => {
-    if (typeof event === 'string') {
-      if (event === DeliveryOption.PERSONAL_ADDRESS) {
-        setSelectedDeliveryOption(DeliveryOption.PERSONAL_ADDRESS);
-        saveCustomerDataToLocalStorage(
-          CheckoutField.DELIVERY_OPTION,
-          DeliveryOption.PERSONAL_ADDRESS
-        );
+  const handleOptionChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement> | DeliveryOption) => {
+      if (typeof event === 'string') {
+        if (event === DeliveryOption.PERSONAL_ADDRESS) {
+          setSelectedDeliveryOption(DeliveryOption.PERSONAL_ADDRESS);
+          saveCustomerDataToLocalStorage(
+            CheckoutField.DELIVERY_OPTION,
+            DeliveryOption.PERSONAL_ADDRESS
+          );
+        }
+        if (event === DeliveryOption.SPEEDY_OFFICE) {
+          setSelectedDeliveryOption(DeliveryOption.SPEEDY_OFFICE);
+          saveCustomerDataToLocalStorage(
+            CheckoutField.DELIVERY_OPTION,
+            DeliveryOption.SPEEDY_OFFICE
+          );
+        }
+      } else {
+        setSelectedDeliveryOption(event.target.value as DeliveryOption);
       }
-      if (event === DeliveryOption.SPEEDY_OFFICE) {
-        setSelectedDeliveryOption(DeliveryOption.SPEEDY_OFFICE);
-        saveCustomerDataToLocalStorage(
-          CheckoutField.DELIVERY_OPTION,
-          DeliveryOption.SPEEDY_OFFICE
-        );
-      }
-    } else {
-      setSelectedDeliveryOption(event.target.value as DeliveryOption);
-    }
-  };
+    },
+    []
+  );
 
-  const isAllDataAvailable =
-    customerFirstName &&
-    customerLastName &&
-    customerPhone &&
-    customerEmail &&
-    (selectedDeliveryOption === DeliveryOption.PERSONAL_ADDRESS
-      ? customerAddress
-      : selectedSpeedyOffice);
+  const isAllDataAvailable = useMemo(
+    () =>
+      customerFirstName &&
+      customerLastName &&
+      customerPhone &&
+      customerEmail &&
+      (selectedDeliveryOption === DeliveryOption.PERSONAL_ADDRESS
+        ? customerAddress
+        : selectedSpeedyOffice),
+    [
+      customerFirstName,
+      customerLastName,
+      customerPhone,
+      customerEmail,
+      customerAddress,
+      selectedDeliveryOption,
+      selectedSpeedyOffice
+    ]
+  );
 
   return (
     <Wrapper>
@@ -77,7 +93,7 @@ export const CheckoutContainer = ({ onGoBack, onContinueToMyPos }: Props) => {
       <LargeText>Лични данни</LargeText>
       <InputWrapper>
         <Text>Име</Text>
-        <Input
+        <MemoizedInput
           value={customerFirstName}
           placeholder={'Име'}
           onChange={(e) => setCustomerFirstName(e.target.value)}
@@ -91,7 +107,7 @@ export const CheckoutContainer = ({ onGoBack, onContinueToMyPos }: Props) => {
       </InputWrapper>
       <InputWrapper>
         <Text>Фамилия</Text>
-        <Input
+        <MemoizedInput
           value={customerLastName}
           placeholder={'Фамилия'}
           onChange={(e) => setCustomerLastName(e.target.value)}
@@ -120,7 +136,7 @@ export const CheckoutContainer = ({ onGoBack, onContinueToMyPos }: Props) => {
       </InputWrapper>
       <InputWrapper>
         <Text>Имейл</Text>
-        <Input
+        <MemoizedInput
           value={customerEmail}
           placeholder={'name@email.com'}
           onChange={(e) => setCustomerEmail(e.target.value)}
@@ -160,7 +176,7 @@ export const CheckoutContainer = ({ onGoBack, onContinueToMyPos }: Props) => {
           <Text>Офис на Спиди</Text>
         </RadioOption>
       </RadioButtonsWrapper>
-      <SpeedyOfficeSelector
+      <MemoizedSpeedyOfficeSelector
         selectedDeliveryOption={selectedDeliveryOption}
         customerAddress={customerAddress}
         setCustomerAddress={setCustomerAddress}
@@ -169,7 +185,7 @@ export const CheckoutContainer = ({ onGoBack, onContinueToMyPos }: Props) => {
         setSelectedSpeedyOffice={setSelectedSpeedyOffice}
       />
       <Divider />
-      <Button
+      <MemoizedButton
         label={'Продължи към плащане'}
         disabled={!isAllDataAvailable}
         onClick={onContinueToMyPos}
