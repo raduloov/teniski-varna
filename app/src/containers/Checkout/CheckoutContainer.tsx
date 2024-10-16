@@ -221,6 +221,7 @@ export const CheckoutContainer = ({ onGoBack, onContinueToMyPos }: Props) => {
           type={'checkbox'}
           checked={isSaveCustomerDataChecked}
           style={{ cursor: 'pointer' }}
+          readOnly
         />
         <p>Запази данните ми за доставка в този браузър за следващият път</p>
       </SaveCustomerDataCheckboxWrapper>

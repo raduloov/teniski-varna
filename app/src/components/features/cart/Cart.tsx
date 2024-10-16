@@ -30,12 +30,12 @@ import { CartProductCard } from './CartProductCard';
 import { RemainingForFreeShipping } from '../checkout/RemainingForFreeShipping';
 
 interface Props {
-  showModal: boolean;
-  setShowModal: (showModal: boolean) => void;
+  showCart: boolean;
+  onCloseCart: () => void;
   cartItems: CartProduct[];
 }
 
-export const Cart = ({ setShowModal, showModal, cartItems }: Props) => {
+export const Cart = ({ showCart, onCloseCart, cartItems }: Props) => {
   const [shipping, setShipping] = useState<ShippingData>({
     shippingCost: 0,
     minimumAmount: 0
@@ -45,7 +45,7 @@ export const Cart = ({ setShowModal, showModal, cartItems }: Props) => {
   const navigate = useCustomNavigate();
   const { getActiveDiscounts, isLoading: isFetchingDiscounts } = useDiscounts();
   const { getShipping, isLoading: isFetchingShipping } = useShipping();
-  const { closing, handleClose } = useModalClose(() => setShowModal(false));
+  const { closing, handleClose } = useModalClose(onCloseCart);
   const screenSize = useScreenSize();
 
   const isLargeScreen = screenSize === ScreenSize.LARGE;
@@ -99,7 +99,7 @@ export const Cart = ({ setShowModal, showModal, cartItems }: Props) => {
   useEffect(() => {
     setShippingFromFirebase();
     setItemsToCart();
-  }, [showModal]);
+  }, [showCart]);
 
   const cartPrice = cartItems.reduce((acc, product) => {
     return acc + product.price * product.quantity;
@@ -113,7 +113,7 @@ export const Cart = ({ setShowModal, showModal, cartItems }: Props) => {
 
   return (
     <>
-      {showModal && (
+      {showCart && (
         <Modal
           onClose={handleClose}
           enterAnimation={ModalEnterAnimation.SLIDE_LEFT}
@@ -159,7 +159,7 @@ export const Cart = ({ setShowModal, showModal, cartItems }: Props) => {
                   </CartPriceContainer>
                   {!isFreeShipping && (
                     <RemainingForFreeShipping
-                      totalPrice={totalPrice}
+                      totalPrice={cartPrice}
                       minimumAmount={shipping.minimumAmount}
                     />
                   )}

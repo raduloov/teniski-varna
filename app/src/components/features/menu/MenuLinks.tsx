@@ -53,12 +53,17 @@ export const MenuLinks = ({ currentPage, onClick }: MenuLinkProps) => {
     0
   );
 
+  const handleCloseCart = () => {
+    setShowCart(false);
+    onClick && onClick();
+  };
+
   return (
     <NavigationContainer>
       <Cart
         cartItems={cartItems}
-        showModal={showCart}
-        setShowModal={() => setShowCart(!showCart)}
+        showCart={showCart}
+        onCloseCart={handleCloseCart}
       />
       {pages.map((page) =>
         page.path === null ? (

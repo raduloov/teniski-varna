@@ -14,7 +14,7 @@ import { useCustomNavigate } from '../../../hooks/useCustomNavigate';
 
 export const Header = () => {
   const [showMenu, setShowMenu] = useState<boolean>(false);
-  const [showModal, setShowModal] = useState<boolean>(false);
+  const [showCart, setShowCart] = useState<boolean>(false);
   const cartItems = useAppSelector((state) => state.cart);
   const navigate = useCustomNavigate();
   const { containerRef: fixedCartButtonRef, isVisible: cartIsVisible } =
@@ -28,12 +28,17 @@ export const Header = () => {
     0
   );
 
+  const handleCloseCart = () => {
+    setShowCart(false);
+    setShowMenu(false);
+  };
+
   return (
     <HeaderContainer>
       <Cart
         cartItems={cartItems}
-        setShowModal={setShowModal}
-        showModal={showModal}
+        showCart={showCart}
+        onCloseCart={handleCloseCart}
       />
       {isSmallScreen && (
         <MenuMobile
@@ -56,7 +61,7 @@ export const Header = () => {
         {isSmallScreen && (
           <CartButtonWrapper>
             <CartButton
-              onOpenCart={() => setShowModal(true)}
+              onOpenCart={() => setShowCart(true)}
               itemsQuantity={cartItemsQuantity}
               isInBounds={cartIsVisible}
             />
@@ -68,7 +73,7 @@ export const Header = () => {
         <SearchAndCartWrapper>
           <Search />
           <CartButton
-            onOpenCart={() => setShowModal(true)}
+            onOpenCart={() => setShowCart(true)}
             itemsQuantity={cartItemsQuantity}
             isInBounds={cartIsVisible}
           />
