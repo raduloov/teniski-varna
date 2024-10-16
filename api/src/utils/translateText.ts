@@ -29,7 +29,7 @@ const latinToBulgarianMap = {
   ya: 'я'
 };
 
-export const translateText = (text: string) => {
+export const translateTextForSpeedyQuery = (text: string) => {
   const keys = Object.keys(latinToBulgarianMap).sort(
     (a, b) => b.length - a.length
   );
@@ -41,6 +41,10 @@ export const translateText = (text: string) => {
     // @ts-ignore
     translatedText = translatedText.replace(regex, latinToBulgarianMap[key]);
   });
+
+  if (translatedText.endsWith('иа')) {
+    return translatedText.slice(0, -1) + 'я';
+  }
 
   return translatedText;
 };
