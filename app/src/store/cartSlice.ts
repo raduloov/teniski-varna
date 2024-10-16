@@ -14,7 +14,7 @@ export type LocalItem = {
   type: TShirtType;
 };
 
-export type InitialState = Array<CartProduct>;
+export type InitialState = CartProduct[];
 
 const initialState: InitialState = [];
 

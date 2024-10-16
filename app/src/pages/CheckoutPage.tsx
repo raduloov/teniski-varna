@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import * as MyPOSEmbedded from 'mypos-embedded-checkout';
 import { v4 as uuid4 } from 'uuid';
-import { useLocation } from 'react-router';
 import {
   cartItemsMapperToMYPOSObject,
   CartProduct,
@@ -31,6 +30,7 @@ import {
 import { useProducts } from '../hooks/useProducts';
 import { useDiscounts } from '../hooks/useDiscounts';
 import { ActivityIndicator } from '../components/common/ActivityIndicator';
+import { useAppSelector } from '../hooks/useRedux';
 
 export const CheckoutPage = () => {
   const [showSummary, setShowSummary] = useState<boolean>(true);
@@ -50,9 +50,10 @@ export const CheckoutPage = () => {
   const [isPromoCodeValid, setIsPromoCodeValid] = useState<boolean | null>(
     null
   );
+
+  const cartItems = useAppSelector((state) => state.cart);
   const { getProductById, isLoading: isFetchingProduct } = useProducts();
   const { getActiveDiscounts, isLoading: isFetchingDiscount } = useDiscounts();
-  const { state } = useLocation();
   const navigate = useCustomNavigate();
   const { getShipping } = useShipping();
 
@@ -62,7 +63,7 @@ export const CheckoutPage = () => {
   };
 
   const createSummary = async () => {
-    const flattenedItems = flattenItems(state.cartItems);
+    const flattenedItems = flattenItems(cartItems);
     const activeDiscounts = await getActiveDiscounts();
 
     const mappedItems: CartProduct[] = [];
@@ -95,7 +96,7 @@ export const CheckoutPage = () => {
     const amount = isShippingFree
       ? myPosTotalPrice
       : myPosTotalPrice + shipping.shippingCost;
-    const cartItems = isShippingFree
+    const myPosFinalItems = isShippingFree
       ? myPosCartItems
       : [
           ...myPosCartItems,
@@ -108,7 +109,7 @@ export const CheckoutPage = () => {
         ];
 
     setItems(mappedItems);
-    setMyPosItems(cartItems);
+    setMyPosItems(myPosFinalItems);
     setTotalPrice(myPosTotalPrice);
     setFinalPrice(amount);
   };
@@ -183,11 +184,9 @@ export const CheckoutPage = () => {
   };
 
   useEffect(() => {
-    if (!state || !state.cartItems) {
+    if (!cartItems) {
       return navigate('/');
     }
-
-    // resetState();
 
     try {
       setShippingFromFirebase();
@@ -197,7 +196,7 @@ export const CheckoutPage = () => {
     } catch (error: any) {
       toast.error(`💥 Нещо се обърка :( ${error.message}`);
     }
-  }, [state]);
+  }, [cartItems]);
 
   const isLoading = isFetchingProduct || isFetchingDiscount;
 

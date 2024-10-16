@@ -180,7 +180,7 @@ const InputWrapper = styled.div`
 
   @media (min-width: 1366px) {
     display: grid;
-    grid-template-columns: 3fr 1fr;
+    grid-template-columns: 2.5fr 1fr;
   }
 `;
 

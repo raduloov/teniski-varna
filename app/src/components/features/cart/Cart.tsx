@@ -92,8 +92,6 @@ export const Cart = ({ setShowModal, showModal, cartItems }: Props) => {
       }
     }
 
-    console.log(cartItems);
-
     dispatch(cartActions.fillCart(cartItems));
   };
 
@@ -174,7 +172,7 @@ export const Cart = ({ setShowModal, showModal, cartItems }: Props) => {
                   <Button
                     label={'Купи'}
                     onClick={() => {
-                      navigate('/checkout', { state: { cartItems } });
+                      navigate('/checkout');
                       handleClose();
                     }}
                     disabled={cartItems.length === 0}
