@@ -58,7 +58,9 @@ export const getMyPosNote = (
         : ''
     ).concat(`
       \nShipping: ${firstName} ${lastName}, ${email}, ${phone} - ${
-    personalAddress || speedyOffice
+    personalAddress
+      ? `[Personal Address] ${personalAddress}`
+      : `[Speedy Office] ${speedyOffice}`
   };`);
 };
 
