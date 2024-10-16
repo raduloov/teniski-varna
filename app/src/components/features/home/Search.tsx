@@ -3,11 +3,13 @@ import { Input } from '../../common/Input';
 import { icons } from '../../../assets/icons';
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux';
 import { searchActions } from '../../../store/searchSlice';
+import { useCustomNavigate } from '../../../hooks/useCustomNavigate';
 
 export const Search = () => {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const { searchTerm } = useAppSelector((state) => state.search);
   const dispatch = useAppDispatch();
+  const navigate = useCustomNavigate();
 
   useEffect(() => {
     setSearchQuery(searchTerm);
@@ -15,6 +17,11 @@ export const Search = () => {
 
   const setSearchTerm = (searchTerm: string) => {
     dispatch(searchActions.setSearch(searchTerm));
+  };
+
+  const onSearch = () => {
+    setSearchTerm(searchQuery);
+    navigate('/');
   };
 
   const onClear = () => {
@@ -25,7 +32,7 @@ export const Search = () => {
   return (
     <Input
       icon={icons.FaSearch}
-      onEnterKey={() => setSearchTerm(searchQuery)}
+      onEnterKey={onSearch}
       onBlur={() => setSearchTerm(searchQuery)}
       clearIcon={searchQuery.length > 0}
       onClear={onClear}
