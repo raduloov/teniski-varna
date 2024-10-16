@@ -1,6 +1,6 @@
 {
   "name": "teniski-varna-app",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "author": "Yavor Radulov",
   "private": true,
   "dependencies": {
@@ -21,6 +21,7 @@
     "react-router-dom": "^6.4.4",
     "react-scripts": "5.0.1",
     "react-select": "^5.8.1",
+    "react-select-async-paginate": "^0.7.6",
     "react-toastify": "^10.0.5",
     "redux": "^4.2.0",
     "sass": "^1.56.1",

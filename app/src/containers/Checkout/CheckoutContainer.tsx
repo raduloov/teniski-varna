@@ -123,7 +123,7 @@ export const CheckoutContainer = ({ onGoBack, onContinueToMyPos }: Props) => {
         <Text>Телефон</Text>
         <Input
           value={customerPhone}
-          placeholder={'08XX XXX XXX'}
+          placeholder={'08XXXXXXXX'}
           type={'number'}
           onChange={(e) => setCustomerPhone(e.target.value)}
           onBlur={() =>

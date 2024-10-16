@@ -31,10 +31,17 @@ const bulgarianToLatinMap = {
   я: 'ya'
 };
 
-export const translateText = (text: string) =>
-  text
+export const translateTextForSpeedyQuery = (text: string) => {
+  const translatedText = text
     .split('')
     .map((char) =>
       bulgarianToLatinMap[char] ? bulgarianToLatinMap[char] : char
     )
     .join('');
+
+  if (translatedText.endsWith('ya')) {
+    return translatedText.slice(0, -2) + 'a';
+  }
+
+  return translatedText;
+};

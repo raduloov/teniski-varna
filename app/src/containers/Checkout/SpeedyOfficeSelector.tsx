@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { SpeedyCity, SpeedyOffice, useSpeedy } from '../../hooks/useSpeedy';
 import styled from 'styled-components';
 import { Input } from '../../components/common/Input';
 import { CheckoutField, saveCustomerDataToLocalStorage } from './utils';
-import { translateText } from '../../utils/translateText';
-import AsyncSelect from 'react-select/async';
+import { translateTextForSpeedyQuery } from '../../utils/translateText';
+import { AsyncPaginate } from 'react-select-async-paginate';
 import Select from 'react-select';
 import { ActivityIndicator } from '../../components/common/ActivityIndicator';
 import { Color } from '../../assets/constants';
@@ -31,22 +31,31 @@ export const SpeedyOfficeSelector = ({
   selectedCity,
   setSelectedCity
 }: Props) => {
+  const [searchTerm, setSearchTerm] = useState<string>('');
   const [speedyOffices, setSpeedyOffices] = useState<SpeedyOffice[]>([]);
-  const [searhTerm, setSearchTerm] = useState<string>('');
 
   const { findCitiesByName, findOfficesByCity, isLoading } = useSpeedy();
 
-  const loadCities = async () =>
-    await findCitiesByName(translateText(searhTerm));
+  const loadCities = useCallback(async () => {
+    const cities = await findCitiesByName(
+      translateTextForSpeedyQuery(searchTerm)
+    );
 
-  const loadOffices = async (city: string) => {
+    return {
+      options: cities ?? []
+    };
+  }, [searchTerm]);
+
+  const loadOffices = useCallback(async (city: string) => {
     const offices = await findOfficesByCity(city.toLowerCase());
     setSpeedyOffices(offices);
-  };
+  }, []);
 
   useEffect(() => {
     if (selectedCity) {
       loadOffices(selectedCity.nameEn);
+    } else {
+      setSpeedyOffices([]);
     }
   }, [selectedCity]);
 
@@ -71,15 +80,16 @@ export const SpeedyOfficeSelector = ({
       )}
       {selectedDeliveryOption === DeliveryOption.SPEEDY_OFFICE && (
         <>
-          <AsyncSelect
+          <AsyncPaginate
             loadOptions={loadCities}
             getOptionLabel={(option: SpeedyCity) => option.name}
             getOptionValue={(option: SpeedyCity) => option.name}
             placeholder={'Населено място'}
             loadingMessage={() => 'Търсим населено място...'}
             noOptionsMessage={() => 'Няма намерени резултати'}
-            onInputChange={(value) => setSearchTerm(value)}
+            onInputChange={(value) => setSearchTerm(value.toLowerCase())}
             onChange={(value) => setSelectedCity(value)}
+            debounceTimeout={500}
           />
           {isLoading && selectedCity && (
             <ActivityIndicatorWrapper>
