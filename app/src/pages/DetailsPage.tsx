@@ -177,7 +177,7 @@ export const DetailsPage = () => {
           onDecreaseQuantity={decreaseQuantity}
           onShowSizeInfo={() => setShowSizeInfo((state) => !state)}
           showSizeInfo={showSizeInfo}
-          onShowCart={() => setShowCart((state) => !state)}
+          onToggleCart={() => setShowCart((state) => !state)}
           showCart={showCart}
           onShowShippingInfo={onShowShippingInfo}
           showShippingInfo={showShippingInfo}

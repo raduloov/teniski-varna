@@ -55,7 +55,7 @@ interface Props {
   showShippingInfo: boolean;
   onShowMaterialsInfo: () => void;
   showMaterialsInfo: boolean;
-  onShowCart: () => void;
+  onToggleCart: () => void;
   showCart: boolean;
 }
 
@@ -75,7 +75,7 @@ export const DetailsContainerMobile = ({
   onDecreaseQuantity,
   onShowSizeInfo,
   showSizeInfo,
-  onShowCart,
+  onToggleCart,
   showCart,
   onShowShippingInfo,
   showShippingInfo,
@@ -124,7 +124,7 @@ export const DetailsContainerMobile = ({
         <PartyIcon src={require('../../assets/images/partyPopperIcon.png')} />
       ),
       onClick: () => {
-        onShowCart();
+        onToggleCart();
         toast.dismiss();
       }
     });
@@ -139,10 +139,10 @@ export const DetailsContainerMobile = ({
     <>
       <Cart
         cartItems={cartItems}
-        showModal={showCart}
-        setShowModal={onShowCart}
+        showCart={showCart}
+        onCloseCart={onToggleCart}
       />
-      <CartButton onOpenCart={onShowCart} itemsQuantity={cartItemsQuantity} />
+      <CartButton onOpenCart={onToggleCart} itemsQuantity={cartItemsQuantity} />
       <Container>
         <ActionButtonsWrapper>
           <IconButton icon={icons.FaChevronLeft} onClick={onGoBack} />

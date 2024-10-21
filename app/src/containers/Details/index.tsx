@@ -31,7 +31,7 @@ export interface Props {
   showShippingInfo: boolean;
   onShowMaterialsInfo: () => void;
   showMaterialsInfo: boolean;
-  onShowCart: () => void;
+  onToggleCart: () => void;
   showCart: boolean;
 }
 

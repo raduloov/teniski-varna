@@ -49,7 +49,7 @@ interface Props {
   showShippingInfo: boolean;
   onShowMaterialsInfo: () => void;
   showMaterialsInfo: boolean;
-  onShowCart: () => void;
+  onToggleCart: () => void;
   showCart: boolean;
 }
 
@@ -68,7 +68,7 @@ export const DetailsContainerDesktop = ({
   onDecreaseQuantity,
   onShowSizeInfo,
   showSizeInfo,
-  onShowCart,
+  onToggleCart,
   showCart,
   onShowShippingInfo,
   showShippingInfo,
@@ -117,7 +117,7 @@ export const DetailsContainerDesktop = ({
         <PartyIcon src={require('../../assets/images/partyPopperIcon.png')} />
       ),
       onClick: () => {
-        onShowCart();
+        onToggleCart();
         toast.dismiss();
       }
     });
@@ -127,8 +127,8 @@ export const DetailsContainerDesktop = ({
     <>
       <Cart
         cartItems={cartItems}
-        showModal={showCart}
-        setShowModal={onShowCart}
+        showCart={showCart}
+        onCloseCart={onToggleCart}
       />
       <Container>
         <ImageWrapper>

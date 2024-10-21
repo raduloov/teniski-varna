@@ -1,4 +1,4 @@
-const bulgarianToLatinMap = {
+const bulgarianToLatinMap: { [key: string]: string } = {
   а: 'a',
   б: 'b',
   в: 'v',
@@ -35,7 +35,9 @@ export const translateTextForSpeedyQuery = (text: string) => {
   const translatedText = text
     .split('')
     .map((char) =>
-      bulgarianToLatinMap[char] ? bulgarianToLatinMap[char] : char
+      bulgarianToLatinMap[char as keyof typeof bulgarianToLatinMap]
+        ? bulgarianToLatinMap[char as keyof typeof bulgarianToLatinMap]
+        : char
     )
     .join('');
 

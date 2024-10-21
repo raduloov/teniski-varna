@@ -35,8 +35,8 @@ export const useSpeedy = () => {
       });
       const data = await response.json();
       return data;
-    } catch (e) {
-      toast.error(`💥 ${e.message}`);
+    } catch (e: unknown) {
+      toast.error(`💥 ${(e as Error).message}`);
     } finally {
       setIsLoading(false);
     }
@@ -57,8 +57,8 @@ export const useSpeedy = () => {
       });
       const data = await response.json();
       return data;
-    } catch (e) {
-      toast.error(`💥 ${e.message}`);
+    } catch (e: unknown) {
+      toast.error(`💥 ${(e as Error).message}`);
     } finally {
       setIsLoading(false);
     }
@@ -78,10 +78,10 @@ export const useSpeedy = () => {
         }
       });
       const data = await response.json();
-      console.log('data', data);
+
       return data;
-    } catch (e) {
-      toast.error(`💥 ${e.message}`);
+    } catch (e: unknown) {
+      toast.error(`💥 ${(e as Error).message}`);
     } finally {
       setIsLoading(false);
     }
