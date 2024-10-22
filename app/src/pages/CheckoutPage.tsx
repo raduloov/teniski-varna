@@ -120,31 +120,44 @@ export const CheckoutPage = () => {
   const createMyPos = async (orderShippingInfo: OrderShippingInfo) => {
     const myPosNote = getMyPosNote(items, promoCode, orderShippingInfo);
 
+    // const paymentParams = {
+    //   Amount: finalPrice ?? totalPrice,
+    //   Currency: 'BGN',
+    //   OrderID: uuid4(),
+    //   SID: process.env.REACT_APP_MYPOS_SID,
+    //   WalletNumber: process.env.REACT_APP_MYPOS_WALLET_NUMBER,
+    //   KeyIndex: 1,
+    //   URL_OK: window.location.href,
+    //   URL_Cancel: window.location.href,
+    //   URL_Notify: window.location.href,
+    //   CardTokenRequest: 0,
+    //   PaymentParametersRequired: 3,
+    //   cartItems: myPosItems,
+    //   Note: myPosNote
+    // };
+
     const paymentParams = {
-      Amount: finalPrice ?? totalPrice,
-      Currency: 'BGN',
-      OrderID: uuid4(),
-      SID: process.env.REACT_APP_MYPOS_SID,
-      WalletNumber: process.env.REACT_APP_MYPOS_WALLET_NUMBER,
-      KeyIndex: 1,
-      URL_OK: window.location.href,
-      URL_Cancel: window.location.href,
-      URL_Notify: window.location.href,
-      CardTokenRequest: 0,
-      PaymentParametersRequired: 3,
+      sid: process.env.REACT_APP_MYPOS_SID,
+      ipcLanguage: 'bg',
+      walletNumber: process.env.REACT_APP_MYPOS_WALLET_NUMBER,
+      amount: finalPrice ?? totalPrice,
+      currency: 'BGN',
+      orderID: uuid4(),
+      urlNotify: 'https://teniski-varna-api.vercel.app/myPos/notify',
+      urlOk: window.location.href,
+      urlCancel: window.location.href,
+      keyIndex: 1,
       cartItems: myPosItems,
-      Note: myPosNote
+      note: myPosNote
     };
 
     console.log('paymentParams', paymentParams);
 
-    if (showMyPos) {
-      MyPOSEmbedded.createPayment(
-        'embeddedCheckout',
-        paymentParams,
-        callbackParams
-      );
-    }
+    MyPOSEmbedded.createPayment(
+      'embeddedCheckout',
+      paymentParams,
+      callbackParams
+    );
   };
 
   const onContinueToDelivery = () => {
@@ -153,9 +166,9 @@ export const CheckoutPage = () => {
   };
 
   const onContinueToMyPos = (orderShippingInfo: OrderShippingInfo) => {
+    setShowMyPos(true);
     createMyPos(orderShippingInfo);
     scrollToTop();
-    setShowMyPos(true);
   };
 
   const applyPromoCode = (promoCode: PromoCode | null) => {
@@ -234,15 +247,13 @@ export const CheckoutPage = () => {
           onContinueToMyPos={onContinueToMyPos}
         />
       )}
-      {!isLoading && showMyPos && (
-        <MyPosWrapper>
-          <BackButton onClick={() => setShowMyPos(false)}>
-            <icons.FaChevronLeft />
-            <p>Обратно към Данни за Доставка</p>
-          </BackButton>
-          <div id="embeddedCheckout" />
-        </MyPosWrapper>
-      )}
+      <MyPosWrapper display={showMyPos}>
+        <BackButton onClick={() => setShowMyPos(false)}>
+          <icons.FaChevronLeft />
+          <p>Обратно към Данни за Доставка</p>
+        </BackButton>
+        <div id="embeddedCheckout" />
+      </MyPosWrapper>
     </>
   );
 };
@@ -265,8 +276,8 @@ const BackButton = styled.div`
   }
 `;
 
-const MyPosWrapper = styled.div`
-  display: flex;
+const MyPosWrapper = styled.div<{ display: boolean }>`
+  display: ${({ display }) => (display ? 'flex' : 'none')};
   flex-direction: column;
   padding: 20px;
   gap: 20px;
