@@ -132,7 +132,7 @@ export const CheckoutPage = () => {
       URL_Notify: window.location.href,
       CardTokenRequest: 0,
       PaymentParametersRequired: 3,
-      items: myPosItems,
+      cartItems: myPosItems,
       Note: myPosNote
     };
 
