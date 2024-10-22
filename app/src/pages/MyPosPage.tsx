@@ -4,13 +4,13 @@ import { v4 as uuid4 } from 'uuid';
 
 export const MyPosPage = () => {
   const paymentParams = {
-    sid: '000000000000010',
+    sid: process.env.REACT_APP_MYPOS_SID,
     ipcLanguage: 'en',
-    walletNumber: '61938166610',
+    walletNumber: process.env.REACT_APP_MYPOS_WALLET_NUMBER,
     amount: 1.65,
     currency: 'BGN',
     orderID: uuid4(),
-    urlNotify: 'https://teniski-varna.vercel.app/',
+    urlNotify: 'https://teniski-varna-api.vercel.app/myPos/notify',
     urlOk: window.location.href,
     urlCancel: window.location.href,
     keyIndex: 1,
@@ -36,7 +36,7 @@ export const MyPosPage = () => {
   console.log('paymentParams', paymentParams);
 
   const callbackParams = {
-    isSandbox: true,
+    // isSandbox: true,
     onSuccess: function (data: any) {
       console.log('success callback');
       console.log(data);
@@ -54,7 +54,6 @@ export const MyPosPage = () => {
   //     callbackParams
   //   );
   // }, []);
-
   return (
     <>
       <button
