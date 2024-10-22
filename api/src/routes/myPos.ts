@@ -3,6 +3,6 @@ import { myPosNotify } from '../controllers/myPos';
 
 const router = Router();
 
-router.get('/notify', myPosNotify);
+router.post('/notify', myPosNotify);
 
 export default router;
