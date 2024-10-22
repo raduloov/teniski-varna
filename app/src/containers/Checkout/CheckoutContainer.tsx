@@ -121,8 +121,8 @@ export const CheckoutContainer = ({ onGoBack, onContinueToMyPos }: Props) => {
       customerPhone.length >= 10 &&
       customerEmail &&
       (selectedDeliveryOption === DeliveryOption.PERSONAL_ADDRESS
-        ? customerAddress
-        : selectedSpeedyOffice),
+        ? customerAddress !== ''
+        : selectedSpeedyOffice !== null),
     [
       customerFirstName,
       customerLastName,
