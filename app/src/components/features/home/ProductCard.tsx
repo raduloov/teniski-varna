@@ -75,8 +75,7 @@ export const ProductCard = ({
       }
     >
       <img src={product.thumbnail.url} />
-      <h1>{product.title}</h1>
-      <p>{product.description}</p>
+      <Title>{product.title}</Title>
       <FavoriteButton>
         <PriceWrapper>
           <Price discounted={!!discount}>{product.price}лв</Price>
@@ -107,8 +106,9 @@ const Price = styled.h1<{ discounted?: boolean }>`
   ${({ discounted }) =>
     discounted &&
     `
-    font-size: 14px;
-    text-decoration: line-through;
+      font-size: 14px;
+      text-decoration: line-through;
+      color: ${Color.GRAY}
   `}
 `;
 
@@ -147,7 +147,6 @@ const Card = styled.div`
     justify-content: space-between;
   }
   p {
-    color: ${Color.GRAY};
     font-size: 0.9rem;
   }
   ${productAppearAnimation}
@@ -177,4 +176,10 @@ const FavoriteButton = styled.div`
   h1 {
     margin-top: auto;
   }
+`;
+
+const Title = styled.p`
+  font-size: 1rem;
+  font-weight: bold;
+  color: ${Color.BLACK};
 `;
