@@ -42,22 +42,23 @@ export const RatingStars = () => {
         <Star type={StarType.FILLED} />
         <Star type={StarType.FILLED} />
       </StarsWrapper>
-      <Reviews>(200+ отзива)</Reviews>
+      <Reviews>(220+ отзива)</Reviews>
     </Wrapper>
   );
 };
 
 const Reviews = styled.p`
+  line-height: 0;
   color: ${Color.GRAY};
 `;
 
 const StarsWrapper = styled.div`
   flex-direction: row;
-  align-self: flex-end;
 `;
 
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
+  align-items: flex-end;
   cursor: pointer;
 `;

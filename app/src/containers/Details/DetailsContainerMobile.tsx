@@ -160,11 +160,11 @@ export const DetailsContainerMobile = ({
         <BottomSheetContainer>
           <BottomSheetContent>
             <HeaderWrapper>
+              <RatingStars />
               <TitleWrapper>
                 <Title>{product.title}</Title>
-                <Description>{product.description}</Description>
               </TitleWrapper>
-              <RatingStars />
+              <Description>{product.description}</Description>
             </HeaderWrapper>
 
             <SelectTitle>Изберете модел</SelectTitle>
@@ -385,8 +385,8 @@ const ImageWrapper = styled.div`
 `;
 
 const Image = styled.img<{ loaded: boolean }>`
-  max-height: 100%;
-  max-width: 100%;
+  max-width: 110%;
+  padding-top: 25px;
   ${({ loaded }) => !loaded && 'display: none;'}
 `;
 
@@ -437,17 +437,17 @@ const TilesWrapper = styled.div`
 `;
 
 const TitleWrapper = styled.div`
-  flex-direction: column;
+  display: flex;
+  margin-top: 10px;
 `;
 
 const HeaderWrapper = styled.div`
-  display: flex;
-  justify-content: space-between;
   line-height: 30px;
 `;
 
 const Description = styled.p`
   color: ${Color.GRAY};
+  margin-top: 10px;
 `;
 
 const Title = styled.p`
@@ -479,5 +479,5 @@ const ActionButtonsWrapper = styled.div`
 
 const Container = styled.div`
   min-height: 100svh;
-  width: 100svw;
+  max-width: 100svw;
 `;
