@@ -41,7 +41,7 @@ export const mapProductToCartProduct = (
   type: selectedType
 });
 
-export const cartItemsMapperToMYPOSObject = (
+export const mapCartItemsToMyPosProduct = (
   cartItems: CartProduct[]
 ): MYPOSProduct[] =>
   cartItems.map(

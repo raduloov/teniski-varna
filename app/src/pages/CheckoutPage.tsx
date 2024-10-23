@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import * as MyPOSEmbedded from 'mypos-embedded-checkout';
 import { v4 as uuid4 } from 'uuid';
 import {
-  cartItemsMapperToMYPOSObject,
+  mapCartItemsToMyPosProduct,
   CartProduct,
   mapProductToCartProduct,
   MYPOSProduct as MyPosProduct
@@ -41,9 +41,7 @@ export const CheckoutPage = () => {
     minimumAmount: 0
   });
   const [items, setItems] = useState<CartProduct[]>([]);
-  const [myPosItems, setMyPosItems] = useState<CartProduct | MyPosProduct[]>(
-    []
-  );
+  const [myPosItems, setMyPosItems] = useState<MyPosProduct[]>([]);
   const [totalPrice, setTotalPrice] = useState<number>(0);
   const [finalPrice, setFinalPrice] = useState<number>();
   const [promoCode, setPromoCode] = useState<PromoCode | null>(null);
@@ -92,7 +90,7 @@ export const CheckoutPage = () => {
       }
     }
 
-    const myPosCartItems = cartItemsMapperToMYPOSObject(mappedItems);
+    const myPosCartItems = mapCartItemsToMyPosProduct(mappedItems);
     const myPosTotalPrice = getTotalPrice(mappedItems);
 
     const isShippingFree = myPosTotalPrice >= shipping.minimumAmount;
@@ -120,25 +118,11 @@ export const CheckoutPage = () => {
   const createMyPos = async (orderShippingInfo: OrderShippingInfo) => {
     const myPosNote = getMyPosNote(items, promoCode, orderShippingInfo);
 
-    // const paymentParams = {
-    //   Amount: finalPrice ?? totalPrice,
-    //   Currency: 'BGN',
-    //   OrderID: uuid4(),
-    //   SID: process.env.REACT_APP_MYPOS_SID,
-    //   WalletNumber: process.env.REACT_APP_MYPOS_WALLET_NUMBER,
-    //   KeyIndex: 1,
-    //   URL_OK: window.location.href,
-    //   URL_Cancel: window.location.href,
-    //   URL_Notify: window.location.href,
-    //   CardTokenRequest: 0,
-    //   PaymentParametersRequired: 3,
-    //   cartItems: myPosItems,
-    //   Note: myPosNote
-    // };
-
     const paymentParams = {
       sid: process.env.REACT_APP_MYPOS_SID,
+      // sid: '000000000000010',
       ipcLanguage: 'bg',
+      // walletNumber: '61938166610',
       walletNumber: process.env.REACT_APP_MYPOS_WALLET_NUMBER,
       amount: finalPrice ?? totalPrice,
       currency: 'BGN',
@@ -149,6 +133,23 @@ export const CheckoutPage = () => {
       keyIndex: 1,
       cartItems: myPosItems,
       note: myPosNote
+    };
+
+    console.log('cartItems', myPosItems);
+
+    const callbackParams = {
+      // isSandbox: true,
+      // eslint-disable-next-line
+      onSuccess: function (data: any) {
+        console.log('success callback');
+        console.log(data);
+      },
+
+      // eslint-disable-next-line
+      onError: function (data: any) {
+        console.log('error');
+        console.log(data);
+      }
     };
 
     console.log('paymentParams', paymentParams);
@@ -167,39 +168,49 @@ export const CheckoutPage = () => {
 
   const onContinueToMyPos = (orderShippingInfo: OrderShippingInfo) => {
     setShowMyPos(true);
-    createMyPos(orderShippingInfo);
     scrollToTop();
+
+    // make sure the div is rendered before creating the MyPos payment
+    setTimeout(() => {
+      createMyPos(orderShippingInfo);
+    }, 100);
   };
 
   const applyPromoCode = (promoCode: PromoCode | null) => {
     setPromoCode(promoCode);
 
     if (promoCode) {
-      const discountedPrice = getDiscountedPrice(
+      const discountedTotalPrice = getDiscountedPrice(
         totalPrice,
         promoCode.percentage
       );
+
+      const discountedMyPosItems = myPosItems.map((item) => {
+        if (item.article === 'Доставка') {
+          return {
+            ...item,
+            price: shipping.shippingCost
+          };
+        }
+        const discountedItemPrice = getDiscountedPrice(
+          item.price,
+          promoCode.percentage
+        );
+
+        return {
+          ...item,
+          price: discountedItemPrice
+        };
+      });
+      setMyPosItems(discountedMyPosItems);
+
       setFinalPrice(
         isFreeShipping
-          ? discountedPrice
-          : discountedPrice + shipping.shippingCost
+          ? discountedTotalPrice
+          : discountedTotalPrice + shipping.shippingCost
       );
     } else {
       setFinalPrice(undefined);
-    }
-  };
-
-  const callbackParams = {
-    // eslint-disable-next-line
-    onSuccess: function (data: any) {
-      console.log('success callback');
-      console.log(data);
-    },
-
-    // eslint-disable-next-line
-    onError: function (data: any) {
-      console.log('error');
-      console.log(data);
     }
   };
 
@@ -247,13 +258,15 @@ export const CheckoutPage = () => {
           onContinueToMyPos={onContinueToMyPos}
         />
       )}
-      <MyPosWrapper display={showMyPos}>
-        <BackButton onClick={() => setShowMyPos(false)}>
-          <icons.FaChevronLeft />
-          <p>Обратно към Данни за Доставка</p>
-        </BackButton>
-        <div id="embeddedCheckout" />
-      </MyPosWrapper>
+      {showMyPos && (
+        <MyPosWrapper>
+          <BackButton onClick={() => setShowMyPos(false)}>
+            <icons.FaChevronLeft />
+            <p>Обратно към Данни за Доставка</p>
+          </BackButton>
+          <div id="embeddedCheckout" />
+        </MyPosWrapper>
+      )}
     </>
   );
 };
@@ -276,8 +289,8 @@ const BackButton = styled.div`
   }
 `;
 
-const MyPosWrapper = styled.div<{ display: boolean }>`
-  display: ${({ display }) => (display ? 'flex' : 'none')};
+const MyPosWrapper = styled.div`
+  display: flex;
   flex-direction: column;
   padding: 20px;
   gap: 20px;
