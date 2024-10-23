@@ -13,7 +13,7 @@ import {
 import {
   DeliveryOption,
   DeliveryInfoSelector
-} from '../../components/features/checkout/SpeedyOfficeSelector';
+} from '../../components/features/checkout/DeliveryInfoSelector';
 import { SpeedyCity, SpeedyOffice } from '../../hooks/useSpeedy';
 
 const MemoizedInput = React.memo(Input);
