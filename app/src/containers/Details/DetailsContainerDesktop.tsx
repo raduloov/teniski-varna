@@ -359,6 +359,7 @@ const ImageWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 100%;
   height: 600px;
 `;
 
@@ -426,6 +427,7 @@ const HeaderWrapper = styled.div`
 
 const Description = styled.p`
   color: ${Color.GRAY};
+  line-height: 1.4rem;
   margin-top: 20px;
 `;
 

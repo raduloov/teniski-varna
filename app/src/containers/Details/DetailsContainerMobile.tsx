@@ -448,6 +448,7 @@ const HeaderWrapper = styled.div`
 const Description = styled.p`
   color: ${Color.GRAY};
   margin-top: 10px;
+  line-height: 1.4rem;
 `;
 
 const Title = styled.p`
