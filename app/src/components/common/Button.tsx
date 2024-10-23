@@ -135,8 +135,8 @@ const getButtonSize = (size: ButtonSize) => {
         min-width: 120px;
         padding-top: 16px;
         padding-bottom: 16px;
-        padding-left: 32px;
-        padding-right: 32px;
+        padding-left: 20px;
+        padding-right: 20px;
         border-radius: 16px;
         font-size: 16px;
       `;

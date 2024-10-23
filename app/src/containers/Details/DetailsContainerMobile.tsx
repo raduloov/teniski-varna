@@ -481,4 +481,5 @@ const ActionButtonsWrapper = styled.div`
 const Container = styled.div`
   min-height: 100svh;
   max-width: 100svw;
+  overflow-x: hidden;
 `;
