@@ -1,3 +1,4 @@
+import { getMetadata, StorageReference } from 'firebase/storage';
 import { Product } from '../../domain/models/ProductDTO';
 import { Discount, DiscountType } from '../../hooks/useDiscounts';
 
@@ -332,3 +333,18 @@ export const mapTShirtColorToHex = (color: TShirtColor): string => {
 
 export const mapSizeToString = (size: string): string =>
   size === 'XLPlus' ? 'XL+' : size;
+
+export const checkIfFileExists = async (
+  fileRef: StorageReference
+): Promise<boolean> => {
+  try {
+    await getMetadata(fileRef);
+    return true;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (e: any) {
+    if (e.code === 'storage/object-not-found') {
+      return false;
+    }
+    throw e;
+  }
+};

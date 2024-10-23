@@ -5,7 +5,7 @@ import { Color } from '../../assets/constants';
 import { Button, ButtonSize, ButtonType } from '../../components/common/Button';
 import { useAuth } from '../../hooks/useAuth';
 import { NewProductContainer } from './NewProductContainer';
-import { UpdateBannerImageContainer } from './UpdateBannerImageContainer';
+import { UpdateBannersContainer } from './UpdateBannersContainer';
 import { LabelsContainer } from './LabelsContainer';
 import { DiscountsMenuContainer } from './DiscountsContainer';
 import { ManageProductsContainer } from './ManageProductsContainer';
@@ -56,7 +56,7 @@ export const AdminPanelMenuContainer = ({ user }: Props) => {
         </Header>
         {showAddNewProduct && <NewProductContainer />}
         {showManageProducts && <ManageProductsContainer />}
-        {showUpdateBannerImage && <UpdateBannerImageContainer />}
+        {showUpdateBannerImage && <UpdateBannersContainer />}
         {showLabels && <LabelsContainer />}
         {showDiscounts && <DiscountsMenuContainer />}
         {showUpdateShippingCost && <UpdateShippingCostContainer />}

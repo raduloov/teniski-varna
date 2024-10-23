@@ -13,13 +13,22 @@ import {
 } from '@firebase/firestore';
 import { db, storage } from '../../firebase/firebaseConfig';
 import { ImageInput } from '../../components/common/ImageInput';
-import { supportedImageTypes, supportedVideoTypes } from './utils';
+import {
+  checkIfFileExists,
+  supportedImageTypes,
+  supportedVideoTypes
+} from './utils';
 import { Banner, FileType, useBanners } from '../../hooks/useBanners';
-import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+import {
+  deleteObject,
+  getDownloadURL,
+  ref,
+  uploadBytes
+} from 'firebase/storage';
 import { v4 as uuid4 } from 'uuid';
 import { EdittableAndSelectableItems } from '../../components/common/EdittableAndSelectableItems';
 
-export const UpdateBannerImageContainer = () => {
+export const UpdateBannersContainer = () => {
   const [banners, setBanners] = useState<Banner[]>([]);
   const [file, setFile] = useState<File>();
   const [bannerLink, setBannerLink] = useState<string>('');
@@ -125,7 +134,7 @@ export const UpdateBannerImageContainer = () => {
     resetForm();
   };
 
-  const handleEditExistingLabel = async () => {
+  const handleEditExistingBanner = async () => {
     const bannerToEdit = banners.find((label) => label.id === bannerIdToEdit);
     if (!bannerToEdit) {
       resetForm();
@@ -175,13 +184,26 @@ export const UpdateBannerImageContainer = () => {
     setIsDeletingBanner(true);
 
     try {
+      const imageRef = ref(storage, `bannerImages/${bannerId}`);
+      const videoRef = ref(storage, `bannerVideos/${bannerId}`);
+
+      const imageExists = await checkIfFileExists(imageRef);
+      const videoExists = await checkIfFileExists(videoRef);
+
       await deleteDoc(doc(db, 'banners', bannerId));
-      // TODO: Remove image from storage
+
+      if (imageExists) {
+        await deleteObject(imageRef);
+      }
+      if (videoExists) {
+        await deleteObject(videoRef);
+      }
 
       toast.success('Banner deleted successfully!');
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       setIsDeletingBanner(false);
+
       return toast.error(`💥 ${e.message}`);
     } finally {
       setLabelsFromFirebase();
@@ -206,7 +228,7 @@ export const UpdateBannerImageContainer = () => {
 
   const handleActionButtonFunction = !bannerIdToEdit
     ? handleAddNewBanner
-    : handleEditExistingLabel;
+    : handleEditExistingBanner;
 
   const actionButtonLabel = bannerIdToEdit ? 'Edit banner' : 'Add banner';
 
