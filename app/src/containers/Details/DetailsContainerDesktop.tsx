@@ -141,13 +141,13 @@ export const DetailsContainerDesktop = ({
             loaded={imageHasLoaded}
           />
         </ImageWrapper>
-        <SideContainer>
+        <BottomContainer>
           <HeaderWrapper>
             <TitleWrapper>
               <Title>{product.title}</Title>
-              <Description>{product.description}</Description>
+              <RatingStars minWidth={150} />
             </TitleWrapper>
-            <RatingStars />
+            <Description>{product.description}</Description>
           </HeaderWrapper>
 
           <SelectTitle>Изберете модел</SelectTitle>
@@ -229,7 +229,7 @@ export const DetailsContainerDesktop = ({
               onClick={addToCartHandler}
             />
           </CtaWrapper>
-        </SideContainer>
+        </BottomContainer>
       </Container>
       {/* <ShippingAndMaterialsWrapper>
         <FullWidthButton onClick={() => onShowShippingInfo()}>
@@ -359,7 +359,7 @@ const ImageWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 50%;
+  height: 600px;
 `;
 
 const Image = styled.img<{ loaded: boolean }>`
@@ -391,9 +391,9 @@ const Price = styled.p<{ discounted?: boolean }>`
   ${({ discounted }) =>
     discounted &&
     `
-    font-size: 24px;
-    color: ${Color.GRAY};
-    text-decoration: line-through;
+      font-size: 24px;
+      color: ${Color.GRAY};
+      text-decoration: line-through;
   `}
 `;
 
@@ -415,31 +415,33 @@ const TilesWrapper = styled.div`
 `;
 
 const TitleWrapper = styled.div`
-  flex-direction: column;
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
 `;
 
 const HeaderWrapper = styled.div`
-  display: flex;
-  justify-content: space-between;
   line-height: 30px;
 `;
 
 const Description = styled.p`
   color: ${Color.GRAY};
+  margin-top: 20px;
 `;
 
 const Title = styled.p`
   font-size: 24px;
   font-weight: bold;
+  margin-right: 20px;
 `;
 
-const SideContainer = styled.div`
-  width: 50%;
+const BottomContainer = styled.div`
   padding: 1.5rem;
 `;
 
 const Container = styled.div`
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 `;

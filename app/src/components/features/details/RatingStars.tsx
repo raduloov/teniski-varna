@@ -13,6 +13,10 @@ interface StarProps {
   type: StarType;
 }
 
+interface Props {
+  minWidth?: number;
+}
+
 // TODO Yavor: Implement rating functionality
 
 const GOOGLE_MAPS_REVIEWS_URL =
@@ -29,12 +33,12 @@ const Star = ({ type }: StarProps) => {
   }
 };
 
-export const RatingStars = () => {
+export const RatingStars = ({ minWidth }: Props) => {
   const redirectToGoogleMapsReviews = () =>
     window.open(GOOGLE_MAPS_REVIEWS_URL, '_blank');
 
   return (
-    <Wrapper onClick={() => redirectToGoogleMapsReviews()}>
+    <Wrapper minWidth={minWidth} onClick={() => redirectToGoogleMapsReviews()}>
       <StarsWrapper>
         <Star type={StarType.FILLED} />
         <Star type={StarType.FILLED} />
@@ -56,9 +60,10 @@ const StarsWrapper = styled.div`
   flex-direction: row;
 `;
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{ minWidth?: number }>`
   display: flex;
   flex-direction: column;
   align-items: flex-end;
+  min-width: ${({ minWidth }) => minWidth || 0}px;
   cursor: pointer;
 `;
