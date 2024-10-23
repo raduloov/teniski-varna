@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { Input } from '../../common/Input';
 import { translateTextForSpeedyQuery } from '../../../utils/translateText';
 import { AsyncPaginate } from 'react-select-async-paginate';
-import Select from 'react-select';
+import Select, { PropsValue } from 'react-select';
 import { ActivityIndicator } from '../../common/ActivityIndicator';
 import { Color } from '../../../assets/constants';
 
@@ -15,17 +15,25 @@ export enum DeliveryOption {
 
 interface Props {
   selectedDeliveryOption: string;
-  customerAddress: string;
-  setCustomerAddress: (address: string) => void;
+  customerCity: string;
+  setCustomerCity: (city: string) => void;
+  customerStreet: string;
+  setCustomerStreet: (address: string) => void;
+  customerAdditionalNotes: string;
+  setCustomerAdditionalNotes: (notes: string) => void;
   setSelectedSpeedyOffice: (office: SpeedyOffice | null) => void;
   selectedCity: SpeedyCity | null;
   setSelectedCity: (city: SpeedyCity | null) => void;
 }
 
-export const SpeedyOfficeSelector = ({
+export const DeliveryInfoSelector = ({
   selectedDeliveryOption,
-  customerAddress,
-  setCustomerAddress,
+  customerCity,
+  setCustomerCity,
+  customerStreet,
+  setCustomerStreet,
+  customerAdditionalNotes,
+  setCustomerAdditionalNotes,
   setSelectedSpeedyOffice,
   selectedCity,
   setSelectedCity
@@ -58,17 +66,52 @@ export const SpeedyOfficeSelector = ({
     }
   }, [selectedCity]);
 
+  const inputStyle = `
+    background: white;
+    border: 1px solid rgb(209, 209, 209);
+    border-radius: 2px;
+    padding: 10px 0;
+  `;
+
+  const value = customerCity
+    ? ({ name: customerCity } as PropsValue<SpeedyCity>)
+    : undefined;
+
   return (
     <>
       {selectedDeliveryOption === DeliveryOption.PERSONAL_ADDRESS && (
         <InputWrapper>
-          <Input
-            value={customerAddress}
-            placeholder={
-              'улица, номер, етаж, вход, апартамент, град, пощенски код'
-            }
-            onChange={(e) => setCustomerAddress(e.target.value)}
+          <Text>Населено място</Text>
+          <AsyncPaginate
+            value={value}
+            loadOptions={loadCities}
+            getOptionLabel={(option: SpeedyCity) => option.name}
+            getOptionValue={(option: SpeedyCity) => option.name}
+            placeholder={'Населено място'}
+            loadingMessage={() => 'Търсим населено място...'}
+            noOptionsMessage={() => 'Няма намерени резултати'}
+            onInputChange={(value) => setSearchTerm(value.toLowerCase())}
+            onChange={(value) => setCustomerCity(value?.name ?? '')}
+            debounceTimeout={500}
           />
+          {customerCity && (
+            <>
+              <Text>Улица</Text>
+              <Input
+                value={customerStreet}
+                placeholder={'улица, номер'}
+                onChange={(e) => setCustomerStreet(e.target.value)}
+                additionalStyles={inputStyle}
+              />
+              <Text>Допълнителни пояснения</Text>
+              <Input
+                value={customerAdditionalNotes}
+                placeholder={'етаж, вход, апартамент, град, пощенски код'}
+                onChange={(e) => setCustomerAdditionalNotes(e.target.value)}
+                additionalStyles={inputStyle}
+              />
+            </>
+          )}
         </InputWrapper>
       )}
       {selectedDeliveryOption === DeliveryOption.SPEEDY_OFFICE && (
@@ -106,6 +149,13 @@ export const SpeedyOfficeSelector = ({
     </>
   );
 };
+
+const Text = styled.p`
+  font-size: 16px;
+  font-weight: 500;
+  margin-left: 5px;
+  color: ${Color.DARK_GRAY};
+`;
 
 const ActivityIndicatorWrapper = styled.div`
   display: flex;

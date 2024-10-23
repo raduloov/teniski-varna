@@ -15,7 +15,9 @@ export enum CheckoutField {
   CUSTOMER_LAST_NAME = 'lastName',
   CUSTOMER_PHONE = 'phone',
   CUSTOMER_EMAIL = 'email',
-  CUSTOMER_ADDRESS = 'address',
+  CUSTOMER_CITY = 'city',
+  CUSTOMER_STREET = 'street',
+  CUSTOMER_ADDITIONAL_NOTES = 'additionalNotes',
   CUSTOMER_SPEEDY_OFFICE = 'speedyOffice',
   DELIVERY_OPTION = 'deliveryOption',
   SAVE_DATA = 'saveData'

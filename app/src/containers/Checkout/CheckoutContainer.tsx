@@ -12,13 +12,13 @@ import {
 } from '../../components/features/checkout/utils';
 import {
   DeliveryOption,
-  SpeedyOfficeSelector
+  DeliveryInfoSelector
 } from '../../components/features/checkout/SpeedyOfficeSelector';
 import { SpeedyCity, SpeedyOffice } from '../../hooks/useSpeedy';
 
 const MemoizedInput = React.memo(Input);
 const MemoizedButton = React.memo(Button);
-const MemoizedSpeedyOfficeSelector = React.memo(SpeedyOfficeSelector);
+const MemoizedSpeedyOfficeSelector = React.memo(DeliveryInfoSelector);
 
 interface Props {
   onGoBack: () => void;
@@ -31,7 +31,9 @@ export const CheckoutContainer = ({ onGoBack, onContinueToMyPos }: Props) => {
     lastName,
     phone,
     email,
-    address,
+    city,
+    street,
+    additionalNotes,
     deliveryOption,
     saveData
   } = getCustomerDataFromLocalStorage();
@@ -44,7 +46,10 @@ export const CheckoutContainer = ({ onGoBack, onContinueToMyPos }: Props) => {
   );
   const [customerPhone, setCustomerPhone] = useState<string>(phone ?? '');
   const [customerEmail, setCustomerEmail] = useState<string>(email ?? '');
-  const [customerAddress, setCustomerAddress] = useState<string>(address ?? '');
+  const [customerCity, setCustomerCity] = useState<string>(city ?? '');
+  const [customerStreet, setCustomerStreet] = useState<string>(street ?? '');
+  const [customerAdditionalNotes, setCustomerAdditionalNotes] =
+    useState<string>(additionalNotes ?? '');
   const [selectedCity, setSelectedCity] = useState<SpeedyCity | null>(null);
   const [selectedSpeedyOffice, setSelectedSpeedyOffice] =
     useState<SpeedyOffice | null>(null);
@@ -82,8 +87,16 @@ export const CheckoutContainer = ({ onGoBack, onContinueToMyPos }: Props) => {
         { field: CheckoutField.CUSTOMER_PHONE, value: customerPhone },
         { field: CheckoutField.CUSTOMER_EMAIL, value: customerEmail },
         {
-          field: CheckoutField.CUSTOMER_ADDRESS,
-          value: customerAddress
+          field: CheckoutField.CUSTOMER_CITY,
+          value: customerCity
+        },
+        {
+          field: CheckoutField.CUSTOMER_STREET,
+          value: customerStreet
+        },
+        {
+          field: CheckoutField.CUSTOMER_ADDITIONAL_NOTES,
+          value: customerAdditionalNotes
         },
         {
           field: CheckoutField.DELIVERY_OPTION,
@@ -105,7 +118,7 @@ export const CheckoutContainer = ({ onGoBack, onContinueToMyPos }: Props) => {
       phone: customerPhone,
       personalAddress:
         deliveryOption === DeliveryOption.PERSONAL_ADDRESS
-          ? customerAddress
+          ? customerStreet
           : undefined,
       speedyOffice:
         deliveryOption === DeliveryOption.SPEEDY_OFFICE
@@ -121,14 +134,14 @@ export const CheckoutContainer = ({ onGoBack, onContinueToMyPos }: Props) => {
       customerPhone.length >= 10 &&
       customerEmail &&
       (selectedDeliveryOption === DeliveryOption.PERSONAL_ADDRESS
-        ? customerAddress !== ''
+        ? customerStreet !== ''
         : selectedSpeedyOffice !== null),
     [
       customerFirstName,
       customerLastName,
       customerPhone,
       customerEmail,
-      customerAddress,
+      customerStreet,
       selectedDeliveryOption,
       selectedSpeedyOffice
     ]
@@ -204,8 +217,12 @@ export const CheckoutContainer = ({ onGoBack, onContinueToMyPos }: Props) => {
       </RadioButtonsWrapper>
       <MemoizedSpeedyOfficeSelector
         selectedDeliveryOption={selectedDeliveryOption}
-        customerAddress={customerAddress}
-        setCustomerAddress={setCustomerAddress}
+        customerCity={customerCity}
+        setCustomerCity={setCustomerCity}
+        customerStreet={customerStreet}
+        setCustomerStreet={setCustomerStreet}
+        customerAdditionalNotes={customerAdditionalNotes}
+        setCustomerAdditionalNotes={setCustomerAdditionalNotes}
         selectedCity={selectedCity}
         setSelectedCity={setSelectedCity}
         setSelectedSpeedyOffice={setSelectedSpeedyOffice}

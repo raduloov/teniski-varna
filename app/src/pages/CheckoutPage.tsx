@@ -119,11 +119,11 @@ export const CheckoutPage = () => {
     const myPosNote = getMyPosNote(items, promoCode, orderShippingInfo);
 
     const paymentParams = {
-      sid: process.env.REACT_APP_MYPOS_SID,
-      // sid: '000000000000010',
+      // sid: process.env.REACT_APP_MYPOS_SID,
+      sid: '000000000000010',
       ipcLanguage: 'bg',
-      // walletNumber: '61938166610',
-      walletNumber: process.env.REACT_APP_MYPOS_WALLET_NUMBER,
+      walletNumber: '61938166610',
+      // walletNumber: process.env.REACT_APP_MYPOS_WALLET_NUMBER,
       amount: finalPrice ?? totalPrice,
       currency: 'BGN',
       orderID: uuid4(),
@@ -138,7 +138,7 @@ export const CheckoutPage = () => {
     console.log('cartItems', myPosItems);
 
     const callbackParams = {
-      // isSandbox: true,
+      isSandbox: true,
       // eslint-disable-next-line
       onSuccess: function (data: any) {
         console.log('success callback');
