@@ -90,6 +90,10 @@ export const cartSlice = createSlice({
         localItems.splice(localIndex, 1);
         localStorage.setItem('cartItems', JSON.stringify(localItems));
       }
+    },
+    clearCart: (state) => {
+      state.splice(0, state.length);
+      localStorage.setItem('cartItems', JSON.stringify([]));
     }
   }
 });

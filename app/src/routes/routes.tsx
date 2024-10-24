@@ -10,6 +10,7 @@ import { ContactPage } from '../pages/ContactPage';
 import { FavoritesPage } from '../pages/FavoritesPage';
 import { TermsAndConditionsPage } from '../pages/TermsAndConditionsPage';
 import { PrivacyPolicyPage } from '../pages/PrivacyPolicyPage';
+import { ThankYouPage } from '../pages/ThankYouPage';
 
 export const AppRoutes = () => {
   return (
@@ -27,6 +28,7 @@ export const AppRoutes = () => {
         path="/terms-and-conditions"
         element={<TermsAndConditionsPage />}
       />
+      <Route path="/thank-you" element={<ThankYouPage />} />
       <Route path="*" element={<HomePage />} />
     </Routes>
   );
