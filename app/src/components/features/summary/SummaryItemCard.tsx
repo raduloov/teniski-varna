@@ -49,9 +49,7 @@ export const SummaryItemCard = ({ product }: Props) => {
           <Text>Размер:</Text>
           <BoldText>{product.size}</BoldText>
         </TextRow>
-        <PriceWrapper>
-          <Price>{product.price.toFixed(2)}лв</Price>
-        </PriceWrapper>
+        <Price>{product.price.toFixed(2)}лв</Price>
       </ProductDetails>
     </Card>
   );
@@ -84,15 +82,11 @@ const BoldText = styled.p`
 `;
 
 const Price = styled.p`
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
   font-weight: bold;
   font-size: 1.25rem;
-`;
-
-const PriceWrapper = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  margin-right: 1rem;
 `;
 
 const Card = styled.div`

@@ -152,7 +152,7 @@ export const Cart = ({ showCart, onCloseCart, cartItems }: Props) => {
                 </CartItemsContainer>
                 <CartFooter>
                   <CartPriceContainer>
-                    Тениски:<p>{cartPrice.toFixed(2)}лв</p>
+                    Тениски:<p>{cartPrice}лв</p>
                   </CartPriceContainer>
                   <CartPriceContainer>
                     Доставка:<p>{shippingPrice}лв</p>

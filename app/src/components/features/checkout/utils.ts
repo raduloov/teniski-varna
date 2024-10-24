@@ -76,5 +76,10 @@ export const getTotalPrice = (items: CartProduct[]) => {
   return totalPrice;
 };
 
-export const getDiscountedPrice = (price: number, discount?: number) =>
-  discount ? price - price * (discount / 100) : price;
+export const getDiscountedPrice = (
+  price: number,
+  discount?: number
+): number => {
+  const discountedPrice = discount ? price - price * (discount / 100) : price;
+  return Number(discountedPrice.toFixed(2));
+};
