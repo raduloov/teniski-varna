@@ -131,23 +131,26 @@ export const DetailsContainerDesktop = ({
         onCloseCart={onToggleCart}
       />
       <Container>
-        <ImageWrapper>
-          {!imageHasLoaded && (
-            <ActivityIndicator size={100} color={Color.ACCENT} />
-          )}
-          <Image
-            src={image}
-            onLoad={() => onImageLoad()}
-            loaded={imageHasLoaded}
-          />
-        </ImageWrapper>
-        <BottomContainer>
+        <RightContainer>
+          <ImageWrapper>
+            {!imageHasLoaded && (
+              <ActivityIndicator size={100} color={Color.ACCENT} />
+            )}
+            <Image
+              src={image}
+              onLoad={() => onImageLoad()}
+              loaded={imageHasLoaded}
+            />
+          </ImageWrapper>
+          <DescriptionTitle>Тениска с щампа</DescriptionTitle>
+          <Description>{product.description}</Description>
+        </RightContainer>
+        <LeftContainer>
           <HeaderWrapper>
             <TitleWrapper>
               <Title>{product.title}</Title>
               <RatingStars minWidth={150} />
             </TitleWrapper>
-            <Description>{product.description}</Description>
           </HeaderWrapper>
 
           <SelectTitle>Изберете модел</SelectTitle>
@@ -216,20 +219,22 @@ export const DetailsContainerDesktop = ({
               onDecreaseQuantity={onDecreaseQuantity}
             />
           </QuantityWrapper>
+
+          <PriceWrapper>
+            <Price discounted={!!discountedPrice}>{product.price}лв</Price>
+            {discountedPrice && (
+              <DiscountedPrice>{discountedPrice}лв</DiscountedPrice>
+            )}
+          </PriceWrapper>
+
           <CtaWrapper>
-            <PriceWrapper>
-              <Price discounted={!!discountedPrice}>{product.price}лв</Price>
-              {discountedPrice && (
-                <DiscountedPrice>{discountedPrice}лв</DiscountedPrice>
-              )}
-            </PriceWrapper>
             <Button
               label="Добави в кошницата"
               size={ButtonSize.MEDIUM}
               onClick={addToCartHandler}
             />
           </CtaWrapper>
-        </BottomContainer>
+        </LeftContainer>
       </Container>
       {/* <ShippingAndMaterialsWrapper>
         <FullWidthButton onClick={() => onShowShippingInfo()}>
@@ -339,7 +344,9 @@ const TypeButton = styled.div<{ selected: boolean }>`
   color: ${(props) => (props.selected ? Color.BLACK : Color.GRAY)};
 `;
 
-const PriceWrapper = styled.div``;
+const PriceWrapper = styled.div`
+  margin-top: 15px;
+`;
 
 const QuantityWrapper = styled.div`
   display: flex;
@@ -360,7 +367,6 @@ const ImageWrapper = styled.div`
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 600px;
 `;
 
 const Image = styled.img<{ loaded: boolean }>`
@@ -399,12 +405,7 @@ const Price = styled.p<{ discounted?: boolean }>`
 `;
 
 const CtaWrapper = styled.div`
-  display: flex;
-  width: 100%;
   margin-top: 15px;
-  gap: 15px;
-  align-items: center;
-  justify-content: space-between;
 `;
 
 const TilesWrapper = styled.div`
@@ -417,7 +418,6 @@ const TilesWrapper = styled.div`
 
 const TitleWrapper = styled.div`
   display: flex;
-  align-items: center;
   margin-top: 10px;
 `;
 
@@ -431,19 +431,31 @@ const Description = styled.p`
   margin-top: 20px;
 `;
 
+const DescriptionTitle = styled.p`
+  font-size: 20px;
+  font-weight: bold;
+  margin-top: 20px;
+  color: ${Color.DARK_GRAY};
+`;
+
 const Title = styled.p`
   font-size: 24px;
   font-weight: bold;
   margin-right: 20px;
 `;
 
-const BottomContainer = styled.div`
+const RightContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+`;
+
+const LeftContainer = styled.div`
   padding: 1.5rem;
+  width: 50%;
 `;
 
 const Container = styled.div`
   display: flex;
-  flex-direction: column;
-  justify-content: center;
   align-items: center;
 `;
