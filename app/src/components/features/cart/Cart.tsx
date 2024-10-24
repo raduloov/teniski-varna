@@ -141,7 +141,7 @@ export const Cart = ({ showCart, onCloseCart, cartItems }: Props) => {
               </ActivityIndicatorWrapper>
             ) : (
               <>
-                <CartItemsContainer disableScroll={cartItems.length < 3}>
+                <CartItemsContainer disableScroll={cartItems.length < 2}>
                   {cartItems.length > 0 &&
                     cartItems.map((product) => (
                       <CartProductCard

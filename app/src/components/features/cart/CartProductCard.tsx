@@ -54,7 +54,7 @@ export const CartProductCard = ({ product }: Props) => {
         >
           <RiCloseFill color={Color.GRAY} size={24} />
         </RemoveButton>
-        <h1>{product.title}</h1>
+        <ProductTitle>{product.title}</ProductTitle>
         <Row>
           <TextRow>
             <Text>Цвят:</Text>
@@ -95,6 +95,7 @@ const ImageWrapper = styled.div`
 `;
 
 const Image = styled.img<{ loaded: boolean }>`
+  transform: scale(1.6);
   ${({ loaded }) => !loaded && 'display: none;'}
 `;
 
@@ -128,7 +129,7 @@ const BoldText = styled.p`
 
 const Price = styled.p`
   font-weight: bold;
-  font-size: 1.25rem;
+  font-size: 1.2rem;
 `;
 
 const PriceAndQuantityWrapper = styled.div`
@@ -160,6 +161,14 @@ const Card = styled.div`
     object-fit: cover;
     border-radius: 10px;
   }
+`;
+
+const ProductTitle = styled.p`
+  text-overflow: ellipsis;
+  word-wrap: break-word;
+  overflow: hidden;
+  max-height: 2.3rem;
+  margin-right: 20px;
 `;
 
 const ProductDetails = styled.div`

@@ -119,7 +119,7 @@ export const DetailsContainerMobile = ({
       })
     );
 
-    toast.success(`${product.title} беше успешно добавен в кошницата.`, {
+    toast.success(`Тениската беше успешно добавена в кошницата.`, {
       icon: (
         <PartyIcon src={require('../../assets/images/partyPopperIcon.png')} />
       ),
@@ -385,8 +385,9 @@ const ImageWrapper = styled.div`
 `;
 
 const Image = styled.img<{ loaded: boolean }>`
-  max-width: 110%;
-  padding-top: 25px;
+  max-width: 100%;
+  padding-top: 20px;
+  /* transform: scale(1.1); */
   ${({ loaded }) => !loaded && 'display: none;'}
 `;
 

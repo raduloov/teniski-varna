@@ -112,7 +112,7 @@ export const DetailsContainerDesktop = ({
       })
     );
 
-    toast.success(`${product.title} беше успешно добавен в кошницата.`, {
+    toast.success(`Тениската беше успешно добавена в кошницата.`, {
       icon: (
         <PartyIcon src={require('../../assets/images/partyPopperIcon.png')} />
       ),
@@ -367,12 +367,14 @@ const ImageWrapper = styled.div`
   align-items: center;
   justify-content: center;
   width: 100%;
+  height: 500px;
 `;
 
 const Image = styled.img<{ loaded: boolean }>`
+  ${({ loaded }) => !loaded && 'display: none;'}
   max-height: 100%;
   max-width: 100%;
-  ${({ loaded }) => !loaded && 'display: none;'}
+  transform: scale(1.1);
 `;
 
 const SelectTitle = styled.p`

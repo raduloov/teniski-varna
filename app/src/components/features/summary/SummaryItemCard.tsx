@@ -36,23 +36,21 @@ export const SummaryItemCard = ({ product }: Props) => {
         />
       </ImageWrapper>
       <ProductDetails>
-        <Column>
-          <h1>{product.title}</h1>
-          <TextRow>
-            <Text>Цвят:</Text>
-            <BoldText>{translateColorToBulgarian(product.color)}</BoldText>
-          </TextRow>
-          <TextRow>
-            <Text>Модел:</Text>
-            <BoldText>{translateTypeToBulgarian(product.type)}</BoldText>
-          </TextRow>
-          <TextRow>
-            <Text>Размер:</Text>
-            <BoldText>{product.size}</BoldText>
-          </TextRow>
-        </Column>
+        <ProductTitle>{product.title}</ProductTitle>
+        <TextRow>
+          <Text>Цвят:</Text>
+          <BoldText>{translateColorToBulgarian(product.color)}</BoldText>
+        </TextRow>
+        <TextRow>
+          <Text>Модел:</Text>
+          <BoldText>{translateTypeToBulgarian(product.type)}</BoldText>
+        </TextRow>
+        <TextRow>
+          <Text>Размер:</Text>
+          <BoldText>{product.size}</BoldText>
+        </TextRow>
         <PriceWrapper>
-          <Price>{product.price}лв</Price>
+          <Price>{product.price.toFixed(2)}лв</Price>
         </PriceWrapper>
       </ProductDetails>
     </Card>
@@ -66,7 +64,8 @@ const ImageWrapper = styled.div`
 `;
 
 const Image = styled.img<{ loaded: boolean }>`
-  ${({ loaded }) => !loaded && 'display: none;'}
+  transform: scale(1.6);
+  ${({ loaded }) => !loaded && 'display: none;'};
 `;
 
 const Text = styled.p`
@@ -117,14 +116,17 @@ const Card = styled.div`
   }
 `;
 
-const Column = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+const ProductTitle = styled.p`
+  text-overflow: ellipsis;
+  word-wrap: break-word;
+  overflow: hidden;
+  max-height: 2.3rem;
+  margin-right: 20px;
 `;
 
 const ProductDetails = styled.div`
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
   gap: 0.5rem;
   width: 100%;
