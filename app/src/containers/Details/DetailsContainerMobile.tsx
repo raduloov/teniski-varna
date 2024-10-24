@@ -395,11 +395,13 @@ const SelectTitle = styled.p`
   font-size: 18px;
   font-weight: 500;
   margin-top: 15px;
+  color: ${Color.DARK_GRAY};
 `;
 
 const SelectSizeTitle = styled.p`
   font-size: 18px;
   font-weight: 500;
+  color: ${Color.DARK_GRAY};
 `;
 
 const DiscountedPrice = styled.p`

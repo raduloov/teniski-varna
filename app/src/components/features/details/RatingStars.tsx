@@ -25,11 +25,11 @@ const GOOGLE_MAPS_REVIEWS_URL =
 const Star = ({ type }: StarProps) => {
   switch (type) {
     case StarType.FILLED:
-      return <icons.BsStarFill color={Color.ACCENT} />;
+      return <icons.BsStarFill color={Color.ACCENT} size={10} />;
     case StarType.OUTLINED:
-      return <icons.BsStar color={Color.ACCENT} />;
+      return <icons.BsStar color={Color.ACCENT} size={10} />;
     case StarType.HALF:
-      return <icons.BsStarHalf color={Color.ACCENT} />;
+      return <icons.BsStarHalf color={Color.ACCENT} size={10} />;
   }
 };
 
@@ -52,6 +52,7 @@ export const RatingStars = ({ minWidth }: Props) => {
 };
 
 const Reviews = styled.p`
+  font-size: 12px;
   line-height: 0;
   color: ${Color.GRAY};
 `;

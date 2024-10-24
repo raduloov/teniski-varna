@@ -149,7 +149,7 @@ export const DetailsContainerDesktop = ({
           <HeaderWrapper>
             <TitleWrapper>
               <Title>{product.title}</Title>
-              <RatingStars minWidth={150} />
+              <RatingStars minWidth={80} />
             </TitleWrapper>
           </HeaderWrapper>
 
@@ -381,11 +381,13 @@ const SelectTitle = styled.p`
   font-size: 18px;
   font-weight: 500;
   margin-top: 15px;
+  color: ${Color.DARK_GRAY};
 `;
 
 const SelectSizeTitle = styled.p`
   font-size: 18px;
   font-weight: 500;
+  color: ${Color.DARK_GRAY};
 `;
 
 const DiscountedPrice = styled.p`
@@ -441,9 +443,9 @@ const DescriptionTitle = styled.p`
 `;
 
 const Title = styled.p`
-  font-size: 24px;
+  font-size: 1.2rem;
   font-weight: bold;
-  margin-right: 20px;
+  line-height: 1.3rem;
 `;
 
 const RightContainer = styled.div`
@@ -460,4 +462,5 @@ const LeftContainer = styled.div`
 const Container = styled.div`
   display: flex;
   align-items: center;
+  padding-bottom: 1.5rem;
 `;
