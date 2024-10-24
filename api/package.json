@@ -13,7 +13,9 @@
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
-    "express": "^4.21.1"
+    "express": "^4.21.1",
+    "form-data": "^4.0.1",
+    "mailgun.js": "^10.2.3"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",

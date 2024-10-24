@@ -3,13 +3,14 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import speedy from './routes/speedy';
 import myPos from './routes/myPos';
+import mailgun from './routes/mailgun';
 
 dotenv.config();
 
 const app = express();
 
 app.use(cors());
-
+app.use('/mailgun', mailgun);
 app.use('/speedy', speedy);
 app.use('/myPos', myPos);
 
