@@ -2,15 +2,17 @@ import { useState } from 'react';
 
 const { REACT_APP_TENISKI_API_BASE_URL } = process.env;
 
+export interface EmailProps {
+  to: string;
+  subject: string;
+  text: string;
+  html: string;
+}
+
 export const useMailgun = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const sendEmail = async (
-    to: string,
-    subject: string,
-    text: string,
-    html: string
-  ) => {
+  const sendEmail = async (props: EmailProps) => {
     const url = `${REACT_APP_TENISKI_API_BASE_URL}/mailgun/sendEmail`;
 
     setIsLoading(true);
@@ -21,7 +23,7 @@ export const useMailgun = () => {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ to, subject, text, html })
+        body: JSON.stringify(props)
       });
       const data = await response.json();
       return data;

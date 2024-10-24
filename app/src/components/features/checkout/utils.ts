@@ -1,5 +1,4 @@
 import { CartProduct } from '../../../domain/mappers/cartProductMapper';
-import { PromoCode } from '../../../hooks/usePromoCodes';
 
 export interface OrderShippingInfo {
   firstName: string;
@@ -39,34 +38,6 @@ export const saveCustomerDataToLocalStorage = (
 
 export const getCustomerDataFromLocalStorage = () =>
   JSON.parse(localStorage.getItem('customerData') || '{}');
-
-export const getMyPosNote = (
-  cartItems: CartProduct[],
-  promoCode: PromoCode | null,
-  shippingInfo: OrderShippingInfo
-) => {
-  const { firstName, lastName, email, phone, personalAddress, speedyOffice } =
-    shippingInfo;
-
-  return cartItems
-    .map(
-      (item: CartProduct, index) =>
-        `Product ${index + 1}: ${item.title} - ${item.type}, ${item.size}, ${
-          item.color
-        };`
-    )
-    .join('\n')
-    .concat(
-      promoCode
-        ? `\nPromo code: ${promoCode.name} - ${promoCode.percentage}%;`
-        : ''
-    ).concat(`
-      \nShipping: ${firstName} ${lastName}, ${email}, ${phone} - ${
-    personalAddress
-      ? `[Personal Address] ${personalAddress}`
-      : `[Speedy Office] ${speedyOffice}`
-  };`);
-};
 
 export const getTotalPrice = (items: CartProduct[]) => {
   const totalPrice = Number(

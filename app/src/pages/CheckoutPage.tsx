@@ -10,7 +10,6 @@ import {
 import { CheckoutContainer } from '../containers/Checkout/CheckoutContainer';
 import {
   getDiscountedPrice,
-  getMyPosNote,
   getTotalPrice,
   OrderShippingInfo
 } from '../components/features/checkout/utils';
@@ -32,6 +31,8 @@ import { useProducts } from '../hooks/useProducts';
 import { useDiscounts } from '../hooks/useDiscounts';
 import { ActivityIndicator } from '../components/common/ActivityIndicator';
 import { useAppSelector } from '../hooks/useRedux';
+import { useMailgun } from '../hooks/useMailgun';
+import { sendEmailToAdmin, sendEmailToCustomer } from '../utils/emailUtils';
 
 export const CheckoutPage = () => {
   const [showSummary, setShowSummary] = useState<boolean>(true);
@@ -55,6 +56,7 @@ export const CheckoutPage = () => {
   const { getActiveDiscounts, isLoading: isFetchingDiscount } = useDiscounts();
   const navigate = useCustomNavigate();
   const { getShipping } = useShipping();
+  const { sendEmail } = useMailgun();
 
   const isFreeShipping = totalPrice >= shipping.minimumAmount;
 
@@ -116,8 +118,6 @@ export const CheckoutPage = () => {
   };
 
   const createMyPos = async (orderShippingInfo: OrderShippingInfo) => {
-    const myPosNote = getMyPosNote(items, promoCode, orderShippingInfo);
-
     const paymentParams = {
       // sid: process.env.REACT_APP_MYPOS_SID,
       sid: '000000000000010',
@@ -131,11 +131,8 @@ export const CheckoutPage = () => {
       urlOk: window.location.href,
       urlCancel: window.location.href,
       keyIndex: 1,
-      cartItems: myPosItems,
-      note: myPosNote
+      cartItems: myPosItems
     };
-
-    console.log('cartItems', myPosItems);
 
     const callbackParams = {
       isSandbox: true,
@@ -146,6 +143,15 @@ export const CheckoutPage = () => {
           state: { fromCheckout: true },
           replace: true
         });
+        sendEmailToCustomer(sendEmail, orderShippingInfo);
+        sendEmailToAdmin(
+          sendEmail,
+          orderShippingInfo,
+          items,
+          promoCode,
+          finalPrice ?? totalPrice,
+          shipping.shippingCost
+        );
       },
 
       // eslint-disable-next-line
