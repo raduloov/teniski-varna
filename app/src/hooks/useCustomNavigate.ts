@@ -1,4 +1,4 @@
-import { NavigateOptions, To, useNavigate } from 'react-router';
+import { NavigateOptions, To, useNavigate } from 'react-router-dom';
 import { scrollToTop } from '../utils/scrollToTop';
 
 export const useCustomNavigate = () => {

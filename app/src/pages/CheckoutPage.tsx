@@ -140,13 +140,16 @@ export const CheckoutPage = () => {
     const callbackParams = {
       isSandbox: true,
       // eslint-disable-next-line
-      onSuccess: function (data: any) {
-        console.log('success callback');
-        console.log(data);
+      onSuccess: (data: any) => {
+        console.log('success', data);
+        navigate('/thank-you', {
+          state: { fromCheckout: true },
+          replace: true
+        });
       },
 
       // eslint-disable-next-line
-      onError: function (data: any) {
+      onError: (data: any) => {
         console.log('error');
         console.log(data);
       }
